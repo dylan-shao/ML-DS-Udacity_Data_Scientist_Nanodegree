@@ -67,3 +67,47 @@ print(laos_life_exp)
 
     [[60.31564716]]
 
+
+#### Try train the data only using part of the dataset:
+
+
+```python
+from sklearn.model_selection import train_test_split
+
+model2 = LinearRegression()
+X_train, X_test, Y_train, Y_test = train_test_split(bmi,life_expenctancy, test_size = 0.3)
+model2.fit(X_train,Y_train)
+
+Y_pred = model2.predict(X_test)
+
+plt.scatter(Y_test, Y_pred)
+plt.xlabel("BMI")
+plt.ylabel("Predicted BMI")
+plt.show()
+
+mse = mean_squared_error(Y_test, Y_pred)
+print('mse: ', mse)
+```
+
+
+![png](output_4_0.png)
+
+
+    mse:  31.29356316687032
+
+
+####  Question: the mse above is different every time we run the above code, how should we choose? Just run 100 times, and choose smallest one?
+
+
+```python
+plt.scatter(bmi, life_expenctancy)
+plt.plot(X_test, Y_pred, color='green', linewidth=3)
+plt.xlabel('BMI')
+plt.ylabel('life expentancy')
+plt.show()
+
+```
+
+
+![png](output_6_0.png)
+
