@@ -11,3 +11,5 @@
 [Multi Linear Regression](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/tree/master/LinearRegression_multiVariables)
 
 [Polynomial Regression](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/tree/master/PolynomialRegression)
+
+[Regularization & FeatureScaling](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/tree/master/Regularization_FeatureScaling)
