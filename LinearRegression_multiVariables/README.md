@@ -8,6 +8,7 @@ use `LinearRegression` from `sklearn.linear_model`
 from sklearn.linear_model import LinearRegression
 from sklearn.datasets import load_boston
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
 import pandas as pd
 
 # Load the data from the boston house-prices dataset 
@@ -156,10 +157,16 @@ plt.scatter(Y_test, Y_pred)
 plt.xlabel("Prices: $Y_i$")
 plt.ylabel("Predicted prices: $\hat{Y}_i$")
 plt.show()
+
+mse = mean_squared_error(Y_test, Y_pred)
+print('mse: ', mse)
 ```
 
 
 ![png](output_4_0.png)
+
+
+    mse:  25.534909837516775
 
 
 
@@ -173,5 +180,5 @@ prediction = model.predict(sample_house)
 print(prediction)
 ```
 
-    [23.62893003]
+    [23.747783]
 
