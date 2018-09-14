@@ -86,7 +86,7 @@ def perceptronStep(X, y, W, b, learn_rate = 0.01):
 # for plotting purposes.
 # Feel free to play with the learning rate and the num_epochs,
 # and see your results plotted below.
-def trainPerceptronAlgorithm(X, y, learn_rate = 0.01, num_epochs = 200):
+def trainPerceptronAlgorithm(X, y, learn_rate = 0.01, num_epochs = 50):
     x_min, x_max = min(X.T[0]), max(X.T[0])
     y_min, y_max = min(X.T[1]), max(X.T[1])
     W = np.array(np.random.rand(2,1))
@@ -100,6 +100,9 @@ def trainPerceptronAlgorithm(X, y, learn_rate = 0.01, num_epochs = 200):
         
     return boundary_lines
 
+#-------------plot------------------------------
+import seaborn as sns
+sns.set_palette('Blues')
 def plotLine(slope, intercept):
    
     axes = plt.gca()
@@ -109,7 +112,7 @@ def plotLine(slope, intercept):
     plt.plot(x_vals, y_vals, '--')
     
 
-a = trainPerceptronAlgorithm(X,y)
+a = trainPerceptronAlgorithm(X,y, 0.005, 100)
 
 plt.scatter(x, y, c=label, cmap=ListedColormap(colors))
 plt.xlim(-0.5, 1.5)  
@@ -120,6 +123,7 @@ plt.ylim(-0.5, 1.5)
 for i in range(0, len(a)):
     (arr1,arr2) = a[i]
     plotLine(arr1[0],arr2[0])
+#----------------end plot--------------------------
 ```
 
 
