@@ -2064,7 +2064,7 @@ print('The test accuracy is', test_accuracy)
 ```
 
     The training accuracy is 1.0
-    The test accuracy is 0.810055865922
+    The test accuracy is 0.798882681564
 
 
 # Exercise: Improving the model
@@ -2082,9 +2082,21 @@ You can use your intuition, trial and error, or even better, feel free to use Gr
 
 
 ```python
-# TODO: Train the model
+model = DecisionTreeClassifier(max_depth= 15, min_samples_split=15, min_samples_leaf=6)
+model.fit(X_train,y_train)
 
-# TODO: Make predictions
+# Making predictions
+y_train_pred = model.predict(X_train)
+y_test_pred = model.predict(X_test)
 
-# TODO: Calculate the accuracy
+# Calculate the accuracy
+from sklearn.metrics import accuracy_score
+train_accuracy = accuracy_score(y_train, y_train_pred)
+test_accuracy = accuracy_score(y_test, y_test_pred)
+print('The training accuracy is', train_accuracy)
+print('The test accuracy is', test_accuracy)
 ```
+
+    The training accuracy is 0.88202247191
+    The test accuracy is 0.860335195531
+
