@@ -30,15 +30,20 @@ b = 'classification'
 c = 'both regression and classification'
 
 models = {
-    'decision trees': c,
-    'random forest': c,
-    'adaptive boosting': c,
-    'logistic regression': b,
-    'linear regression': a,
+    'decision trees': c,# Letter here,
+    'random forest': c,# Letter here,
+    'adaptive boosting':c, # Letter here,
+    'logistic regression':b, # Letter here,
+    'linear regression': a# Letter here
 }
 
 #checks your answer, no need to change this code
 t.q1_check(models)
+# output:
+# That's right!  All but logistic regression can be used for predicting numeric values.  
+# And linear regression is the only one of these that you should not use for predicting categories.  
+# Technically sklearn won't stop you from doing most of anything you want, 
+# but you probably want to treat cases in the way you found by answering this question!
 ```
 
     That's right!  All but logistic regression can be used for predicting numeric values.  And linear regression is the only one of these that you should not use for predicting categories.  Technically sklearn won't stop you from doing most of anything you want, but you probably want to treat cases in the way you found by answering this question!
@@ -51,10 +56,9 @@ t.q1_check(models)
 # Import models from sklearn - notice you will want to use 
 # the regressor version (not classifier) - googling to find 
 # each of these is what we all do!
-
+from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import RandomForestRegressor, AdaBoostRegressor
 from sklearn.linear_model import LinearRegression
-from sklearn.tree import DecisionTreeRegressor
 ```
 
 > **Step 3:** Now that you have imported the 4 models that can be used for regression problems, instantate each below.
@@ -63,11 +67,10 @@ from sklearn.tree import DecisionTreeRegressor
 ```python
 # Instantiate each of the models you imported
 # For now use the defaults for all the hyperparameters
-
-tree_mod = DecisionTreeRegressor()
-rf_mod = RandomForestRegressor()
-ada_mod = AdaBoostRegressor()
-reg_mod = LinearRegression()
+dt_model = DecisionTreeRegressor()
+rf_model = RandomForestRegressor(n_estimators=200)
+ada_model = AdaBoostRegressor(n_estimators=300, learning_rate=0.2)
+lr_model = LinearRegression()
 ```
 
 > **Step 4:** Fit each of your instantiated models on the training data.
@@ -75,11 +78,10 @@ reg_mod = LinearRegression()
 
 ```python
 # Fit each of your models using the training data
-tree_mod.fit(X_train, y_train)
-rf_mod.fit(X_train, y_train)
-ada_mod.fit(X_train, y_train)
-reg_mod.fit(X_train, y_train)
-
+dt_model.fit(X_train, y_train)
+rf_model.fit(X_train, y_train)
+ada_model.fit(X_train, y_train)
+lr_model.fit(X_train, y_train)
 ```
 
 
@@ -94,47 +96,36 @@ reg_mod.fit(X_train, y_train)
 
 ```python
 # Predict on the test values for each model
-
-preds_tree = tree_mod.predict(X_test) 
-preds_rf = rf_mod.predict(X_test)
-preds_ada = ada_mod.predict(X_test)
-preds_reg = reg_mod.predict(X_test)
+dt_preds = dt_model.predict(X_test)
+rf_preds = rf_model.predict(X_test)
+ada_preds = ada_model.predict(X_test)
+lr_preds = lr_model.predict(X_test)
 ```
 
 > **Step 6:** Now for the information related to this lesson.  Use the dictionary to match the metrics that are used for regression and those that are for classification.
-
-
-```python
 # potential model options
 a = 'regression'
 b = 'classification'
 c = 'both regression and classification'
 
-#
 metrics = {
-    'precision': b,
-    'recall': b,
-    'accuracy': b,
-    'r2_score': a,
-    'mean_squared_error': a,
-    'area_under_curve': b, 
-    'mean_absolute_area': a 
+    'precision': b,# Letter here,
+    'recall': b,# Letter here,
+    'accuracy': b,# Letter here,
+    'r2_score': a,# Letter here,
+    'mean_squared_error': a,# Letter here,
+    'area_under_curve': b,# Letter here, 
+    'mean_absolute_area': a# Letter here 
 }
 
 #checks your answer, no need to change this code
 t.q6_check(metrics)
-```
-
-    That's right! Looks like you know your metrics!
-
-
 > **Step 6:** Now that you have identified the metrics that can be used in for regression problems, use sklearn to import them.
 
 
 ```python
 # Import the metrics from sklearn
-from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
-
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, r2_score,mean_squared_error, mean_absolute_error, roc_auc_score
 ```
 
 > **Step 7:** Similar to what you did with classification models, let's make sure you are comfortable with how exactly each of these metrics is being calculated.  We can then match the value to what sklearn provides.
@@ -154,13 +145,13 @@ def r2(actual, preds):
     return 1 - sse/sst
 
 # Check solution matches sklearn
-print(r2(y_test, preds_tree))
-print(r2_score(y_test, preds_tree))
+print(r2(y_test, dt_preds))
+print(r2_score(y_test, dt_preds))
 print("Since the above match, we can see that we have correctly calculated the r2 value.")
 ```
 
-    0.739635302019
-    0.739635302019
+    0.7501287928872782
+    0.7501287928872782
     Since the above match, we can see that we have correctly calculated the r2 value.
 
 
@@ -177,17 +168,17 @@ def mse(actual, preds):
     returns the mean squared error as a float
     '''
     
-    return np.sum((actual-preds)**2)/len(actual)
+    return np.sum((actual-preds)**2) / len(actual) # calculate mse here
 
 
 # Check your solution matches sklearn
-print(mse(y_test, preds_tree))
-print(mean_squared_error(y_test, preds_tree))
+print(mse(y_test, dt_preds))
+print(mean_squared_error(y_test, dt_preds))
 print("If the above match, you are all set!")
 ```
 
-    19.704011976
-    19.704011976
+    18.90988023952096
+    18.90988023952096
     If the above match, you are all set!
 
 
@@ -204,16 +195,16 @@ def mae(actual, preds):
     returns the mean absolute error as a float
     '''
     
-    return np.sum(np.abs(actual-preds))/len(actual)
+    return np.sum(abs(actual-preds)) / len(actual) # calculate the mae here
 
 # Check your solution matches sklearn
-print(mae(y_test, preds_tree))
-print(mean_absolute_error(y_test, preds_tree))
+print(mae(y_test, dt_preds))
+print(mean_absolute_error(y_test, dt_preds))
 print("If the above match, you are all set!")
 ```
 
-    3.15748502994
-    3.15748502994
+    3.0508982035928147
+    3.0508982035928147
     If the above match, you are all set!
 
 
@@ -227,17 +218,42 @@ b = 'random forest'
 c = 'adaptive boosting'
 d = 'linear regression'
 
+def print_score(actual, preds, name):
+    print('mse for ', name, 'is: ',mse(actual, preds))
+    print('r2 for ', name, 'is: ',r2(actual, preds))    
+    print('mae for ', name, 'is: ',mae(actual, preds), '\n')
+
+print_score(y_test, dt_preds, a)
+print_score(y_test, rf_preds, b )
+print_score(y_test, ada_preds, c)
+print_score(y_test, lr_preds, d)
 
 best_fit = {
-    'mse': b,
-    'r2': b,
-    'mae': b
+    'mse': b,# letter here,
+    'r2': b,# letter here,
+    'mae': b# letter here
 }
 
 #Tests your answer - don't change this code
 t.check_ten(best_fit)
 ```
 
+    mse for  decision tree is:  18.90988023952096
+    r2 for  decision tree is:  0.7501287928872782
+    mae for  decision tree is:  3.0508982035928147 
+    
+    mse for  random forest is:  10.675734110778437
+    r2 for  random forest is:  0.8589330796765403
+    mae for  random forest is:  2.166461077844309 
+    
+    mse for  adaptive boosting is:  15.239955774029408
+    r2 for  adaptive boosting is:  0.79862240810798
+    mae for  adaptive boosting is:  2.75242850833652 
+    
+    mse for  linear regression is:  20.747143360308847
+    r2 for  linear regression is:  0.7258515818230061
+    mae for  linear regression is:  3.15128783658839 
+    
     That's right!  The random forest was best in terms of all the metrics this time!
 
 
@@ -245,70 +261,3 @@ t.check_ten(best_fit)
 ```python
 # cells for work
 ```
-
-
-```python
-def print_metrics(y_true, preds, model_name=None):
-    '''
-    INPUT:
-    y_true - the y values that are actually true in the dataset (numpy array or pandas series)
-    preds - the predictions for those values from some model (numpy array or pandas series)
-    model_name - (str - optional) a name associated with the model if you would like to add it to the print statements 
-    
-    OUTPUT:
-    None - prints the mse, mae, r2
-    '''
-    if model_name == None:
-        print('Mean Squared Error: ', format(mean_squared_error(y_true, preds)))
-        print('Mean Absolute Error: ', format(mean_absolute_error(y_true, preds)))
-        print('R2 Score: ', format(r2_score(y_true, preds)))
-        print('\n\n')
-    
-    else:
-        print('Mean Squared Error ' + model_name + ' :' , format(mean_squared_error(y_true, preds)))
-        print('Mean Absolute Error ' + model_name + ' :', format(mean_absolute_error(y_true, preds)))
-        print('R2 Score ' + model_name + ' :', format(r2_score(y_true, preds)))
-        print('\n\n')
-```
-
-
-```python
-# Print Decision Tree scores
-print_metrics(y_test, preds_tree, 'tree')
-
-# Print Random Forest scores
-print_metrics(y_test, preds_rf, 'random forest')
-
-# Print AdaBoost scores
-print_metrics(y_test, preds_ada, 'adaboost')
-
-# Linear Regression scores
-print_metrics(y_test, preds_reg, 'linear reg')
-
-```
-
-    Mean Squared Error tree : 19.7040119760479
-    Mean Absolute Error tree : 3.1574850299401196
-    R2 Score tree : 0.7396353020190601
-    
-    
-    
-    Mean Squared Error random forest : 11.312801796407184
-    Mean Absolute Error random forest : 2.277425149700599
-    R2 Score random forest : 0.8505150003653941
-    
-    
-    
-    Mean Squared Error adaboost : 14.257393853099275
-    Mean Absolute Error adaboost : 2.692951294012893
-    R2 Score adaboost : 0.8116057760688565
-    
-    
-    
-    Mean Squared Error linear reg : 20.74714336030895
-    Mean Absolute Error linear reg : 3.1512878365883963
-    R2 Score linear reg : 0.7258515818230048
-    
-    
-    
-
