@@ -1,0 +1,28 @@
+{
+  "name": "ml-ds-udacity_data_scientist_nanodegree",
+  "version": "1.0.0",
+  "description": "```python import numpy as np a = np.array([1,2,3]) b= np.array([[1,2,3],[2,3,4]]) # np.dot(a,b) # np.sum(a*b) # np.array([np.dot(row,a) for row in b]) # np.dot(b,a) np.sum(b*a,axis=1) # for row in b: #     print(row)",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "pre-commit": "^1.2.2"
+  },
+  "scripts": {
+    "create-md": "node index.js",
+    "add": "git add ."
+  },
+  "pre-commit": [
+    "create-md",
+    "add"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/issues"
+  },
+  "homepage": "https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree#readme"
+}
