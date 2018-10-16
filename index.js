@@ -7,10 +7,9 @@ const fs = require('fs');
 const fileName = 'README.md';
 fs.writeFileSync(fileName, '');
 
-let level = 0;
+let level = 1;
 
-(function f(dir) {
-  level += 1;
+(function f(dir, level) {
   const filesOrFolders = fs.readdirSync(dir);
   for (let i = 0; i < filesOrFolders.length; i++) {
     const fileOrFolder = filesOrFolders[i];
@@ -27,16 +26,16 @@ let level = 0;
         }
 
         if(level === 2) {
-          const folderPath = (encodeURIComponent(dir.replace('./', '')) + '/' + fileOrFolder);
+          const folderPath = (encodeURIComponent(dir.replace('./', '')) + '/' + encodeURIComponent(fileOrFolder));
           const path = _getUrl(folderPath);
           _append(`[${fileOrFolder}](${path})\n\n`);
         }
-        level === 1 && f(fileOrFolderName);
+        level === 1 && f(fileOrFolderName, level+1);
         /*-------------------------------------------------------*/
       }
     }
   }
-})('.');
+})('.', level);
 
 /*------------------------------Utilities-------------------------------------*/
 function _isFolder(fileOrFolderName) {
