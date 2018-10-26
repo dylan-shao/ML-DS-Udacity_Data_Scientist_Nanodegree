@@ -412,7 +412,7 @@ display(features_log_minmax_transform.head(n = 5))
       <td>Not-in-family</td>
       <td>White</td>
       <td>Male</td>
-      <td>0.855471</td>
+      <td>0.667492</td>
       <td>0.0</td>
       <td>0.397959</td>
       <td>United-States</td>
@@ -490,11 +490,11 @@ display(features_log_minmax_transform.head(n = 5))
 
 From the table in **Exploring the Data** above, we can see there are several features for each record that are non-numeric. Typically, learning algorithms expect input to be numeric, which requires that non-numeric features (called *categorical variables*) be converted. One popular way to convert categorical variables is by using the **one-hot encoding** scheme. One-hot encoding creates a _"dummy"_ variable for each possible category of each non-numeric feature. For example, assume `someFeature` has three possible entries: `A`, `B`, or `C`. We then encode this feature into `someFeature_A`, `someFeature_B` and `someFeature_C`.
 
-|   | someFeature |                    | someFeature_A | someFeature_B | someFeature_C |
-| :-: | :-: |                            | :-: | :-: | :-: |
-| 0 |  B  |  | 0 | 1 | 0 |
+|  _ | someFeature |        _            | someFeature_A | someFeature_B | someFeature_C |
+| :---: | :---: |  -----                          | :---: | :---: | :---: |
+| 0 |  B  | ----> | 0 | 1 | 0 |
 | 1 |  C  | ----> one-hot encode ----> | 0 | 0 | 1 |
-| 2 |  A  |  | 1 | 0 | 0 |
+| 2 |  A  | ----> | 1 | 0 | 0 |
 
 Additionally, as with the non-numeric features, we need to convert the non-numeric target label, `'income'` to numerical values for the learning algorithm to work. Since there are only two possible categories for this label ("<=50K" and ">50K"), we can avoid using one-hot encoding and simply encode these two categories as `0` and `1`, respectively. In code cell below, you will need to implement the following:
  - Use [`pandas.get_dummies()`](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.get_dummies.html?highlight=get_dummies#pandas.get_dummies) to perform one-hot encoding on the `'features_log_minmax_transform'` data.
@@ -565,7 +565,7 @@ print("{} total features after one-hot encoding.".format(len(encoded)))
       <th>0</th>
       <td>0.301370</td>
       <td>0.800000</td>
-      <td>0.855471</td>
+      <td>0.667492</td>
       <td>0.0</td>
       <td>0.397959</td>
       <td>0</td>
@@ -1005,14 +1005,14 @@ Looking at the distribution of classes ( those who make at most 50K, and those w
 
 #### Note: Recap of accuracy, precision, recall
 
-** Accuracy ** measures how often the classifier makes the correct prediction. It’s the ratio of the number of correct predictions to the total number of predictions (the number of test data points).
+**Accuracy** measures how often the classifier makes the correct prediction. It’s the ratio of the number of correct predictions to the total number of predictions (the number of test data points).
 
-** Precision ** tells us what proportion of messages we classified as spam, actually were spam.
+**Precision** tells us what proportion of messages we classified as spam, actually were spam.
 It is a ratio of true positives(words classified as spam, and which are actually spam) to all positives(all words classified as spam, irrespective of whether that was the correct classificatio), in other words it is the ratio of
 
 `[True Positives/(True Positives + False Positives)]`
 
-** Recall(sensitivity)** tells us what proportion of messages that actually were spam were classified by us as spam.
+**Recall(sensitivity)** tells us what proportion of messages that actually were spam were classified by us as spam.
 It is a ratio of true positives(words classified as spam, and which are actually spam) to all the words that were actually spam, in other words it is the ratio of
 
 `[True Positives/(True Positives + False Negatives)]`
@@ -1053,6 +1053,16 @@ print("Naive Predictor: [Accuracy score: {:.4f}, F-score: {:.4f}]".format(accura
 
     Naive Predictor: [Accuracy score: 0.2478, F-score: 0.3972]
 
+
+###  Supervised Learning Models
+**The following are some of the supervised learning models that are currently available in** [`scikit-learn`](http://scikit-learn.org/stable/supervised_learning.html) **that you may choose from:**
+- Gaussian Naive Bayes (GaussianNB)
+- Decision Trees
+- Ensemble Methods (Bagging, AdaBoost, Random Forest, Gradient Boosting)
+- K-Nearest Neighbors (KNeighbors)
+- Stochastic Gradient Descent Classifier (SGDC)
+- Support Vector Machines (SVM)
+- Logistic Regression
 
 ###  Supervised Learning Models
 **The following are some of the supervised learning models that are currently available in** [`scikit-learn`](http://scikit-learn.org/stable/supervised_learning.html) **that you may choose from:**
@@ -1110,6 +1120,7 @@ In the code block below, you will need to implement the following:
 
 ```python
 # TODO: Import two metrics from sklearn - fbeta_score and accuracy_score
+from sklearn.metrics import fbeta_score, accuracy_score
 
 def train_predict(learner, sample_size, X_train, y_train, X_test, y_test): 
     '''
@@ -1126,33 +1137,33 @@ def train_predict(learner, sample_size, X_train, y_train, X_test, y_test):
     
     # TODO: Fit the learner to the training data using slicing with 'sample_size' using .fit(training_features[:], training_labels[:])
     start = time() # Get start time
-    learner = None
+    learner = learner.fit(X_train[:sample_size], y_train[:sample_size])
     end = time() # Get end time
     
     # TODO: Calculate the training time
-    results['train_time'] = None
+    results['train_time'] = end - start
         
     # TODO: Get the predictions on the test set(X_test),
     #       then get predictions on the first 300 training samples(X_train) using .predict()
     start = time() # Get start time
-    predictions_test = None
-    predictions_train = None
+    predictions_test = learner.predict(X_test)
+    predictions_train = learner.predict(X_train[:300])
     end = time() # Get end time
     
     # TODO: Calculate the total prediction time
-    results['pred_time'] = None
+    results['pred_time'] = end - start
             
     # TODO: Compute accuracy on the first 300 training samples which is y_train[:300]
-    results['acc_train'] = None
+    results['acc_train'] = accuracy_score(predictions_train, y_train[:300])
         
     # TODO: Compute accuracy on test set using accuracy_score()
-    results['acc_test'] = None
+    results['acc_test'] = accuracy_score(predictions_test, y_test)
     
     # TODO: Compute F-score on the the first 300 training samples using fbeta_score()
-    results['f_train'] = None
+    results['f_train'] = fbeta_score(y_train[:300], predictions_train, beta=0.5)
         
     # TODO: Compute F-score on the test set which is y_test
-    results['f_test'] = None
+    results['f_test'] = fbeta_score(y_test, predictions_test, beta=0.5)
        
     # Success
     print("{} trained on {} samples.".format(learner.__class__.__name__, sample_size))
@@ -1175,9 +1186,10 @@ In the code cell, you will need to implement the following:
 
 ```python
 # TODO: Import the three supervised learning models from sklearn
+from sklearn.naive_bayes import GaussianNB
 
 # TODO: Initialize the three models
-clf_A = None
+clf_A = GaussianNB()
 clf_B = None
 clf_C = None
 
@@ -1185,13 +1197,13 @@ clf_C = None
 # HINT: samples_100 is the entire training set i.e. len(y_train)
 # HINT: samples_10 is 10% of samples_100 (ensure to set the count of the values to be `int` and not `float`)
 # HINT: samples_1 is 1% of samples_100 (ensure to set the count of the values to be `int` and not `float`)
-samples_100 = None
-samples_10 = None
-samples_1 = None
+samples_100 = len(y_train)
+samples_10 = len(y_train) // 10
+samples_1 = len(y_train) // 100
 
 # Collect results on the learners
 results = {}
-for clf in [clf_A, clf_B, clf_C]:
+for clf in [clf_A]:
     clf_name = clf.__class__.__name__
     results[clf_name] = {}
     for i, samples in enumerate([samples_1, samples_10, samples_100]):
@@ -1201,6 +1213,19 @@ for clf in [clf_A, clf_B, clf_C]:
 # Run metrics visualization for the three supervised learning models chosen
 vs.evaluate(results, accuracy, fscore)
 ```
+
+    /Users/yangshao/anaconda3/lib/python3.6/site-packages/sklearn/utils/validation.py:578: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+      y = column_or_1d(y, warn=True)
+
+
+    GaussianNB trained on 361 samples.
+    GaussianNB trained on 3617 samples.
+    GaussianNB trained on 36177 samples.
+
+
+
+![png](output_30_2.png)
+
 
 ----
 ## Improving Results
