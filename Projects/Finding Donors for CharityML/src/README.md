@@ -1104,7 +1104,13 @@ Structure your answer in the same format as above^, with 4 parts for each of the
         * even though we have some feature that are not independent such as the `age` and `education-num`, but most of them are independent
         * As after One-hot encode, we have more features, and GaussianNB can converge quickly than some other algorithms such as the Logistic Regression
 ---
-2. sdf
+2. Decision Trees:
+    * can be applied to [providing recommendations, Fraudulent Statement Detection,making predictions](http://what-when-how.com/artificial-intelligence/decision-tree-applications-for-data-modelling-artificial-intelligence/) 
+    * Strengths: 
+        * Relative fewer effort for data pre-rocessing [1](http://www.simafore.com/blog/bid/62333/4-key-advantages-of-using-decision-trees-for-predictive-analytics), [2](https://www.edupristine.com/blog/decision-trees-development-and-scoring)
+        * 
+    * Weekness
+        * Can be easily overfit
 
 ### Implementation - Creating a Training and Predicting Pipeline
 To properly evaluate the performance of each model you've chosen, it's important that you create a training and predicting pipeline that allows you to quickly and effectively train models using various sizes of training data and perform predictions on the testing data. Your implementation here will be used in the following section.
@@ -1137,7 +1143,7 @@ def train_predict(learner, sample_size, X_train, y_train, X_test, y_test):
     
     # TODO: Fit the learner to the training data using slicing with 'sample_size' using .fit(training_features[:], training_labels[:])
     start = time() # Get start time
-    learner = learner.fit(X_train[:sample_size], y_train[:sample_size])
+    learner = learner.fit(X_train[:sample_size], y_train[:sample_size].values.ravel())
     end = time() # Get end time
     
     # TODO: Calculate the training time
@@ -1170,7 +1176,12 @@ def train_predict(learner, sample_size, X_train, y_train, X_test, y_test):
         
     # Return the results
     return results
+
+print( y_train[:10].values.ravel())
 ```
+
+    [0 0 0 1 0 0 0 0 0 1]
+
 
 ### Implementation: Initial Model Evaluation
 In the code cell, you will need to implement the following:
@@ -1187,10 +1198,12 @@ In the code cell, you will need to implement the following:
 ```python
 # TODO: Import the three supervised learning models from sklearn
 from sklearn.naive_bayes import GaussianNB
+from sklearn.tree import DecisionTreeClassifier
+
 
 # TODO: Initialize the three models
 clf_A = GaussianNB()
-clf_B = None
+clf_B = DecisionTreeClassifier()
 clf_C = None
 
 # TODO: Calculate the number of samples for 1%, 10%, and 100% of the training data
@@ -1203,7 +1216,7 @@ samples_1 = len(y_train) // 100
 
 # Collect results on the learners
 results = {}
-for clf in [clf_A]:
+for clf in [clf_A, clf_B]:
     clf_name = clf.__class__.__name__
     results[clf_name] = {}
     for i, samples in enumerate([samples_1, samples_10, samples_100]):
@@ -1214,17 +1227,16 @@ for clf in [clf_A]:
 vs.evaluate(results, accuracy, fscore)
 ```
 
-    /Users/yangshao/anaconda3/lib/python3.6/site-packages/sklearn/utils/validation.py:578: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
-      y = column_or_1d(y, warn=True)
-
-
     GaussianNB trained on 361 samples.
     GaussianNB trained on 3617 samples.
     GaussianNB trained on 36177 samples.
+    DecisionTreeClassifier trained on 361 samples.
+    DecisionTreeClassifier trained on 3617 samples.
+    DecisionTreeClassifier trained on 36177 samples.
 
 
 
-![png](output_30_2.png)
+![png](output_30_1.png)
 
 
 ----
@@ -1302,6 +1314,22 @@ print("\nOptimized Model\n------")
 print("Final accuracy score on the testing data: {:.4f}".format(accuracy_score(y_test, best_predictions)))
 print("Final F-score on the testing data: {:.4f}".format(fbeta_score(y_test, best_predictions, beta = 0.5)))
 ```
+
+
+    --------------------------------------------------------------------------
+
+    AttributeError                           Traceback (most recent call last)
+
+    <ipython-input-11-e3943885eece> in <module>()
+         18 
+         19 # Get the estimator
+    ---> 20 best_clf = grid_fit.best_estimator_
+         21 
+         22 # Make predictions using the unoptimized and model
+
+
+    AttributeError: 'NoneType' object has no attribute 'best_estimator_'
+
 
 ### Question 5 - Final Model Evaluation
 
