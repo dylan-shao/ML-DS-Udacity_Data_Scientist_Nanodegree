@@ -1218,17 +1218,11 @@ In the code cell, you will need to implement the following:
 from sklearn.naive_bayes import GaussianNB
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import AdaBoostClassifier
-from sklearn.ensemble import BaggingClassifier
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.svm import SVC
 
 # TODO: Initialize the three models
 clf_A = GaussianNB()
-clf_B = DecisionTreeClassifier()
-clf_C = AdaBoostClassifier(n_estimators=200, learning_rate=0.2)
-clf_D = BaggingClassifier(n_estimators=200) 
-clf_E = RandomForestClassifier(n_estimators=200)
-clf_F = SVC(gamma='auto', C=1000)
+clf_B = DecisionTreeClassifier(random_state=0)
+clf_C = AdaBoostClassifier(n_estimators=200, learning_rate=0.2, random_state=0)
 
 # TODO: Calculate the number of samples for 1%, 10%, and 100% of the training data
 # HINT: samples_100 is the entire training set i.e. len(y_train)
@@ -1240,7 +1234,7 @@ samples_1 = len(y_train) // 100
 
 # Collect results on the learners
 results = {}
-for clf in [clf_A, clf_B, clf_C, clf_D, clf_E, clf_F]:
+for clf in [clf_A, clf_B, clf_C]:
     clf_name = clf.__class__.__name__
     results[clf_name] = {}
     for i, samples in enumerate([samples_1, samples_10, samples_100]):
@@ -1260,19 +1254,54 @@ vs.evaluate(results, accuracy, fscore)
     AdaBoostClassifier trained on 361 samples.
     AdaBoostClassifier trained on 3617 samples.
     AdaBoostClassifier trained on 36177 samples.
+
+
+
+![png](output_30_1.png)
+
+
+
+```python
+# -------- Compare C with more models D, E, F-------------
+
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.ensemble import BaggingClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.svm import SVC
+
+clf_C = AdaBoostClassifier(n_estimators=200, learning_rate=0.2, random_state=0)
+clf_D = BaggingClassifier(n_estimators=200, random_state=0) 
+clf_E = RandomForestClassifier(n_estimators=200, random_state=0)
+clf_F = SVC(gamma='auto', C=1000, random_state=0)
+
+results2 = {}
+for clf in [clf_D, clf_E, clf_C, clf_F]:
+    clf_name = clf.__class__.__name__
+    results2[clf_name] = {}
+    for i, samples in enumerate([samples_1, samples_10, samples_100]):
+        results2[clf_name][i] = \
+        train_predict(clf, samples, X_train, y_train, X_test, y_test)
+
+# Run metrics visualization for the three supervised learning models chosen
+vs.evaluate(results2, accuracy, fscore)
+```
+
     BaggingClassifier trained on 361 samples.
     BaggingClassifier trained on 3617 samples.
     BaggingClassifier trained on 36177 samples.
     RandomForestClassifier trained on 361 samples.
     RandomForestClassifier trained on 3617 samples.
     RandomForestClassifier trained on 36177 samples.
+    AdaBoostClassifier trained on 361 samples.
+    AdaBoostClassifier trained on 3617 samples.
+    AdaBoostClassifier trained on 36177 samples.
     SVC trained on 361 samples.
     SVC trained on 3617 samples.
     SVC trained on 36177 samples.
 
 
 
-![png](output_30_1.png)
+![png](output_31_1.png)
 
 
 ----
@@ -1350,22 +1379,6 @@ print("\nOptimized Model\n------")
 print("Final accuracy score on the testing data: {:.4f}".format(accuracy_score(y_test, best_predictions)))
 print("Final F-score on the testing data: {:.4f}".format(fbeta_score(y_test, best_predictions, beta = 0.5)))
 ```
-
-
-    --------------------------------------------------------------------------
-
-    AttributeError                           Traceback (most recent call last)
-
-    <ipython-input-11-e3943885eece> in <module>()
-         18 
-         19 # Get the estimator
-    ---> 20 best_clf = grid_fit.best_estimator_
-         21 
-         22 # Make predictions using the unoptimized and model
-
-
-    AttributeError: 'NoneType' object has no attribute 'best_estimator_'
-
 
 ### Question 5 - Final Model Evaluation
 

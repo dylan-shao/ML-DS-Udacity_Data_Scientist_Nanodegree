@@ -22,13 +22,13 @@
 
 [Perceptron](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/Perceptron)
 
-[PolynomialRegression](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/PolynomialRegression)
-
 [Regularization_FeatureScaling](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/Regularization_FeatureScaling)
 
-[SVM](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/SVM)
+[PolynomialRegression](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/PolynomialRegression)
 
 [Spam_&_Ensembles](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/Spam_%26_Ensembles)
+
+[SVM](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/SVM)
 
 [Spam_Classifier](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/Spam_Classifier)
 

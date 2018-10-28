@@ -62,7 +62,7 @@ def evaluate(results, accuracy, f1):
     # Create figure
     fig, ax = pl.subplots(2, 3, figsize = (25,16))
     # Constants
-    bar_width = 0.13
+    bar_width = 0.2
     colors = ['#A00000','#00A0A0','#00A000', '#c93611', '#bec911', '#1142c9']
     # Super loop to plot four panels of data
     for k, learner in enumerate(results.keys()):
