@@ -1220,7 +1220,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.ensemble import BaggingClassifier
 from sklearn.ensemble import RandomForestClassifier
-
+from sklearn.svm import SVC
 
 # TODO: Initialize the three models
 clf_A = GaussianNB()
@@ -1228,6 +1228,7 @@ clf_B = DecisionTreeClassifier()
 clf_C = AdaBoostClassifier(n_estimators=200, learning_rate=0.2)
 clf_D = BaggingClassifier(n_estimators=200) 
 clf_E = RandomForestClassifier(n_estimators=200)
+clf_F = SVC(gamma='auto', C=1000)
 
 # TODO: Calculate the number of samples for 1%, 10%, and 100% of the training data
 # HINT: samples_100 is the entire training set i.e. len(y_train)
@@ -1239,7 +1240,7 @@ samples_1 = len(y_train) // 100
 
 # Collect results on the learners
 results = {}
-for clf in [clf_A, clf_B, clf_C, clf_D, clf_E]:
+for clf in [clf_A, clf_B, clf_C, clf_D, clf_E, clf_F]:
     clf_name = clf.__class__.__name__
     results[clf_name] = {}
     for i, samples in enumerate([samples_1, samples_10, samples_100]):
@@ -1265,6 +1266,9 @@ vs.evaluate(results, accuracy, fscore)
     RandomForestClassifier trained on 361 samples.
     RandomForestClassifier trained on 3617 samples.
     RandomForestClassifier trained on 36177 samples.
+    SVC trained on 361 samples.
+    SVC trained on 3617 samples.
+    SVC trained on 36177 samples.
 
 
 
