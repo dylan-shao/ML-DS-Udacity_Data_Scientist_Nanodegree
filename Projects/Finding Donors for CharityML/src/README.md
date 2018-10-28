@@ -1099,18 +1099,26 @@ Structure your answer in the same format as above^, with 4 parts for each of the
     * Weaknesses:
         * [cannot do regression](http://responsive.media.mit.edu/wp-content/uploads/sites/5/2014/01/Class-4-Naive-Bayes.pdf)
         * [a lot of assumptions, such as independency, gaussian](http://responsive.media.mit.edu/wp-content/uploads/sites/5/2014/01/Class-4-Naive-Bayes.pdf)
+        * due to the "navie" assumption, the performance may be not that good compared to other algorithms such as Ensemble, Decision Tree
     * Why good for this problem:
-        * this is a clissification prolem, we are identifying wether the result is 1 (more than 50k) or 0 (less than 50k)
         * even though we have some feature that are not independent such as the `age` and `education-num`, but most of them are independent
         * As after One-hot encode, we have more features, and GaussianNB can converge quickly than some other algorithms such as the Logistic Regression
+        * Even though I know this algorithm may not performe that well, it's good to see the result compared to other method listed below
 ---
 2. Decision Trees:
     * can be applied to [providing recommendations, Fraudulent Statement Detection,making predictions](http://what-when-how.com/artificial-intelligence/decision-tree-applications-for-data-modelling-artificial-intelligence/) 
     * Strengths: 
-        * Relative fewer effort for data pre-rocessing [1](http://www.simafore.com/blog/bid/62333/4-key-advantages-of-using-decision-trees-for-predictive-analytics), [2](https://www.edupristine.com/blog/decision-trees-development-and-scoring)
-        * 
+        * Simple to use, easy to understand 
+        * Relative fewer effort for data pre-rocessing [refer 1](http://www.simafore.com/blog/bid/62333/4-key-advantages-of-using-decision-trees-for-predictive-analytics), [refer 2](https://www.edupristine.com/blog/decision-trees-development-and-scoring)
+        * implicitly perform variable screening or feature selection (feature selection is completed automatically) [refer 1](http://www.simafore.com/blog/bid/62333/4-key-advantages-of-using-decision-trees-for-predictive-analytics)
+        * Nonlinear relationships between parameters do not affect tree performance [refer 1](http://www.simafore.com/blog/bid/62333/4-key-advantages-of-using-decision-trees-for-predictive-analytics)
     * Weekness
         * Can be easily overfit
+        * Instability, a small change in input data may cause large changes in the tree [refer 1](https://www.brighthubpm.com/project-planning/106005-disadvantages-to-using-decision-trees/#imgn_0)
+        * Complexity, preparing the tree with many branches, are complex and time-consuming [refer 1](https://www.brighthubpm.com/project-planning/106005-disadvantages-to-using-decision-trees/#imgn_0)
+    * Why good for this problem:
+        * This problem has a lot of features, and using Decision Tree requires little or no **feature selection**, so will be easy for us to use, and get good performance
+        * There is no need to do **normalization or scaling** for using Decision Tree
 
 ### Implementation - Creating a Training and Predicting Pipeline
 To properly evaluate the performance of each model you've chosen, it's important that you create a training and predicting pipeline that allows you to quickly and effectively train models using various sizes of training data and perform predictions on the testing data. Your implementation here will be used in the following section.

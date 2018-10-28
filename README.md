@@ -10,11 +10,11 @@
 
 [DecisionTrees-titanic_survival_exploration](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/DecisionTrees-titanic_survival_exploration)
 
-[LinearRegression_singleVariable](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/LinearRegression_singleVariable)
-
 [LinearRegression_multiVariables](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/LinearRegression_multiVariables)
 
 [Metrics_Classification](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/Metrics_Classification)
+
+[LinearRegression_singleVariable](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/LinearRegression_singleVariable)
 
 [Metrics_Regression](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/Metrics_Regression)
 
@@ -26,9 +26,9 @@
 
 [Regularization_FeatureScaling](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/Regularization_FeatureScaling)
 
-[Spam_&_Ensembles](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/Spam_%26_Ensembles)
-
 [SVM](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/SVM)
+
+[Spam_&_Ensembles](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/Spam_%26_Ensembles)
 
 [Spam_Classifier](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/Spam_Classifier)
 
