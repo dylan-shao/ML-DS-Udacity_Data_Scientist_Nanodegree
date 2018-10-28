@@ -2,6 +2,8 @@
 # Supervised Learning
 ## Project: Finding Donors for CharityML
 
+> [My Solution](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/tree/master/Projects/Finding%20Donors%20for%20CharityML/src)
+
 ### Install
 
 This project requires **Python 3.x** and the following Python libraries installed:
