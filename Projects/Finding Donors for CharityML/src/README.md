@@ -320,10 +320,14 @@ features_raw = data.drop('income', axis = 1)
 
 # Visualize skewed continuous features of original data
 vs.distribution(data)
+print(data.shape)
 ```
 
+    (45222, 14)
 
-![png](output_10_0.png)
+
+
+![png](output_10_1.png)
 
 
 For highly-skewed feature distributions such as `'capital-gain'` and `'capital-loss'`, it is common practice to apply a <a href="https://en.wikipedia.org/wiki/Data_transformation_(statistics)">logarithmic transformation</a> on the data so that the very large and very small values do not negatively affect the performance of a learning algorithm. Using a logarithmic transformation significantly reduces the range of values caused by outliers. Care must be taken when applying this transformation however: The logarithm of `0` is undefined, so we must translate the values by a small amount above `0` to apply the the logarithm successfully.
@@ -1108,7 +1112,8 @@ Structure your answer in the same format as above^, with 4 parts for each of the
 2. Decision Trees:
     * can be applied to both Regression and Cliassification problems, such as [providing recommendations, Fraudulent Statement Detection,making predictions](http://what-when-how.com/artificial-intelligence/decision-tree-applications-for-data-modelling-artificial-intelligence/) 
     * Strengths: 
-        * Simple to use, easy to understand 
+        * [Simple to use, easy to understand](http://www.if.ufrj.br/~helder/20070706_hh_bdt.pdf)
+        * Can be visualized
         * Relative fewer effort for data pre-rocessing [refer 1](http://www.simafore.com/blog/bid/62333/4-key-advantages-of-using-decision-trees-for-predictive-analytics), [refer 2](https://www.edupristine.com/blog/decision-trees-development-and-scoring)
         * implicitly perform variable screening or feature selection (feature selection is completed automatically) [refer 1](http://www.simafore.com/blog/bid/62333/4-key-advantages-of-using-decision-trees-for-predictive-analytics)
         * Nonlinear relationships between parameters do not affect tree performance [refer 1](http://www.simafore.com/blog/bid/62333/4-key-advantages-of-using-decision-trees-for-predictive-analytics)
@@ -1275,6 +1280,7 @@ clf_E = RandomForestClassifier(n_estimators=200, random_state=0)
 clf_F = SVC(gamma='auto', C=1000, random_state=0)
 
 results2 = {}
+# keep clf_C same color as above
 for clf in [clf_D, clf_E, clf_C, clf_F]:
     clf_name = clf.__class__.__name__
     results2[clf_name] = {}
@@ -1312,23 +1318,29 @@ In this final section, you will choose from the three supervised learning models
 
 * Based on the evaluation you performed earlier, in one to two paragraphs, explain to *CharityML* which of the three models you believe to be most appropriate for the task of identifying individuals that make more than \$50,000. 
 
-** HINT: ** 
+**HINT:** 
 Look at the graph at the bottom left from the cell above(the visualization created by `vs.evaluate(results, accuracy, fscore)`) and check the F score for the testing set when 100% of the training set is used. Which model has the highest score? Your answer should include discussion of the:
 * metrics - F score on the testing when 100% of the training data is used, 
 * prediction/training time
 * the algorithm's suitability for the data.
 
-**Answer: **
+**Answer:**
+I believe the AdaBoostClassifier is performing best among all the 6 models above. Because:
+    1. has highest F1 score
+    2. predict time is lower than others like random forest, baggingClassifier, SVM (it taks longer time than NB, and DTree, but it perform better than those two, furthermore you can also set the params for AdaBoostClassifier to get better performance)
+    3. AdaBoostClassifier is good learner for this problem because it's a powerful classification algorithm which combines weak learner to achieve strong result
+    
 
 ### Question 4 - Describing the Model in Layman's Terms
 
 * In one to two paragraphs, explain to *CharityML*, in layman's terms, how the final model chosen is supposed to work. Be sure that you are describing the major qualities of the model, such as how the model is trained and how the model makes a prediction. Avoid using advanced mathematical jargon, such as describing equations.
 
-** HINT: **
+**HINT:**
 
 When explaining your model, if using external resources please include all citations.
 
-**Answer: ** 
+**Answer:** 
+The AdaBoostClassifier is an ensemble method that combines the weak learners such as Decision Tree into a powerful leaner, so we can have better predicting result, and more stable than weak learners.
 
 ### Implementation: Model Tuning
 Fine tune the chosen model. Use grid search (`GridSearchCV`) with at least one important parameter tuned with at least 3 different values. You will need to use the entire training set for this. In the code cell below, you will need to implement the following:
