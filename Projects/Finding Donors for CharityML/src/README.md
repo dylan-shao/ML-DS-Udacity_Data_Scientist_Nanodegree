@@ -1106,19 +1106,29 @@ Structure your answer in the same format as above^, with 4 parts for each of the
         * Even though I know this algorithm may not performe that well, it's good to see the result compared to other method listed below
 ---
 2. Decision Trees:
-    * can be applied to [providing recommendations, Fraudulent Statement Detection,making predictions](http://what-when-how.com/artificial-intelligence/decision-tree-applications-for-data-modelling-artificial-intelligence/) 
+    * can be applied to both Regression and Cliassification problems, such as [providing recommendations, Fraudulent Statement Detection,making predictions](http://what-when-how.com/artificial-intelligence/decision-tree-applications-for-data-modelling-artificial-intelligence/) 
     * Strengths: 
         * Simple to use, easy to understand 
         * Relative fewer effort for data pre-rocessing [refer 1](http://www.simafore.com/blog/bid/62333/4-key-advantages-of-using-decision-trees-for-predictive-analytics), [refer 2](https://www.edupristine.com/blog/decision-trees-development-and-scoring)
         * implicitly perform variable screening or feature selection (feature selection is completed automatically) [refer 1](http://www.simafore.com/blog/bid/62333/4-key-advantages-of-using-decision-trees-for-predictive-analytics)
         * Nonlinear relationships between parameters do not affect tree performance [refer 1](http://www.simafore.com/blog/bid/62333/4-key-advantages-of-using-decision-trees-for-predictive-analytics)
-    * Weekness
+    * Weeknesses
         * Can be easily overfit
         * Instability, a small change in input data may cause large changes in the tree [refer 1](https://www.brighthubpm.com/project-planning/106005-disadvantages-to-using-decision-trees/#imgn_0)
         * Complexity, preparing the tree with many branches, are complex and time-consuming [refer 1](https://www.brighthubpm.com/project-planning/106005-disadvantages-to-using-decision-trees/#imgn_0)
     * Why good for this problem:
         * This problem has a lot of features, and using Decision Tree requires little or no **feature selection**, so will be easy for us to use, and get good performance
         * There is no need to do **normalization or scaling** for using Decision Tree
+---
+3. Ensemble Methods
+    * can be applied to both Regression and Cliassification problems, and it's widely used because combined algorithms usually have better performance than single algorithm
+    * Strengths:
+        * [As with regression, classification tree ensembles also perform very well in practice. They are robust to outliers, scalable, and able to naturally model non-linear decision boundaries thanks to their hierarchical structure.](https://elitedatascience.com/machine-learning-algorithms)
+    * Weeknesses:
+        * [Unconstrained, individual trees are prone to overfitting, but this can be alleviated by ensemble methods.](https://elitedatascience.com/machine-learning-algorithms)
+    * Why good for this problem:
+        * ensemble methods usually perfom good
+        * we can also compare the result got from Decision Trees, so I understand the ensemble method more
 
 ### Implementation - Creating a Training and Predicting Pipeline
 To properly evaluate the performance of each model you've chosen, it's important that you create a training and predicting pipeline that allows you to quickly and effectively train models using various sizes of training data and perform predictions on the testing data. Your implementation here will be used in the following section.
@@ -1207,12 +1217,17 @@ In the code cell, you will need to implement the following:
 # TODO: Import the three supervised learning models from sklearn
 from sklearn.naive_bayes import GaussianNB
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.ensemble import BaggingClassifier
+from sklearn.ensemble import RandomForestClassifier
 
 
 # TODO: Initialize the three models
 clf_A = GaussianNB()
 clf_B = DecisionTreeClassifier()
-clf_C = None
+clf_C = AdaBoostClassifier(n_estimators=200, learning_rate=0.2)
+clf_D = BaggingClassifier(n_estimators=200) 
+clf_E = RandomForestClassifier(n_estimators=200)
 
 # TODO: Calculate the number of samples for 1%, 10%, and 100% of the training data
 # HINT: samples_100 is the entire training set i.e. len(y_train)
@@ -1224,7 +1239,7 @@ samples_1 = len(y_train) // 100
 
 # Collect results on the learners
 results = {}
-for clf in [clf_A, clf_B]:
+for clf in [clf_A, clf_B, clf_C, clf_D, clf_E]:
     clf_name = clf.__class__.__name__
     results[clf_name] = {}
     for i, samples in enumerate([samples_1, samples_10, samples_100]):
@@ -1241,6 +1256,15 @@ vs.evaluate(results, accuracy, fscore)
     DecisionTreeClassifier trained on 361 samples.
     DecisionTreeClassifier trained on 3617 samples.
     DecisionTreeClassifier trained on 36177 samples.
+    AdaBoostClassifier trained on 361 samples.
+    AdaBoostClassifier trained on 3617 samples.
+    AdaBoostClassifier trained on 36177 samples.
+    BaggingClassifier trained on 361 samples.
+    BaggingClassifier trained on 3617 samples.
+    BaggingClassifier trained on 36177 samples.
+    RandomForestClassifier trained on 361 samples.
+    RandomForestClassifier trained on 3617 samples.
+    RandomForestClassifier trained on 36177 samples.
 
 
 
