@@ -46,7 +46,7 @@ plt.scatter(x1.reshape(100,), x2.reshape(100,), c=y, cmap=ListedColormap(colors)
 
 
 
-    <matplotlib.collections.PathCollection at 0x1a1e632be0>
+    <matplotlib.collections.PathCollection at 0x1a1ddeeef0>
 
 
 
@@ -198,10 +198,9 @@ def plot_contours(ax, clf, xx, yy, **params):
 # Create figure
 fig, ax1 = pl.subplots(1, 3, figsize = (20,6),sharex =True)
 
-learners = [lr, dt, svm]
-titles = ['Logistic Regression (underfit)', 'Decision Tree (good)', 'SVM (overfit)']
+learnersTitlesTuple = [(lr,'Logistic Regression (underfit)'), (dt, 'Decision Tree (good)'), (svm, 'SVM (overfit)')]
 # Super loop to plot four panels of data
-for k, learner in enumerate(learners):
+for k, (learner, title) in enumerate(learnersTitlesTuple):
     learner.fit(X,y)
     clf = learner
 
@@ -210,14 +209,14 @@ for k, learner in enumerate(learners):
     xx, yy = make_meshgrid(X0, X1)
     ax = ax1[k]
 
-    plot_contours(ax, clf, xx, yy, colors=['purple', 'pink'], alpha=0.8)
+    plot_contours(ax, clf, xx, yy, colors=['cyan', 'royalblue'], alpha=0.8)
 
-    ax.scatter(X0, X1, c=y, cmap=ListedColormap(['blue', 'red']), s=20, edgecolors='k')
+    ax.scatter(X0, X1, c=y, cmap=ListedColormap(['red', 'yellow']), s=20, edgecolors='k')
     ax.set_xlim(xx.min(), xx.max())
     ax.set_ylim(yy.min(), yy.max())
     ax.set_xlabel('x1')
     ax.set_ylabel('x2')
-    ax.set_title(titles[k])
+    ax.set_title(title)
 ```
 
 
