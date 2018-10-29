@@ -10,6 +10,8 @@
 
 [DecisionTrees-titanic_survival_exploration](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/DecisionTrees-titanic_survival_exploration)
 
+[Grid Search](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/Grid%20Search)
+
 [Learning Curves](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/Learning%20Curves)
 
 [LinearRegression_multiVariables](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/LinearRegression_multiVariables)
@@ -26,9 +28,9 @@
 
 [PolynomialRegression](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/PolynomialRegression)
 
-[Regularization_FeatureScaling](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/Regularization_FeatureScaling)
-
 [SVM](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/SVM)
+
+[Regularization_FeatureScaling](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/Regularization_FeatureScaling)
 
 [Spam_&_Ensembles](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/Spam_%26_Ensembles)
 
