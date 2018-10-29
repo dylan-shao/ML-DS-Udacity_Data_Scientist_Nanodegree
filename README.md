@@ -2,37 +2,39 @@
 
 [Finding Donors for CharityML](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Projects/Finding%20Donors%20for%20CharityML)
 
-## Supervised Learning
+## Supervised Learning Mini Projects
 
-[DecisionTrees-bugSpecies](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/DecisionTrees-bugSpecies)
+[DecisionTrees-bugSpecies](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning%20Mini%20Projects/DecisionTrees-bugSpecies)
 
-[DecisionTrees-sklearn_DecisionTreeClassifier](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/DecisionTrees-sklearn_DecisionTreeClassifier)
+[DecisionTrees-sklearn_DecisionTreeClassifier](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning%20Mini%20Projects/DecisionTrees-sklearn_DecisionTreeClassifier)
 
-[DecisionTrees-titanic_survival_exploration](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/DecisionTrees-titanic_survival_exploration)
+[DecisionTrees-titanic_survival_exploration](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning%20Mini%20Projects/DecisionTrees-titanic_survival_exploration)
 
-[Grid Search](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/Grid%20Search)
+[Grid Search](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning%20Mini%20Projects/Grid%20Search)
 
-[Learning Curves](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/Learning%20Curves)
+[Diabetes case](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning%20Mini%20Projects/Diabetes%20case)
 
-[LinearRegression_multiVariables](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/LinearRegression_multiVariables)
+[Learning Curves](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning%20Mini%20Projects/Learning%20Curves)
 
-[LinearRegression_singleVariable](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/LinearRegression_singleVariable)
+[LinearRegression_singleVariable](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning%20Mini%20Projects/LinearRegression_singleVariable)
 
-[Metrics_Classification](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/Metrics_Classification)
+[LinearRegression_multiVariables](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning%20Mini%20Projects/LinearRegression_multiVariables)
 
-[Metrics_Regression](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/Metrics_Regression)
+[Metrics_Classification](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning%20Mini%20Projects/Metrics_Classification)
 
-[Mini-batch_example](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/Mini-batch_example)
+[Metrics_Regression](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning%20Mini%20Projects/Metrics_Regression)
 
-[Perceptron](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/Perceptron)
+[Mini-batch_example](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning%20Mini%20Projects/Mini-batch_example)
 
-[PolynomialRegression](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/PolynomialRegression)
+[Perceptron](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning%20Mini%20Projects/Perceptron)
 
-[SVM](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/SVM)
+[PolynomialRegression](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning%20Mini%20Projects/PolynomialRegression)
 
-[Regularization_FeatureScaling](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/Regularization_FeatureScaling)
+[Regularization_FeatureScaling](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning%20Mini%20Projects/Regularization_FeatureScaling)
 
-[Spam_&_Ensembles](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/Spam_%26_Ensembles)
+[SVM](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning%20Mini%20Projects/SVM)
 
-[Spam_Classifier](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/Spam_Classifier)
+[Spam_&_Ensembles](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning%20Mini%20Projects/Spam_%26_Ensembles)
+
+[Spam_Classifier](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning%20Mini%20Projects/Spam_Classifier)
 
