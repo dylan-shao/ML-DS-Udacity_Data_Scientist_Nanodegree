@@ -196,7 +196,7 @@ def plot_contours(ax, clf, xx, yy, **params):
     return out
 
 # Create figure
-fig, ax1 = pl.subplots(1, 3, figsize = (20,6),sharex =True)
+fig, ax1 = pl.subplots(1, 3, figsize = (20,6))
 
 learnersTitlesTuple = [(lr,'Logistic Regression (underfit)'), (dt, 'Decision Tree (good)'), (svm, 'SVM (overfit)')]
 # Super loop to plot four panels of data
