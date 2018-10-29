@@ -18,17 +18,17 @@
 
 [Metrics_Classification](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/Metrics_Classification)
 
-[Metrics_Regression](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/Metrics_Regression)
-
 [Mini-batch_example](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/Mini-batch_example)
 
-[Perceptron](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/Perceptron)
+[Metrics_Regression](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/Metrics_Regression)
 
 [PolynomialRegression](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/PolynomialRegression)
 
-[Regularization_FeatureScaling](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/Regularization_FeatureScaling)
+[Perceptron](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/Perceptron)
 
 [SVM](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/SVM)
+
+[Regularization_FeatureScaling](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/Regularization_FeatureScaling)
 
 [Spam_&_Ensembles](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/Supervised%20Learning/Spam_%26_Ensembles)
 

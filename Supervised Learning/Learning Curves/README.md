@@ -30,6 +30,7 @@ y = np.array(data['y'])
 
 # Fix random seed
 np.random.seed(55)
+
 #---------plot figure-------------
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
@@ -45,7 +46,7 @@ plt.scatter(x1.reshape(100,), x2.reshape(100,), c=y, cmap=ListedColormap(colors)
 
 
 
-    <matplotlib.collections.PathCollection at 0x1a1d9109e8>
+    <matplotlib.collections.PathCollection at 0x1a1e632be0>
 
 
 
@@ -132,7 +133,7 @@ draw_learning_curves(X2,y2, lr, 18)
 
 
 ```python
-draw_learning_curves(X2,y2, dt, 18)
+draw_learning_curves(X2,y2, dt, 10)
 
 # As we can see below, this decision tree is the good fit
 ```
