@@ -4,9 +4,9 @@
 
 ## 1. Supervised Learning Projects
 
-[DecisionTrees-bugSpecies](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/DecisionTrees-bugSpecies)
-
 [DecisionTrees-sklearn_DecisionTreeClassifier](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/DecisionTrees-sklearn_DecisionTreeClassifier)
+
+[DecisionTrees-bugSpecies](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/DecisionTrees-bugSpecies)
 
 [DecisionTrees-titanic_survival_exploration](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/DecisionTrees-titanic_survival_exploration)
 
