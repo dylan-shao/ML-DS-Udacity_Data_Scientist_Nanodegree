@@ -513,7 +513,7 @@ features_final = pd.get_dummies(features_log_minmax_transform)
 display(features_final.head(n = 5))
 # Encode the 'income_raw' data to numerical values
 income = pd.get_dummies(income_raw,drop_first=True)
-display(income)
+display(income.head(5))
 # Print the number of features after one-hot encoding
 encoded = list(features_final.columns)
 print("{} total features after one-hot encoding.".format(len(encoded)))
@@ -734,233 +734,8 @@ print("{} total features after one-hot encoding.".format(len(encoded)))
       <th>4</th>
       <td>0</td>
     </tr>
-    <tr>
-      <th>5</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>9</th>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>10</th>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>11</th>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>12</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>13</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>14</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>15</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>16</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>17</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>18</th>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>19</th>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>20</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>21</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>22</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>23</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>24</th>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>25</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>26</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>27</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>28</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>29</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td>...</td>
-    </tr>
-    <tr>
-      <th>45192</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>45193</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>45194</th>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>45195</th>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>45196</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>45197</th>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>45198</th>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>45199</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>45200</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>45201</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>45202</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>45203</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>45204</th>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>45205</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>45206</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>45207</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>45208</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>45209</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>45210</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>45211</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>45212</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>45213</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>45214</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>45215</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>45216</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>45217</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>45218</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>45219</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>45220</th>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>45221</th>
-      <td>1</td>
-    </tr>
   </tbody>
 </table>
-<p>45222 rows × 1 columns</p>
 </div>
 
 
@@ -1359,28 +1134,39 @@ Fine tune the chosen model. Use grid search (`GridSearchCV`) with at least one i
 
 ```python
 # TODO: Import 'GridSearchCV', 'make_scorer', and any other necessary libraries
+from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import fbeta_score, make_scorer
 
 # TODO: Initialize the classifier
-clf = None
+clf = AdaBoostClassifier()
 
 # TODO: Create the parameters list you wish to tune, using a dictionary if needed.
 # HINT: parameters = {'parameter_1': [value1, value2], 'parameter_2': [value1, value2]}
-parameters = None
+
+# if both my n_estimators & learning_rate is small, got the following error:
+# /Users/yangshao/anaconda3/lib/python3.6/site-packages/sklearn/metrics/classification.py:1135: 
+# UndefinedMetricWarning: F-score is ill-defined and being set to 0.0 due to no predicted samples.
+#   'precision', 'predicted', average, warn_for)
+# myTODO: figure out why
+parameters = {
+'n_estimators': [50, 100, 200, 300],
+'learning_rate': [0.01, 0.03, 0.05, 0.1, 0.5]
+}
 
 # TODO: Make an fbeta_score scoring object using make_scorer()
-scorer = None
+scorer = make_scorer(fbeta_score, beta=0.5)
 
 # TODO: Perform grid search on the classifier using 'scorer' as the scoring method using GridSearchCV()
-grid_obj = None
+grid_obj = GridSearchCV(clf, parameters,scorer)
 
 # TODO: Fit the grid search object to the training data and find the optimal parameters using fit()
-grid_fit = None
+grid_fit = grid_obj.fit(X_train, y_train.values.ravel())
 
 # Get the estimator
 best_clf = grid_fit.best_estimator_
 
 # Make predictions using the unoptimized and model
-predictions = (clf.fit(X_train, y_train)).predict(X_test)
+predictions = (clf.fit(X_train, y_train.values.ravel())).predict(X_test)
 best_predictions = best_clf.predict(X_test)
 
 # Report the before-and-afterscores
@@ -1391,6 +1177,30 @@ print("\nOptimized Model\n------")
 print("Final accuracy score on the testing data: {:.4f}".format(accuracy_score(y_test, best_predictions)))
 print("Final F-score on the testing data: {:.4f}".format(fbeta_score(y_test, best_predictions, beta = 0.5)))
 ```
+
+    Unoptimized model
+    ------
+    Accuracy score on testing data: 0.8576
+    F-score on testing data: 0.7246
+    
+    Optimized Model
+    ------
+    Final accuracy score on the testing data: 0.8622
+    Final F-score on the testing data: 0.7348
+
+
+
+```python
+best_clf
+```
+
+
+
+
+    AdaBoostClassifier(algorithm='SAMME.R', base_estimator=None,
+              learning_rate=0.5, n_estimators=300, random_state=None)
+
+
 
 ### Question 5 - Final Model Evaluation
 
@@ -1404,11 +1214,13 @@ print("Final F-score on the testing data: {:.4f}".format(fbeta_score(y_test, bes
 
 |     Metric     | Unoptimized Model | Optimized Model |
 | :------------: | :---------------: | :-------------: | 
-| Accuracy Score |                   |                 |
-| F-score        |                   |   EXAMPLE       |
+| Accuracy Score |      0.8576             | 0.8622                |
+| F-score        |      0.7246             |   0.7348       |
 
 
-**Answer: **
+**Answer:**
+    * Better than the unoptimized
+    * Compared to the naive Predictor, which got [Accuracy score: 0.2478, F-score: 0.3972], the optimized model is much accuract and F-score also much improved
 
 ----
 ## Feature Importance
@@ -1417,10 +1229,26 @@ An important task when performing supervised learning on a dataset like the cens
 
 Choose a scikit-learn classifier (e.g., adaboost, random forests) that has a `feature_importance_` attribute, which is a function that ranks the importance of features according to the chosen classifier.  In the next python cell fit this classifier to training set and use this attribute to determine the top 5 most important features for the census dataset.
 
+
+```python
+# features_final.income = income
+# display(features_final.head(5))
+
+# import seaborn as sns
+# sns.set(style="ticks")
+# sns.pairplot(features_final, hue="income");
+```
+
 ### Question 6 - Feature Relevance Observation
 When **Exploring the Data**, it was shown there are thirteen available features for each individual on record in the census data. Of these thirteen records, which five features do you believe to be most important for prediction, and in what order would you rank them and why?
 
 **Answer:**
+Rank from 1 to 5
+1. occupation, different occupation usually have different average salary
+2. workclass, same as above
+3. education_level, higher level usually earn more
+4. education-num, same above
+5. hours-per-week, same workclass will earn more by working more
 
 ### Implementation - Extracting Feature Importance
 Choose a `scikit-learn` supervised learning algorithm that has a `feature_importance_` attribute availble for it. This attribute is a function that ranks the importance of each feature when making predictions based on the chosen algorithm.
@@ -1436,14 +1264,18 @@ In the code cell below, you will need to implement the following:
 
 
 # TODO: Train the supervised model on the training set using .fit(X_train, y_train)
-model = None
+model = best_clf
 
 # TODO: Extract the feature importances using .feature_importances_ 
-importances = None
+importances = model.feature_importances_
 
 # Plot
 vs.feature_plot(importances, X_train, y_train)
 ```
+
+
+![png](output_48_0.png)
+
 
 ### Question 7 - Extracting Feature Importance
 
@@ -1453,6 +1285,9 @@ Observe the visualization created above which displays the five most relevant fe
 * If you were not close, why do you think these features are more relevant?
 
 **Answer:**
+First, I missed the age, capital-gain and capital-loss, I think there are reasonable because:
+1. Age, experienced people will get higher pay
+2. Capital-gain and capital-loss:I think both of them means this people have extra money to do investment, and usually those kind of people will earn more money to invest
 
 ### Feature Selection
 How does a model perform if we only use a subset of all the available features in the data? With less features required to train, the expectation is that training and prediction time is much lower — at the cost of performance metrics. From the visualization above, we see that the top five most important features contribute more than half of the importance of **all** features present in the data. This hints that we can attempt to *reduce the feature space* and simplify the information required for the model to learn. The code cell below will use the same optimized model you found earlier, and train it on the same training set *with only the top five important features*. 
@@ -1467,7 +1302,7 @@ X_train_reduced = X_train[X_train.columns.values[(np.argsort(importances)[::-1])
 X_test_reduced = X_test[X_test.columns.values[(np.argsort(importances)[::-1])[:5]]]
 
 # Train on the "best" model found from grid search earlier
-clf = (clone(best_clf)).fit(X_train_reduced, y_train)
+clf = (clone(best_clf)).fit(X_train_reduced, y_train.values.ravel())
 
 # Make new predictions
 reduced_predictions = clf.predict(X_test_reduced)
@@ -1481,12 +1316,25 @@ print("Accuracy on testing data: {:.4f}".format(accuracy_score(y_test, reduced_p
 print("F-score on testing data: {:.4f}".format(fbeta_score(y_test, reduced_predictions, beta = 0.5)))
 ```
 
+    Final Model trained on full data
+    ------
+    Accuracy on testing data: 0.8622
+    F-score on testing data: 0.7348
+    
+    Final Model trained on reduced data
+    ------
+    Accuracy on testing data: 0.8337
+    F-score on testing data: 0.6789
+
+
 ### Question 8 - Effects of Feature Selection
 
 * How does the final model's F-score and accuracy score on the reduced data using only five features compare to those same scores when all features are used?
 * If training time was a factor, would you consider using the reduced data as your training set?
 
 **Answer:**
+    * The score reduced slightly on the `Accuracy`, and relative bigger on F-score.
+    * Yes, definitely. Especially if I have a very large data, with reduced feature training, it will save tons of times for me, and still perform good (not that bad). But still, it really depends on if I have a data that have some very important feature in there, but if all the features are kind equal important to each other, maybe using reduced feature is not a good idea. 
 
 > **Note**: Once you have completed all of the code implementations and successfully answered each question above, you may finalize your work by exporting the iPython Notebook as an HTML document. You can do this by using the menu above and navigating to  
 **File -> Download as -> HTML (.html)**. Include the finished document along with this notebook as your submission.
