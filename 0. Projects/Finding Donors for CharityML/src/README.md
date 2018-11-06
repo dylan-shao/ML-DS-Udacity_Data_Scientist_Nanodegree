@@ -818,19 +818,25 @@ FP = income.count() - TP # Specific to the naive case
 TN = 0 # No predicted negatives in the naive case
 FN = 0 # No predicted negatives in the naive case
 '''
+from sklearn.metrics import accuracy_score, fbeta_score
 # Calculate accuracy, precision and recall
-accuracy = income[income['>50K'] == 1].shape[0] / income.shape[0] 
+# the same as accuracy = income[income['>50K'] == 1].shape[0] / income.shape[0] 
+accuracy = accuracy_score(income, [1]*len(income))
+
 recall = 1
 precision = accuracy
 
 # Calculate F-score using the formula above for beta = 0.5 and correct values for precision and recall.
-fscore = 2*precision*recall / (precision + recall)
+# fscore = (1+0.25)*precision*recall / (0.25*precision + recall)
+fscore = fbeta_score(income, [1]*len(income), beta=0.5)
 
+print(accuracy)
 # Print the results 
 print("Naive Predictor: [Accuracy score: {:.4f}, F-score: {:.4f}]".format(accuracy, fscore))
 ```
 
-    Naive Predictor: [Accuracy score: 0.2478, F-score: 0.3972]
+    0.2478439697492371
+    Naive Predictor: [Accuracy score: 0.2478, F-score: 0.2917]
 
 
 ###  Supervised Learning Models
@@ -1108,13 +1114,25 @@ I believe the AdaBoostClassifier is performing best among all the 6 models above
 
 ### Question 4 - Describing the Model in Layman's Terms
 
-* In one to two paragraphs, explain to *CharityML*, in layman's terms, how the final model chosen is supposed to work. Be sure that you are describing the major qualities of the model, such as how the model is trained and how the model makes a prediction. Avoid using advanced mathematical jargon, such as describing equations.
+* In one to two paragraphs, explain to *CharityML*, in layman's terms, how the final model chosen is supposed to work. Be sure that you are describing the major qualities of the model, such as how the model is trained and how the model makes a prediction. Avoid using advanced mathematical jargon, such as describing equations. When explaining your model, if using external resources please include all citations.
 
 **HINT:**
 
-When explaining your model, if using external resources please include all citations.
+In this problem, we are predicting whether a single person can make more than 50k or not using labeld data, so it's a supervised learning classification problem. Supervised means the data has labeled features on it, for example in our problem we have age, workclass and occupation etc. 
+
+Before introdice our model, let's see a more simple method/algorithm in machine learning problem - Decision Tree, which could be used on supervised classification problems. It is an algorithm or method that spliting the data into different categories based on conditions on a feature such as based on whether this person has more than 10 years experience, we can split the data into two different categories. And then we can go deeper to split it further based on conditions in other features. Finally, after many different conditional check, the structure will become a tree structure where the top root is the entry point, and the leaf point will be our result, which in our case is whether a person can make more than 50k. 
+
+And AdaBoost is a more complex algorithm that combines the weak learners (such as Decision Tree) into a powerful learner. I will explain how it works by an example step by step: 
+    1. we first train our data in Decision Tree problem
+    2. we balance the correctly predicted data and incorrectly predicted data by "boosting" the weight
+    3. we train the "boosted" data set again using Decision Tree, and repeat "boosting" util maybe let's say 3 models (we can choose how many models we want)
+   
+By using the steps above, our result will be more accurate than a single Decision Tree model. 
+
 
 **Answer:** 
+
+In this problem, we are predicting whether a individual person can make more than 50k or not. So it's a classification problem, and for problem like this, we have very simple method such as a Decision Tree which 
 The AdaBoostClassifier is an ensemble method that combines the weak learners such as Decision Tree into a powerful leaner, so we can have better predicting result, and more stable than weak learners.
 
 ### Implementation: Model Tuning
