@@ -42,3 +42,5 @@
 
 [GradientDescent](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/2.%20Deep%20learning/GradientDescent)
 
+[StudentAdmissions](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/2.%20Deep%20learning/StudentAdmissions)
+
