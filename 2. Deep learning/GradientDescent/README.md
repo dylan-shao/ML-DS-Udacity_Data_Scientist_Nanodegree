@@ -91,7 +91,7 @@ This function will help us iterate the gradient descent algorithm through all th
 ```python
 np.random.seed(44)
 
-epochs = 500
+epochs = 3000
 learnrate = 0.01
 
 def train(features, targets, epochs, learnrate, graph_lines=False):
@@ -158,40 +158,40 @@ train(X, y, epochs, learnrate, True)
     Train loss:  0.7135845195381634
     Accuracy:  0.4
     
-    ========== Epoch 50 ==========
-    Train loss:  0.42525543433469976
-    Accuracy:  0.93
-    
-    ========== Epoch 100 ==========
-    Train loss:  0.3235511002047678
-    Accuracy:  0.94
-    
-    ========== Epoch 150 ==========
-    Train loss:  0.27385265997143987
-    Accuracy:  0.94
-    
-    ========== Epoch 200 ==========
-    Train loss:  0.2445014537977157
-    Accuracy:  0.94
-    
-    ========== Epoch 250 ==========
-    Train loss:  0.2250924876995558
-    Accuracy:  0.93
-    
     ========== Epoch 300 ==========
     Train loss:  0.21128008952075578
     Accuracy:  0.93
     
-    ========== Epoch 350 ==========
-    Train loss:  0.20093476659919737
-    Accuracy:  0.93
+    ========== Epoch 600 ==========
+    Train loss:  0.17307306304520367
+    Accuracy:  0.92
     
-    ========== Epoch 400 ==========
-    Train loss:  0.19288993789458375
-    Accuracy:  0.93
+    ========== Epoch 900 ==========
+    Train loss:  0.15901909628351343
+    Accuracy:  0.92
     
-    ========== Epoch 450 ==========
-    Train loss:  0.18645214238850516
+    ========== Epoch 1200 ==========
+    Train loss:  0.15180181789772024
+    Accuracy:  0.92
+    
+    ========== Epoch 1500 ==========
+    Train loss:  0.14747516697028767
+    Accuracy:  0.92
+    
+    ========== Epoch 1800 ==========
+    Train loss:  0.14463571914648873
+    Accuracy:  0.92
+    
+    ========== Epoch 2100 ==========
+    Train loss:  0.14265786622333862
+    Accuracy:  0.92
+    
+    ========== Epoch 2400 ==========
+    Train loss:  0.14122077866896052
+    Accuracy:  0.92
+    
+    ========== Epoch 2700 ==========
+    Train loss:  0.1401432775759585
     Accuracy:  0.92
 
 
