@@ -15,7 +15,7 @@ def sigmoid(x):
 
 # Hyperparameters
 n_hidden = 2  # number of hidden units
-epochs = 900
+epochs = 1000
 learnrate = 0.005
 errors = []
 
@@ -80,15 +80,15 @@ for e in range(epochs):
 ```
 
     Train loss:  0.25135725242598617
-    Train loss:  0.24996540718842886
-    Train loss:  0.24862005218904654
-    Train loss:  0.24731993217179746
-    Train loss:  0.24606380465584848
-    Train loss:  0.24485044179257162
-    Train loss:  0.2436786320186832
-    Train loss:  0.24254718151769536
-    Train loss:  0.24145491550165465
-    Train loss:  0.24040067932493367
+    Train loss:  0.24981365054426322
+    Train loss:  0.24832727139249444
+    Train loss:  0.24689639589640808
+    Train loss:  0.24551932509722565
+    Train loss:  0.24419438319954262
+    Train loss:  0.2429199202432574
+    Train loss:  0.241694314424847
+    Train loss:  0.24051597409282188
+    Train loss:  0.239383339441441
 
 
 
@@ -107,6 +107,7 @@ plt.xlabel('Number of epochs')
 plt.ylabel('Error')
 plt.plot(errors)
 plt.show()
+
 ```
 
     Prediction accuracy: 0.725
@@ -115,3 +116,8 @@ plt.show()
 
 ![png](output_1_1.png)
 
+
+
+```python
+# TODO: this is higher than the one without hidden layer, figure out why
+```
