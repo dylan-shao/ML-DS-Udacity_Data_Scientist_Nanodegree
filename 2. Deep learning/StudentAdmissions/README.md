@@ -613,6 +613,7 @@ def error_term_formula(y, output):
 # Neural Network hyperparameters
 epochs = 2000
 learnrate = 0.5
+errors = []
 
 # Training function
 def train_nn(features, targets, epochs, learnrate):
@@ -657,6 +658,7 @@ def train_nn(features, targets, epochs, learnrate):
         if e % (epochs / 10) == 0:
             out = sigmoid(np.dot(features, weights))
             loss = np.mean((out - targets) ** 2)
+            errors.append(loss)
             print("Epoch:", e)
             if last_loss and last_loss < loss:
                 print("Train loss: ", loss, "  WARNING - Loss Increasing")
@@ -712,7 +714,20 @@ tes_out = sigmoid(np.dot(features_test, weights))
 predictions = tes_out > 0.5
 accuracy = np.mean(predictions == targets_test)
 print("Prediction accuracy: {:.3f}".format(accuracy))
+
+
+# Plotting the error
+import matplotlib.pyplot as plt
+plt.title("Error Plot")
+plt.xlabel('Number of epochs')
+plt.ylabel('Error')
+plt.plot(errors)
+plt.show()
 ```
 
     Prediction accuracy: 0.775
+
+
+
+![png](output_21_1.png)
 
