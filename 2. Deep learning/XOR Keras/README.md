@@ -1,11 +1,11 @@
 
 
-```python
+```
 import numpy as np
 from keras.utils import np_utils
 import tensorflow as tf
 # Using TensorFlow 1.0.0; use tf.python_io in later versions
-tf.python.control_flow_ops = tf
+tf.python_io.control_flow_ops = tf
 
 # Set random seed
 np.random.seed(42)
@@ -41,7 +41,7 @@ xor.compile(loss="binary_crossentropy", optimizer="adam", metrics = ["accuracy"]
 xor.summary()
 
 # Fitting the model
-history = xor.fit(X, y, nb_epoch=400, verbose=0)
+history = xor.fit(X, y, epochs=1200, verbose=0)
 
 # Scoring the model
 score = xor.evaluate(X, y)
@@ -52,18 +52,29 @@ print("\nPredictions:")
 print(xor.predict_proba(X))
 ```
 
-
-    ---------------------------------------------------------------------------
-
-    ModuleNotFoundError                       Traceback (most recent call last)
-
-    <ipython-input-1-b2b73031dc07> in <module>()
-          1 import numpy as np
-    ----> 2 from keras.utils import np_utils
-          3 import tensorflow as tf
-          4 # Using TensorFlow 1.0.0; use tf.python_io in later versions
-          5 tf.python.control_flow_ops = tf
-
-
-    ModuleNotFoundError: No module named 'keras'
+    (4, 2)
+    _________________________________________________________________
+    Layer (type)                 Output Shape              Param #   
+    =================================================================
+    dense_5 (Dense)              (None, 8)                 24        
+    _________________________________________________________________
+    activation_5 (Activation)    (None, 8)                 0         
+    _________________________________________________________________
+    dense_6 (Dense)              (None, 2)                 18        
+    _________________________________________________________________
+    activation_6 (Activation)    (None, 2)                 0         
+    =================================================================
+    Total params: 42
+    Trainable params: 42
+    Non-trainable params: 0
+    _________________________________________________________________
+    4/4 [==============================] - 0s 7ms/step
+    
+    Accuracy:  1.0
+    
+    Predictions:
+    [[ 0.95283729  0.05251895]
+     [ 0.11633323  0.78340721]
+     [ 0.07509472  0.87407708]
+     [ 0.89450121  0.20896456]]
 
