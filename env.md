@@ -1,7 +1,18 @@
 https://conda.io/docs/_downloads/conda-cheatsheet.pdf
 
-
+### conda, jupyter env
 `export PATH="/Users/yangshao/anaconda3/bin:$PATH"`
+
+> no kernel exist for certain conda env:
+```
+conda install jupyter notebook
+conda install nb_conda
+conda install ipykernel
+source activate myenv
+python -m ipykernel install --user --name mykernel
+
+```
+
 
 ```
 conda info --envs

@@ -1,4 +1,17 @@
 
+
+```python
+import sys
+sys.executable
+```
+
+
+
+
+    '/Users/yangshao/anaconda3/envs/py36/bin/python'
+
+
+
 # Predicting Student Admissions with Neural Networks in Keras
 In this notebook, we predict student admissions to graduate school at UCLA based on three pieces of data:
 - GRE Scores (Test)
@@ -155,7 +168,7 @@ plt.show()
 ```
 
 
-![png](output_3_0.png)
+![png](output_4_0.png)
 
 
 Roughly, it looks like the students with high scores in the grades and test passed, while the ones with low scores didn't, but the data is not as nicely separable as we hoped it would. Maybe it would help to take the rank into account? Let's make 4 plots, each one for each rank.
@@ -184,19 +197,19 @@ plt.show()
 ```
 
 
-![png](output_5_0.png)
+![png](output_6_0.png)
 
 
 
-![png](output_5_1.png)
+![png](output_6_1.png)
 
 
 
-![png](output_5_2.png)
+![png](output_6_2.png)
 
 
 
-![png](output_5_3.png)
+![png](output_6_3.png)
 
 
 This looks more promising, as it seems that the lower the rank, the higher the acceptance rate. Let's use the rank as one of our inputs. In order to do this, we should one-hot encode it.
@@ -522,27 +535,27 @@ print(test_data[:10])
     Number of training samples is 360
     Number of testing samples is 40
          admit    gre     gpa  rank_1  rank_2  rank_3  rank_4
-    150      1  1.000  0.9350       1       0       0       0
-    242      1  0.850  0.7400       0       0       1       0
-    92       0  1.000  0.9750       0       1       0       0
-    241      1  0.650  0.9525       1       0       0       0
-    376      0  0.775  0.9075       0       1       0       0
-    38       1  0.625  0.7825       0       1       0       0
-    61       0  0.700  0.8300       0       0       0       1
-    276      0  0.575  0.9425       0       0       1       0
-    273      0  0.825  0.8300       1       0       0       0
-    13       0  0.875  0.7700       0       1       0       0
+    129      0  0.575  0.7875       0       0       0       1
+    17       0  0.450  0.6400       0       0       1       0
+    169      0  0.750  0.9050       0       0       1       0
+    284      1  0.550  0.8475       0       1       0       0
+    54       0  0.825  0.8350       0       0       1       0
+    267      1  0.750  0.9100       0       0       1       0
+    143      0  0.725  0.8500       0       0       1       0
+    97       0  0.600  0.8925       0       1       0       0
+    285      0  0.750  0.8275       0       0       0       1
+    81       0  0.775  0.7675       0       1       0       0
          admit    gre     gpa  rank_1  rank_2  rank_3  rank_4
-    4        0  0.650  0.7325       0       0       0       1
-    12       1  0.950  1.0000       1       0       0       0
-    14       1  0.875  1.0000       1       0       0       0
-    51       0  0.550  0.7825       0       0       0       1
-    59       0  0.750  0.7050       0       0       0       1
-    63       1  0.850  0.9625       0       0       1       0
-    80       0  0.875  0.7250       0       0       0       1
-    84       1  0.625  0.9000       0       0       1       0
-    87       0  0.750  0.8700       0       1       0       0
-    101      0  0.725  0.8925       0       0       1       0
+    30       0  0.675  0.9450       0       0       0       1
+    34       0  0.450  0.7850       1       0       0       0
+    38       1  0.625  0.7825       0       1       0       0
+    68       0  0.725  0.9225       1       0       0       0
+    72       0  0.600  0.8475       0       0       0       1
+    78       0  0.675  0.7800       1       0       0       0
+    89       1  0.825  1.0000       0       1       0       0
+    95       0  0.825  0.8325       0       1       0       0
+    121      1  0.600  0.6675       0       1       0       0
+    131      0  0.800  0.6975       0       1       0       0
 
 
 ## Splitting the data into features and targets (labels)
@@ -565,20 +578,29 @@ print(features[:10])
 print(targets[:10])
 ```
 
-
-    ---------------------------------------------------------------------------
-
-    ModuleNotFoundError                       Traceback (most recent call last)
-
-    <ipython-input-8-7582e65e8dee> in <module>()
-    ----> 1 import keras
-          2 
-          3 # Separate data and one-hot encode the output
-          4 # Note: We're also turning the data into numpy arrays, in order to train the model in Keras
-          5 features = np.array(train_data.drop('admit', axis=1))
+    Using TensorFlow backend.
 
 
-    ModuleNotFoundError: No module named 'keras'
+    [[0.575  0.7875 0.     0.     0.     1.    ]
+     [0.45   0.64   0.     0.     1.     0.    ]
+     [0.75   0.905  0.     0.     1.     0.    ]
+     [0.55   0.8475 0.     1.     0.     0.    ]
+     [0.825  0.835  0.     0.     1.     0.    ]
+     [0.75   0.91   0.     0.     1.     0.    ]
+     [0.725  0.85   0.     0.     1.     0.    ]
+     [0.6    0.8925 0.     1.     0.     0.    ]
+     [0.75   0.8275 0.     0.     0.     1.    ]
+     [0.775  0.7675 0.     1.     0.     0.    ]]
+    [[1. 0.]
+     [1. 0.]
+     [1. 0.]
+     [0. 1.]
+     [1. 0.]
+     [0. 1.]
+     [1. 0.]
+     [1. 0.]
+     [1. 0.]
+     [1. 0.]]
 
 
 ## Defining the model architecture
@@ -595,9 +617,13 @@ from keras.utils import np_utils
 
 # Building the model
 model = Sequential()
-model.add(Dense(128, activation='relu', input_shape=(6,)))
+model.add(Dense(512, activation='sigmoid', input_shape=(6,)))
 model.add(Dropout(.2))
-model.add(Dense(64, activation='relu'))
+model.add(Dense(256, activation='sigmoid'))
+model.add(Dropout(.1))
+model.add(Dense(128, activation='sigmoid'))
+model.add(Dropout(.1))
+model.add(Dense(64, activation='sigmoid'))
 model.add(Dropout(.1))
 model.add(Dense(2, activation='softmax'))
 
@@ -609,18 +635,26 @@ model.summary()
     _________________________________________________________________
     Layer (type)                 Output Shape              Param #   
     =================================================================
-    dense_16 (Dense)             (None, 128)               896       
+    dense_1 (Dense)              (None, 512)               3584      
     _________________________________________________________________
-    dropout_11 (Dropout)         (None, 128)               0         
+    dropout_1 (Dropout)          (None, 512)               0         
     _________________________________________________________________
-    dense_17 (Dense)             (None, 64)                8256      
+    dense_2 (Dense)              (None, 256)               131328    
     _________________________________________________________________
-    dropout_12 (Dropout)         (None, 64)                0         
+    dropout_2 (Dropout)          (None, 256)               0         
     _________________________________________________________________
-    dense_18 (Dense)             (None, 2)                 130       
+    dense_3 (Dense)              (None, 128)               32896     
+    _________________________________________________________________
+    dropout_3 (Dropout)          (None, 128)               0         
+    _________________________________________________________________
+    dense_4 (Dense)              (None, 64)                8256      
+    _________________________________________________________________
+    dropout_4 (Dropout)          (None, 64)                0         
+    _________________________________________________________________
+    dense_5 (Dense)              (None, 2)                 130       
     =================================================================
-    Total params: 9,282
-    Trainable params: 9,282
+    Total params: 176,194
+    Trainable params: 176,194
     Non-trainable params: 0
     _________________________________________________________________
 
@@ -630,13 +664,13 @@ model.summary()
 
 ```python
 # Training the model
-model.fit(features, targets, epochs=200, batch_size=100, verbose=0)
+model.fit(features, targets, epochs=1400, batch_size=80, verbose=0)
 ```
 
 
 
 
-    <keras.callbacks.History at 0x114a34eb8>
+    <keras.callbacks.History at 0xb2e6f4940>
 
 
 
@@ -651,9 +685,11 @@ score = model.evaluate(features_test, targets_test)
 print("\n Testing Accuracy:", score[1])
 ```
 
-     32/360 [=>............................] - ETA: 0s
-     Training Accuracy: 0.730555555556
-    32/40 [=======================>......] - ETA: 0s
+    360/360 [==============================] - 0s 80us/step
+    
+     Training Accuracy: 0.7138888888888889
+    40/40 [==============================] - 0s 150us/step
+    
      Testing Accuracy: 0.7
 
 
