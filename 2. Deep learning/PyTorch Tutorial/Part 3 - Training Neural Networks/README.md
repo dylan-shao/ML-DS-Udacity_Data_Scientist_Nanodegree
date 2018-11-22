@@ -224,6 +224,8 @@ output = model.forward(images)
 loss = criterion(output, labels)
 loss.backward()
 print('Gradient -', model.fc1.weight.grad)
+
+# update weights
 optimizer.step()
 ```
 

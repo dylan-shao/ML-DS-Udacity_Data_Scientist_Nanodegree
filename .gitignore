@@ -6,4 +6,7 @@ __pycache__/
 
 node_modules
 
+
 MNIST_data/
+
+F_MNIST_data/

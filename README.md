@@ -10,9 +10,9 @@
 
 [DecisionTrees-titanic_survival_exploration](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/DecisionTrees-titanic_survival_exploration)
 
-[Diabetes case](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/Diabetes%20case)
-
 [Grid Search](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/Grid%20Search)
+
+[Diabetes case](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/Diabetes%20case)
 
 [Learning Curves](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/Learning%20Curves)
 
@@ -20,9 +20,9 @@
 
 [LinearRegression_singleVariable](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/LinearRegression_singleVariable)
 
-[Metrics_Classification](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/Metrics_Classification)
-
 [Metrics_Regression](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/Metrics_Regression)
+
+[Metrics_Classification](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/Metrics_Classification)
 
 [Mini-batch_example](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/Mini-batch_example)
 
