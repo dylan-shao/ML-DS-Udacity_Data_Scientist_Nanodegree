@@ -30,9 +30,9 @@
 
 [PolynomialRegression](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/PolynomialRegression)
 
-[SVM](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/SVM)
-
 [Regularization_FeatureScaling](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/Regularization_FeatureScaling)
+
+[SVM](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/SVM)
 
 [Spam_&_Ensembles](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/Spam_%26_Ensembles)
 
@@ -55,4 +55,8 @@
 [StudentAdmissions with hidden layer](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/2.%20Deep%20learning/StudentAdmissions%20with%20hidden%20layer)
 
 [XOR Keras](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/2.%20Deep%20learning/XOR%20Keras)
+
+## 3. Unsupervised Learning
+
+[Identifying Clusters](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/3.%20Unsupervised%20Learning/Identifying%20Clusters)
 
