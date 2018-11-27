@@ -20,15 +20,20 @@ config = {
 
 
 class ImageClassifier:
-    def __init__(self, dir):
-        self.dir = dir
+    def __init__(self, data_dir, save_dir, arch, learning_rate, epochs):
+        self.data_dir = data_dir
+        self.save_path = save_dir + 'checkpoint.pth'
+        self.arch = arch
+        self.learning_rate = learning_rate
+        self.epochs = epochs
+
         self.transform_data()
         self.set_model()
 
 
     def train(self):
-        print('---- Start trainning model-----')
-        self.do_deep_learning(self.model, self.dataloaders[0], 3, 40, self.criterion, self.optimizer)
+        print('---- Start trainning model with {} epochs-----'.format(self.epochs))
+        self.do_deep_learning(self.model, self.dataloaders[0], self.epochs, 40, self.criterion, self.optimizer)
         print('---- Trainning model finished!-----')
 
     def transform_data(self):
@@ -70,8 +75,8 @@ class ImageClassifier:
         print('---- Transforming data finished-----')
 
     def set_model(self):
-        print('---- Setting the model-----')
-        self.model = models.vgg16(pretrained=True)
+        print('---- Setting the model using {} architecture-----'.format(self.arch))
+        self.model = getattr(models, self.arch)(pretrained=True)
 
         for param in self.model.parameters():
             param.requires_grad = False
@@ -90,7 +95,7 @@ class ImageClassifier:
         self.model.classifier = classifier
         self.criterion = nn.NLLLoss()
         # Only train the classifier parameters, feature parameters are frozen
-        self.optimizer = optim.Adam(self.model.classifier.parameters(), lr=0.001)
+        self.optimizer = optim.Adam(self.model.classifier.parameters(), lr=self.learning_rate)
         print('---- Setting the model finished-----')
 
 
@@ -149,3 +154,7 @@ class ImageClassifier:
 
                     # Make sure training is back on
                     model.train()
+
+        print('------ Saving checkpoint in {}'.format(self.save_path))
+        torch.save(model.state_dict(), self.save_path)
+        print('------ Saving finished ------')
