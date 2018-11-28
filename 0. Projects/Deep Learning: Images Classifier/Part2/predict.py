@@ -7,6 +7,7 @@
 import argparse
 import ImageClassifier as IC
 import torch
+import json
 
 def load_checkpoint(checkpoint_path):
     checkpoints = torch.load(checkpoint_path)
@@ -23,13 +24,22 @@ def Main():
     parser.add_argument("image_path", help="The path to the image to predict")
     parser.add_argument("checkpoint_path", help="The path to the checkpoint")
     parser.add_argument("--top_k", help="top k", type=int)
+    parser.add_argument("--gpu", help="train on gpu", type=bool)
+    parser.add_argument('--file', help="mapping file", type=argparse.FileType('r'))
 
     args = parser.parse_args()
     top_k = args.top_k or 10
 
-    model = load_checkpoint(args.checkpoint_path)
+    instance = load_checkpoint(args.checkpoint_path)
+    device = 'cuda' if args.gpu else 'cpu'
+    instance.model.to(device)
 
-    model.predict(args.image_path, top_k)
+    if args.file:
+        with args.file as file:
+            mapping = json.load(file)
+            instance.set_mapping('', mapping)
+
+    instance.predict(args.image_path, top_k)
 
 if __name__ == '__main__':
     Main()

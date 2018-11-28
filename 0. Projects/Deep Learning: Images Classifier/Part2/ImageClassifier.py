@@ -43,12 +43,15 @@ class ImageClassifier:
 
         self.transform_data()
         self.set_model()
-        self.set_mapping()
+        self.set_mapping('cat_to_name.json')
 
 
-    def set_mapping(self):
-        with open('cat_to_name.json', 'r') as f:
-            self.cat_to_name = json.load(f)
+    def set_mapping(self, path, mapping=None):
+        if mapping:
+            self.cat_to_name = mapping
+        else:
+            with open(path, 'r') as f:
+                self.cat_to_name = json.load(f)
         self.class_to_idx = self.image_datasets[0].class_to_idx
         self.idx_to_class = {v: k for k, v in self.class_to_idx.items()}
 
@@ -244,6 +247,7 @@ class ImageClassifier:
         print('------ Predicting start ------')
 
         self.model.eval()
+        
         # TODO: Implement the code to predict the class from an image file
         image = self.process_image(image_path)
         image = torch.from_numpy(image).type(torch.cuda.FloatTensor)

@@ -2,9 +2,9 @@
 
 [Deep Learning: Images Classifier](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/0.%20Projects/Deep%20Learning%3A%20Images%20Classifier)
 
-[Supervised Learning: Finding Donors for CharityML](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/0.%20Projects/Supervised%20Learning%3A%20Finding%20Donors%20for%20CharityML)
-
 ## 1. Supervised Learning Projects
+
+[Supervised Learning: Finding Donors for CharityML](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/0.%20Projects/Supervised%20Learning%3A%20Finding%20Donors%20for%20CharityML)
 
 [DecisionTrees-bugSpecies](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/DecisionTrees-bugSpecies)
 
@@ -14,15 +14,15 @@
 
 [Diabetes case](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/Diabetes%20case)
 
-[Learning Curves](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/Learning%20Curves)
-
 [Grid Search](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/Grid%20Search)
 
 [LinearRegression_multiVariables](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/LinearRegression_multiVariables)
 
-[Metrics_Classification](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/Metrics_Classification)
+[Learning Curves](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/Learning%20Curves)
 
 [LinearRegression_singleVariable](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/LinearRegression_singleVariable)
+
+[Metrics_Classification](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/Metrics_Classification)
 
 [Metrics_Regression](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/Metrics_Regression)
 
@@ -48,9 +48,9 @@
 
 [IMDB Data in Keras](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/2.%20Deep%20learning/IMDB%20Data%20in%20Keras)
 
-[StudentAdmissions](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/2.%20Deep%20learning/StudentAdmissions)
-
 [PyTorch Tutorial](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/2.%20Deep%20learning/PyTorch%20Tutorial)
+
+[StudentAdmissions](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/2.%20Deep%20learning/StudentAdmissions)
 
 [StudentAdmissions in Keras](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/2.%20Deep%20learning/StudentAdmissions%20in%20Keras)
 
