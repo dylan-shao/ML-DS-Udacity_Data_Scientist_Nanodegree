@@ -5,7 +5,7 @@ Going forward, AI algorithms will be incorporated into more and more everyday ap
 
 In this project, you'll train an image classifier to recognize different species of flowers. You can imagine using something like this in a phone app that tells you the name of the flower your camera is looking at. In practice you'd train this classifier, then export it for use in your application. We'll be using [this dataset](http://www.robots.ox.ac.uk/~vgg/data/flowers/102/index.html) of 102 flower categories, you can see a few examples below. 
 
-<img src='../assets/Flowers.png' width=500px>
+<img src='assets/Flowers.png' width=500px>
 
 The project is broken down into multiple steps:
 
@@ -380,8 +380,14 @@ model.idx_to_class = {v: k for k, v in model.class_to_idx.items()}
 
 
 ```python
-# TODO: Save the checkpoint 
-torch.save(model.state_dict(), 'ic_project.pth')
+# TODO: Save the checkpoint
+checkpoints = {
+    'class_to_idx': model.class_to_idx,
+    'idx_to_class': model.idx_to_class,
+    'state_dict': model.state_dict()
+}
+
+torch.save(checkpoints, 'ic_project.pth')
 ```
 
 ## Loading the checkpoint
@@ -392,8 +398,8 @@ At this point it's good to write a function that can load a checkpoint and rebui
 ```python
 # TODO: Write a function that loads a checkpoint and rebuilds the model
 def load_checkpoint(model, path):
-    state_dict = torch.load(path)
-    model.load_state_dict(state_dict)
+    checkpoints = torch.load(path)
+    model.load_state_dict(checkpoints['state_dict'])
     return model
 ```
 
@@ -558,7 +564,7 @@ print(b)
 
 Now that you can use a trained model for predictions, check to make sure it makes sense. Even if the testing accuracy is high, it's always good to check that there aren't obvious bugs. Use `matplotlib` to plot the probabilities for the top 5 classes as a bar graph, along with the input image. It should look like this:
 
-<img src='../assets/inference_example.png' width=300px>
+<img src='assets/inference_example.png' width=300px>
 
 You can convert from the class integer encoding to actual flower names with the `cat_to_name.json` file (should have been loaded earlier in the notebook). To show a PyTorch tensor as an image, use the `imshow` function defined above.
 
