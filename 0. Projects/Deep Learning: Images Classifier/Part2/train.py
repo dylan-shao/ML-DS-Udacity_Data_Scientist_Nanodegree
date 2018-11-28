@@ -11,6 +11,7 @@ def Main():
     parser.add_argument("--arch", help="model architecture")
     parser.add_argument("-lr","--learning_rate", help="learning rate", type=float)
     parser.add_argument("--epochs", help="epochs", type=int)
+    parser.add_argument("--gpu", help="train on gpu", type=bool)
 
     args = parser.parse_args()
     save_dir = args.save_dir + '/' or ''
@@ -18,7 +19,7 @@ def Main():
     learning_rate = args.learning_rate or 0.001
     epochs = args.epochs or 3
 
-    model = IC.ImageClassifier(args.path, save_dir, arch, learning_rate, epochs)
+    model = IC.ImageClassifier(args.path, save_dir, arch, learning_rate, epochs, args.gpu)
     model.train()
 
 if __name__ == '__main__':

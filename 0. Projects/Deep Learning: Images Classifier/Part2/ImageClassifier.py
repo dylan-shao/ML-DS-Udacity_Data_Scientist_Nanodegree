@@ -28,12 +28,18 @@ config = {
 
 class ImageClassifier:
     # TODO: refactor to not use *_dir in the init, should call them in other methods like "train" method
-    def __init__(self, data_dir, save_dir, arch, learning_rate, epochs):
+    def __init__(self, data_dir, save_dir, arch='vgg13', learning_rate=0.001, epochs=3, gpu=False):
         self.data_dir = data_dir
         self.save_dir = save_dir
+
+        # TODO handle scenario that the arch not exist in the torchvision.models
         self.arch = arch
         self.learning_rate = learning_rate
         self.epochs = epochs
+        if gpu:
+            self.device = 'cuda'
+        else:
+            self.device = 'cpu'
 
         self.transform_data()
         self.set_model()
@@ -112,15 +118,16 @@ class ImageClassifier:
         self.criterion = nn.NLLLoss()
         # Only train the classifier parameters, feature parameters are frozen
         self.optimizer = optim.Adam(self.model.classifier.parameters(), lr=self.learning_rate)
-        self.model.to('cuda')
+        self.model.to(self.device)
         print('------ Setting the model finished-----')
 
 
-    def validation(self, model, validationloader, criterion, device = 'cuda'):
+    def validation(self, model, validationloader, criterion):
         test_loss = 0
         accuracy = 0
+
         for images, labels in validationloader:
-            images, labels = images.to(device), labels.to(device)
+            images, labels = images.to(self.device), labels.to(self.device)
             output = model.forward(images)
             test_loss += criterion(output, labels).item()
 
@@ -130,21 +137,20 @@ class ImageClassifier:
 
         return test_loss, accuracy
 
-    def do_deep_learning(self, model, trainloader, epochs, print_every, criterion, optimizer, device='cuda'):
+    def do_deep_learning(self, model, trainloader, epochs, print_every, criterion, optimizer):
         epochs = epochs
         print_every = print_every
         steps = 0
         running_loss = 0
-
-        # change to cuda
-        model.to(device)
+        print('------ Trainning on {}------'.format(self.device))
+        model.to(self.device)
 
         for e in range(epochs):
             model.train()
             for images, labels in trainloader:
                 steps += 1
 
-                images, labels = images.to(device), labels.to(device)
+                images, labels = images.to(self.device), labels.to(self.device)
                 optimizer.zero_grad()
 
                 output = model.forward(images)

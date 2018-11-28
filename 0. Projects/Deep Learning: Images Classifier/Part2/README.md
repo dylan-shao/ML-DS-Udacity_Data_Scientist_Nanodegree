@@ -2,7 +2,7 @@
 
 > example:
 ```
-python train.py 'flowers/train' --save_dir 'mydir' --arch 'vgg16' --learning_rate 0.001 --epochs 5
+python train.py 'flowers/train' --save_dir 'mydir' --arch 'vgg16' --learning_rate 0.001 --epochs 5 --gpu True
 ```
 
 ### Basic Usage:
