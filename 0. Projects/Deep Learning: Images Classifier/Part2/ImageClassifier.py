@@ -23,8 +23,7 @@ config = {
 
 # TODO:
 # 1. redesign the class, with better __init__, and static methods and variables
-# 2. make some variables dynamic, like hidden layers variables, so people could change it from input
-# 3. create print helper with uniform format
+# 2. create print helper with uniform format
 
 class ImageClassifier:
     # TODO: refactor to not use *_dir in the init, should call them in other methods like "train" method
@@ -83,14 +82,14 @@ class ImageClassifier:
 
         ]
 
-        # TODO: Load the datasets with ImageFolder
+        # Load the datasets with ImageFolder
         self.image_datasets = [
             datasets.ImageFolder(config['train_dir'], transform=self.data_transforms[0]),
             datasets.ImageFolder(config['valid_dir'], transform=self.data_transforms[1]),
             datasets.ImageFolder(config['test_dir'], transform=self.data_transforms[2])
         ]
 
-        # TODO: Using the image datasets and the trainforms, define the dataloaders
+        # Using the image datasets and the trainforms, define the dataloaders
         self.dataloaders = [
             torch.utils.data.DataLoader(self.image_datasets[0], batch_size=64, shuffle=True),
             torch.utils.data.DataLoader(self.image_datasets[1], batch_size=32),
@@ -211,7 +210,7 @@ class ImageClassifier:
             returns an Numpy array
         '''
 
-        # TODO: Process a PIL image for use in a PyTorch model
+        # Process a PIL image for use in a PyTorch model
         im = Image.open(image)
 
         im_short = np.min(im.size)
@@ -247,8 +246,8 @@ class ImageClassifier:
         print('------ Predicting start ------')
 
         self.model.eval()
-        
-        # TODO: Implement the code to predict the class from an image file
+
+        # Implement the code to predict the class from an image file
         image = self.process_image(image_path)
         image = torch.from_numpy(image).type(torch.cuda.FloatTensor)
         image = image.unsqueeze_(0)
