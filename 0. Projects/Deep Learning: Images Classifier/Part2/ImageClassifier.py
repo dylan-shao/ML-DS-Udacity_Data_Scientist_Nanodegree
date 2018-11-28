@@ -21,6 +21,9 @@ config = {
 }
 
 
+# TODO:
+# 1. redesign the class, with better __init__, and static methods and variables
+# 2. create print helper with uniform format
 
 class ImageClassifier:
     # TODO: refactor to not use *_dir in the init, should call them in other methods like "train" method
@@ -33,15 +36,22 @@ class ImageClassifier:
 
         self.transform_data()
         self.set_model()
+        self.set_mapping()
 
+
+    def set_mapping(self):
+        with open('cat_to_name.json', 'r') as f:
+            self.cat_to_name = json.load(f)
+        self.class_to_idx = self.image_datasets[0].class_to_idx
+        self.idx_to_class = {v: k for k, v in self.class_to_idx.items()}
 
     def train(self):
-        print('---- Start trainning model with {} epochs-----'.format(self.epochs))
+        print('------ Start trainning model with {} epochs-----'.format(self.epochs))
         self.do_deep_learning(self.model, self.dataloaders[0], self.epochs, 40, self.criterion, self.optimizer)
-        print('---- Trainning model finished!-----')
+        print('------ Trainning model finished!-----')
 
     def transform_data(self):
-        print('---- Transforming data-----')
+        print('------ Transforming data-----')
 
         self.data_transforms = [
             transforms.Compose([transforms.RandomRotation(30),
@@ -76,10 +86,10 @@ class ImageClassifier:
             torch.utils.data.DataLoader(self.image_datasets[1], batch_size=32),
             torch.utils.data.DataLoader(self.image_datasets[2], batch_size=32)
         ]
-        print('---- Transforming data finished-----')
+        print('------ Transforming data finished-----')
 
     def set_model(self):
-        print('---- Setting the model using {} architecture-----'.format(self.arch))
+        print('------ Setting the model using {} architecture-----'.format(self.arch))
         self.model = getattr(models, self.arch)(pretrained=True)
 
         for param in self.model.parameters():
@@ -102,7 +112,7 @@ class ImageClassifier:
         # Only train the classifier parameters, feature parameters are frozen
         self.optimizer = optim.Adam(self.model.classifier.parameters(), lr=self.learning_rate)
         self.model.to('cuda')
-        print('---- Setting the model finished-----')
+        print('------ Setting the model finished-----')
 
 
     def validation(self, model, validationloader, criterion, device = 'cuda'):
@@ -236,9 +246,15 @@ class ImageClassifier:
 
         ps = torch.exp(outputs)
         probs, classes =  ps.topk(topk)
-        print('probabilities are: {}'.format(np.array(probs)[0]))
-        print('classes are: {}'.format(np.array(classes)[0]))
+
+        probs = np.array(probs)[0]
+        classes = np.array(classes)[0]
+        class_names = list(map(self.cat_to_name.get, list(map(self.idx_to_class.get, classes))))
+
+        print('probabilities are: {}'.format(probs))
+        print('classes are: {}'.format(classes))
+        print('The flower with largest probs is: {}'.format(class_names[probs.argmax()]))
 
         print('------ Predicting finished ------')
 
-        return np.array(probs)[0],np.array(classes)[0]
+        return probs, classes

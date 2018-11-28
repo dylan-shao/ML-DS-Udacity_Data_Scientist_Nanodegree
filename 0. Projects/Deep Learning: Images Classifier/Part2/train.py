@@ -1,3 +1,6 @@
+# TODO:
+# create gpu input to train on gpu, and default as cpu
+
 import argparse
 import ImageClassifier as IC
 

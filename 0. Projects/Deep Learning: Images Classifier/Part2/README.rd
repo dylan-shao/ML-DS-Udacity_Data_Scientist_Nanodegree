@@ -1,4 +1,4 @@
-# Train the data
+## Train the data
 
 ### Basic Usage:
 
@@ -20,4 +20,11 @@ python train.py 'flowers/train' --save_dir 'mydir' --arch 'vgg16' --learning_rat
 ```
 
 
-# Predict the data
+## Predict the data
+
+ ```python predict.py /path/to/image checkpoint```
+
+ * Options:
+     * Return top K most likely classes: python predict.py input checkpoint --top_k 3
+ > example:
+ ```python predict.py 'flowers/test/1/image_06743.jpg' 'checkpoints/checkpoint.pth' --top_k 5```
