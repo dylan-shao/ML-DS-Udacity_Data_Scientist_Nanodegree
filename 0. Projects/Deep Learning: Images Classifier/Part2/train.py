@@ -17,7 +17,6 @@ def Main():
 
     model = IC.ImageClassifier(args.path, save_dir, arch, learning_rate, epochs)
     model.train()
-#     print "The " + str(args.num)+ "th fib number is " + str(result)
 
 if __name__ == '__main__':
     Main()

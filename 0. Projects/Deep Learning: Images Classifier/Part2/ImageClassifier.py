@@ -9,6 +9,8 @@ from torchvision import datasets, transforms, models
 import json
 from collections import OrderedDict
 import os
+from PIL import Image
+import numpy as np
 
 data_dir = 'flowers'
 config = {
@@ -21,6 +23,7 @@ config = {
 
 
 class ImageClassifier:
+    # TODO: refactor to not use *_dir in the init, should call them in other methods like "train" method
     def __init__(self, data_dir, save_dir, arch, learning_rate, epochs):
         self.data_dir = data_dir
         self.save_dir = save_dir
@@ -82,6 +85,7 @@ class ImageClassifier:
         for param in self.model.parameters():
             param.requires_grad = False
 
+        # TODO: make the size number dynamic as input
         classifier = nn.Sequential(OrderedDict([
                                   ('fc1', nn.Linear(25088, 4096)),
                                   ('relu1', nn.ReLU()),
@@ -97,6 +101,7 @@ class ImageClassifier:
         self.criterion = nn.NLLLoss()
         # Only train the classifier parameters, feature parameters are frozen
         self.optimizer = optim.Adam(self.model.classifier.parameters(), lr=self.learning_rate)
+        self.model.to('cuda')
         print('---- Setting the model finished-----')
 
 
@@ -167,6 +172,73 @@ class ImageClassifier:
         print('------ save_dir is {}, save path is {} '.format(self.save_dir, save_path))
         print('------ Saving checkpoint in {}'.format(save_path_to_checkpoint))
 
-        torch.save(model.state_dict(), save_path_to_checkpoint)
+        # TODO save, input_size, output_size, hidden_layers in checkpoints
+        checkpoints = {
+            'data_dir': self.data_dir,
+            'save_dir': self.save_dir,
+            'arch': self.arch,
+            'learning_rate': self.learning_rate,
+            'epochs':self.epochs,
+            'state_dict': model.state_dict()
+        }
+        torch.save(checkpoints, save_path_to_checkpoint)
 
         print('------ Saving checkpoint finished ------')
+
+
+    def process_image(self,image):
+        ''' Scales, crops, and normalizes a PIL image for a PyTorch model,
+            returns an Numpy array
+        '''
+
+        # TODO: Process a PIL image for use in a PyTorch model
+        im = Image.open(image)
+
+        im_short = np.min(im.size)
+        im_long = np.max(im.size)
+        resize_short = 256
+        resize_long = im_long*resize_short // im_short
+
+        im = im.rotate(30).resize((resize_short,resize_long))
+
+        width, height = im.size
+        left = (width - 224)/2
+        top = (height - 224)/2
+        right = left + 224
+        bottom = top + 224
+        im = im.crop((left, top, right, bottom))
+        np_image = np.array(im)
+
+
+        np_image = (np_image - np.mean(np_image))/np.std(np_image)
+        return np_image.transpose()
+
+    def set_state_dict(self, state_dict):
+        print('------ Loading checkpoint start ------')
+
+        self.model.load_state_dict(state_dict)
+
+        print('------ Loading checkpoint finished ------')
+
+
+    def predict(self, image_path,  topk=10):
+        ''' Predict the class (or classes) of an image using a trained deep learning model.
+        '''
+        print('------ Predicting start ------')
+
+        self.model.eval()
+        # TODO: Implement the code to predict the class from an image file
+        image = self.process_image(image_path)
+        image = torch.from_numpy(image).type(torch.cuda.FloatTensor)
+        image = image.unsqueeze_(0)
+        with torch.no_grad():
+            outputs = self.model(image)
+
+        ps = torch.exp(outputs)
+        probs, classes =  ps.topk(topk)
+        print('probabilities are: {}'.format(np.array(probs)[0]))
+        print('classes are: {}'.format(np.array(classes)[0]))
+
+        print('------ Predicting finished ------')
+
+        return np.array(probs)[0],np.array(classes)[0]
