@@ -23,7 +23,8 @@ config = {
 
 # TODO:
 # 1. redesign the class, with better __init__, and static methods and variables
-# 2. create print helper with uniform format
+# 2. make some variables dynamic, like hidden layers variables, so people could change it from input
+# 3. create print helper with uniform format
 
 class ImageClassifier:
     # TODO: refactor to not use *_dir in the init, should call them in other methods like "train" method
