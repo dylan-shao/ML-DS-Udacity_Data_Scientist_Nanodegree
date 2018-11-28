@@ -8,6 +8,7 @@ import torch.nn.functional as F
 from torchvision import datasets, transforms, models
 import json
 from collections import OrderedDict
+import os
 
 data_dir = 'flowers'
 config = {
@@ -22,7 +23,7 @@ config = {
 class ImageClassifier:
     def __init__(self, data_dir, save_dir, arch, learning_rate, epochs):
         self.data_dir = data_dir
-        self.save_path = save_dir + 'checkpoint.pth'
+        self.save_dir = save_dir
         self.arch = arch
         self.learning_rate = learning_rate
         self.epochs = epochs
@@ -155,6 +156,17 @@ class ImageClassifier:
                     # Make sure training is back on
                     model.train()
 
-        print('------ Saving checkpoint in {}'.format(self.save_path))
-        torch.save(model.state_dict(), self.save_path)
-        print('------ Saving finished ------')
+        # make dir if save_dir not exist, TODO handle exception, if exception happens, delete the save_dir folder
+        if not os.path.exists(self.save_dir):
+            os.makedirs(self.save_dir)
+
+        save_path = os.getcwd() + '/' + self.save_dir
+
+        # this is for the dir in the online command line
+        save_path_to_checkpoint = '{}/checkpoint.pth'.format(save_path)
+        print('------ save_dir is {}, save path is {} '.format(self.save_dir, save_path))
+        print('------ Saving checkpoint in {}'.format(save_path_to_checkpoint))
+
+        torch.save(model.state_dict(), save_path_to_checkpoint)
+
+        print('------ Saving checkpoint finished ------')
