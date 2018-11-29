@@ -5,7 +5,7 @@ Going forward, AI algorithms will be incorporated into more and more everyday ap
 
 In this project, you'll train an image classifier to recognize different species of flowers. You can imagine using something like this in a phone app that tells you the name of the flower your camera is looking at. In practice you'd train this classifier, then export it for use in your application. We'll be using [this dataset](http://www.robots.ox.ac.uk/~vgg/data/flowers/102/index.html) of 102 flower categories, you can see a few examples below. 
 
-<img src='assets/Flowers.png' width=500px>
+<img src='../assets/Flowers.png' width=500px>
 
 The project is broken down into multiple steps:
 
@@ -34,6 +34,10 @@ from torch import nn
 from torch import optim
 import torch.nn.functional as F
 from torchvision import datasets, transforms, models
+import json
+from collections import OrderedDict
+from PIL import Image
+import numpy as np
 ```
 
 ## Load the data
@@ -97,8 +101,6 @@ You'll also need to load in a mapping from category label to category name. You 
 
 
 ```python
-import json
-
 with open('cat_to_name.json', 'r') as f:
     cat_to_name = json.load(f)
 ```
@@ -135,103 +137,36 @@ One last important tip if you're using the workspace to run your code: To avoid 
 
 
 ```python
-# TODO: Build and train your network
-model = models.vgg16(pretrained=True)
-model
-
-```
-
-    Downloading: "https://download.pytorch.org/models/vgg16-397923af.pth" to /root/.torch/models/vgg16-397923af.pth
-    100%|██████████| 553433881/553433881 [00:05<00:00, 100279442.58it/s]
-
-
-
-
-
-    VGG(
-      (features): Sequential(
-        (0): Conv2d(3, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
-        (1): ReLU(inplace)
-        (2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
-        (3): ReLU(inplace)
-        (4): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
-        (5): Conv2d(64, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
-        (6): ReLU(inplace)
-        (7): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
-        (8): ReLU(inplace)
-        (9): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
-        (10): Conv2d(128, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
-        (11): ReLU(inplace)
-        (12): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
-        (13): ReLU(inplace)
-        (14): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
-        (15): ReLU(inplace)
-        (16): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
-        (17): Conv2d(256, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
-        (18): ReLU(inplace)
-        (19): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
-        (20): ReLU(inplace)
-        (21): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
-        (22): ReLU(inplace)
-        (23): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
-        (24): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
-        (25): ReLU(inplace)
-        (26): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
-        (27): ReLU(inplace)
-        (28): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
-        (29): ReLU(inplace)
-        (30): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
-      )
-      (classifier): Sequential(
-        (0): Linear(in_features=25088, out_features=4096, bias=True)
-        (1): ReLU(inplace)
-        (2): Dropout(p=0.5)
-        (3): Linear(in_features=4096, out_features=4096, bias=True)
-        (4): ReLU(inplace)
-        (5): Dropout(p=0.5)
-        (6): Linear(in_features=4096, out_features=1000, bias=True)
-      )
-    )
-
-
-
-
-```python
 config = {
     'drop': 0.5
 }
-print(model.classifier)
+# print(model.classifier)
 ```
-
-    Sequential(
-      (0): Linear(in_features=25088, out_features=4096, bias=True)
-      (1): ReLU(inplace)
-      (2): Dropout(p=0.5)
-      (3): Linear(in_features=4096, out_features=4096, bias=True)
-      (4): ReLU(inplace)
-      (5): Dropout(p=0.5)
-      (6): Linear(in_features=4096, out_features=1000, bias=True)
-    )
-
 
 
 ```python
-for param in model.parameters():
-    param.requires_grad = False
+# TODO: Build and train your network
 
-from collections import OrderedDict
-classifier = nn.Sequential(OrderedDict([
-                          ('fc1', nn.Linear(25088, 4096)),
-                          ('relu1', nn.ReLU()),
-                          ('dropout1', nn.Dropout(config['drop'])),
-                          ('fc2', nn.Linear(4096, 1000)),
-                          ('relu2', nn.ReLU()),
-                          ('dropout2', nn.Dropout(config['drop'])),
-                          ('fc3', nn.Linear(1000, 102)),
-                          ('output', nn.LogSoftmax(dim=1))
-                          ]))
+def create_pretrained_model_with_classifier(arch, input_size, output_size, hidden_units, drop_p=0.5):
     
-model.classifier = classifier
+    model = getattr(models, arch)(pretrained=True)
+   
+    for param in model.parameters():
+        param.requires_grad = False
+
+    # todo: make the number of hidden layers and units dynamic
+    classifier = nn.Sequential(OrderedDict([
+                              ('fc1', nn.Linear(input_size, hidden_units[0])),
+                              ('relu1', nn.ReLU()),
+                              ('dropout1', nn.Dropout(drop_p)),
+                              ('fc2', nn.Linear(hidden_units[0], output_size)),
+                              ('output', nn.LogSoftmax(dim=1))
+                              ]))
+
+    model.classifier = classifier
+    return model
+
+model = create_pretrained_model_with_classifier('vgg16', 25088, 102, [4096], config['drop'])
 ```
 
 
@@ -305,35 +240,20 @@ def do_deep_learning(model, trainloader, epochs, print_every, criterion, optimiz
 
 
 ```python
-do_deep_learning(model, dataloaders[0], 3, 40, criterion, optimizer)
+do_deep_learning(model, dataloaders[0], 4, 40, criterion, optimizer)
 ```
 
-    Epoch: 1/3..  Training Loss: 4.271..  Validation Loss: 2.860..  Validation Accuracy: 0.333
-    Epoch: 1/3..  Training Loss: 2.936..  Validation Loss: 1.754..  Validation Accuracy: 0.526
-    Epoch: 2/3..  Training Loss: 2.356..  Validation Loss: 1.314..  Validation Accuracy: 0.651
-    Epoch: 2/3..  Training Loss: 2.081..  Validation Loss: 1.166..  Validation Accuracy: 0.670
-    Epoch: 2/3..  Training Loss: 1.972..  Validation Loss: 1.012..  Validation Accuracy: 0.732
-    Epoch: 3/3..  Training Loss: 1.792..  Validation Loss: 0.896..  Validation Accuracy: 0.755
-    Epoch: 3/3..  Training Loss: 1.731..  Validation Loss: 0.817..  Validation Accuracy: 0.767
+    Epoch: 1/4..  Training Loss: 4.623..  Validation Loss: 1.558..  Validation Accuracy: 0.608
+    Epoch: 1/4..  Training Loss: 2.103..  Validation Loss: 0.971..  Validation Accuracy: 0.738
+    Epoch: 2/4..  Training Loss: 1.708..  Validation Loss: 0.714..  Validation Accuracy: 0.826
+    Epoch: 2/4..  Training Loss: 1.527..  Validation Loss: 0.726..  Validation Accuracy: 0.792
+    Epoch: 2/4..  Training Loss: 1.413..  Validation Loss: 0.577..  Validation Accuracy: 0.837
+    Epoch: 3/4..  Training Loss: 1.297..  Validation Loss: 0.558..  Validation Accuracy: 0.857
+    Epoch: 3/4..  Training Loss: 1.318..  Validation Loss: 0.530..  Validation Accuracy: 0.851
+    Epoch: 4/4..  Training Loss: 1.190..  Validation Loss: 0.517..  Validation Accuracy: 0.867
+    Epoch: 4/4..  Training Loss: 1.256..  Validation Loss: 0.482..  Validation Accuracy: 0.870
+    Epoch: 4/4..  Training Loss: 1.192..  Validation Loss: 0.444..  Validation Accuracy: 0.885
 
-
-
-```python
-# save the result:
-# Base:
-# vgg11, learn rate 0.001, epochs 3, 
-# classifier = nn.Sequential(OrderedDict([
-#                           ('fc1', nn.Linear(25088, 4096)),
-#                           ('relu1', nn.ReLU()),
-#                           ('dropout1', nn.Dropout(config['drop'])),
-#                           ('fc2', nn.Linear(4096, 1000)),
-#                           ('relu2', nn.ReLU()),
-#                           ('dropout2', nn.Dropout(config['drop'])),
-#                           ('fc3', nn.Linear(1000, 102)),
-#                           ('output', nn.LogSoftmax(dim=1))
-#                           ]))
-# accuracy: 0.817
-```
 
 ## Testing your network
 
@@ -361,7 +281,7 @@ def check_accuracy_on_test(model, testloader, device='cuda'):
 check_accuracy_on_test(model, dataloaders[2])
 ```
 
-    Accuracy of the network on the test images: 74 %
+    Accuracy of the network on the test images: 75 %
 
 
 ## Save the checkpoint
@@ -382,6 +302,11 @@ model.idx_to_class = {v: k for k, v in model.class_to_idx.items()}
 ```python
 # TODO: Save the checkpoint
 checkpoints = {
+    'arch': 'vgg16',
+    'input_size': 25088,
+    'output_size': 102, 
+    'hidden_units': [4096],
+    'drop_p': config['drop'],
     'class_to_idx': model.class_to_idx,
     'idx_to_class': model.idx_to_class,
     'state_dict': model.state_dict()
@@ -397,9 +322,21 @@ At this point it's good to write a function that can load a checkpoint and rebui
 
 ```python
 # TODO: Write a function that loads a checkpoint and rebuilds the model
-def load_checkpoint(model, path):
+def load_checkpoint(path):
     checkpoints = torch.load(path)
+    arch = checkpoints['arch']
+    input_size = checkpoints['input_size']
+    output_size = checkpoints['output_size']
+    hidden_units = checkpoints['hidden_units']
+    drop_p = checkpoints['drop_p']
+    
+    model = create_pretrained_model_with_classifier(arch, input_size, output_size, hidden_units, drop_p)
+    
+    
     model.load_state_dict(checkpoints['state_dict'])
+    
+    model.class_to_idx = checkpoints['class_to_idx']
+    model.idx_to_class = checkpoints['idx_to_class']
     return model
 ```
 
@@ -431,8 +368,7 @@ And finally, PyTorch expects the color channel to be the first dimension but it'
 
 
 ```python
-from PIL import Image
-import numpy as np
+
 
 def process_image(image):
     ''' Scales, crops, and normalizes a PIL image for a PyTorch model,
@@ -496,12 +432,12 @@ imshow(process_image('flowers/test/1/image_06743.jpg'))
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x7f3bd05dd748>
+    <matplotlib.axes._subplots.AxesSubplot at 0x7f585243e208>
 
 
 
 
-![png](output_28_1.png)
+![png](output_26_1.png)
 
 
 ## Class Prediction
@@ -522,15 +458,16 @@ print(classes)
 
 
 ```python
-model = load_checkpoint(model, 'ic_project.pth')
+model = load_checkpoint('ic_project.pth')
 ```
 
 
 ```python
-def predict(image_path, model, topk=5):
+def predict(image_path, model, topk=5, device='cuda'):
     ''' Predict the class (or classes) of an image using a trained deep learning model.
     '''
     model.eval()
+    model.to(device)
     # TODO: Implement the code to predict the class from an image file
     image = process_image(image_path)
     image = torch.from_numpy(image).type(torch.cuda.FloatTensor) 
@@ -550,8 +487,8 @@ print(b)
 # cat_to_name
 ```
 
-    [ 0.4660868   0.08084191  0.07185122  0.05984996  0.05858959]
-    [ 0 70 84 83 13]
+    [ 0.96626234  0.01076849  0.0069605   0.00411693  0.00272089]
+    [ 0 84 83 87 13]
 
 
 
@@ -564,7 +501,7 @@ print(b)
 
 Now that you can use a trained model for predictions, check to make sure it makes sense. Even if the testing accuracy is high, it's always good to check that there aren't obvious bugs. Use `matplotlib` to plot the probabilities for the top 5 classes as a bar graph, along with the input image. It should look like this:
 
-<img src='assets/inference_example.png' width=300px>
+<img src='../assets/inference_example.png' width=300px>
 
 You can convert from the class integer encoding to actual flower names with the `cat_to_name.json` file (should have been loaded earlier in the notebook). To show a PyTorch tensor as an image, use the `imshow` function defined above.
 
@@ -599,5 +536,5 @@ view_classify('flowers/test/1/image_06743.jpg')
 ```
 
 
-![png](output_35_0.png)
+![png](output_33_0.png)
 
