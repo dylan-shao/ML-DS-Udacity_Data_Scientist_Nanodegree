@@ -30,9 +30,9 @@
 
 [Perceptron](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/Perceptron)
 
-[PolynomialRegression](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/PolynomialRegression)
-
 [Regularization_FeatureScaling](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/Regularization_FeatureScaling)
+
+[PolynomialRegression](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/PolynomialRegression)
 
 [SVM](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/SVM)
 
@@ -48,9 +48,9 @@
 
 [IMDB Data in Keras](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/2.%20Deep%20learning/IMDB%20Data%20in%20Keras)
 
-[StudentAdmissions](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/2.%20Deep%20learning/StudentAdmissions)
-
 [PyTorch Tutorial](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/2.%20Deep%20learning/PyTorch%20Tutorial)
+
+[StudentAdmissions](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/2.%20Deep%20learning/StudentAdmissions)
 
 [StudentAdmissions in Keras](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/2.%20Deep%20learning/StudentAdmissions%20in%20Keras)
 
@@ -65,6 +65,8 @@
 [Feature Scaling](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/3.%20Unsupervised%20Learning/Feature%20Scaling)
 
 [Feature Scaling Example](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/3.%20Unsupervised%20Learning/Feature%20Scaling%20Example)
+
+[Hierarchical Clustering](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/3.%20Unsupervised%20Learning/Hierarchical%20Clustering)
 
 [Identifying Clusters](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/3.%20Unsupervised%20Learning/Identifying%20Clusters)
 
