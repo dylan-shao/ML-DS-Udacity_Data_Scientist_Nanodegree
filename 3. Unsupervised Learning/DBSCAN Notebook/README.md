@@ -187,3 +187,5 @@ Looking at this grid, we can guess at some general heuristics for tweaking the p
 * Which values do you believe best satisfy scenario 1? 
 * Which values do you believe best satisfy scenario 2?
 
+Epsilon=1.3, min_samples=5 seems to do a good job here. There are other similar ones as well (1,2), for example.
+Epsilon=1.3, min_samples=20 does the best job to satisfy scenario 2
