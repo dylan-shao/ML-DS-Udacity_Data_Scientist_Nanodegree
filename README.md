@@ -68,6 +68,8 @@
 
 [Feature Scaling Example](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/3.%20Unsupervised%20Learning/Feature%20Scaling%20Example)
 
+[GMM Clustering and Cluster Validation](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/3.%20Unsupervised%20Learning/GMM%20Clustering%20and%20Cluster%20Validation)
+
 [Hierarchical Clustering](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/3.%20Unsupervised%20Learning/Hierarchical%20Clustering)
 
 [Identifying Clusters](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/3.%20Unsupervised%20Learning/Identifying%20Clusters)
