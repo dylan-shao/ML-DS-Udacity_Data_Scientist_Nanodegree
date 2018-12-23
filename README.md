@@ -16,11 +16,11 @@
 
 [Grid Search](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/Grid%20Search)
 
+[LinearRegression_multiVariables](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/LinearRegression_multiVariables)
+
 [Learning Curves](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/Learning%20Curves)
 
 [LinearRegression_singleVariable](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/LinearRegression_singleVariable)
-
-[LinearRegression_multiVariables](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/LinearRegression_multiVariables)
 
 [Metrics_Classification](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/Metrics_Classification)
 
@@ -79,4 +79,6 @@
 [PCA-2: PCA By sklearn](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/3.%20Unsupervised%20Learning/PCA-2%3A%20PCA%20By%20sklearn)
 
 [PCA-3: interpret PCA](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/3.%20Unsupervised%20Learning/PCA-3%3A%20interpret%20PCA)
+
+[PCA-4: mini project](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/3.%20Unsupervised%20Learning/PCA-4%3A%20mini%20project)
 
