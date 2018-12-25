@@ -10,3 +10,11 @@ node_modules
 MNIST_data/
 
 F_MNIST_data/
+
+Udacity_AZDIAS_Subset.csv
+
+Udacity_CUSTOMERS_Subset.csv
+
+AZDIAS_Feature_Summary.csv
+
+azdias_filled_nan.csv
