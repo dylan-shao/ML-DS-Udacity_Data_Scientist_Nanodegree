@@ -26,9 +26,9 @@
 
 [Metrics_Classification](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/Metrics_Classification)
 
-[Mini-batch_example](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/Mini-batch_example)
-
 [Metrics_Regression](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/Metrics_Regression)
+
+[Mini-batch_example](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/Mini-batch_example)
 
 [Perceptron](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/Perceptron)
 
@@ -40,9 +40,9 @@
 
 [Spam_&_Ensembles](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/Spam_%26_Ensembles)
 
-## 2. Deep learning
-
 [Spam_Classifier](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/Spam_Classifier)
+
+## 2. Deep learning
 
 [BackPropagation](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/2.%20Deep%20learning/BackPropagation)
 

@@ -403,8 +403,6 @@ type(np.NaN)
 # Identify missing or unknown data values and convert them to NaNs.
 
 azdias_filled = azdias.copy(deep=True)
-name_list_10 = []
-percentage_list_10 = []
 
 for index, row in feat_info.iterrows():
     column_name = row['attribute']
@@ -416,11 +414,6 @@ for index, row in feat_info.iterrows():
     percentage = azdias_column.isnull().sum() / len(azdias_column)
     
     print('The percentage of missing value for {} is {}'.format(column_name, percentage))
-    
-    if percentage > 0.1:
-        name_list_10.append(column_name)
-        percentage_list_10.append(percentage)
-    
 
 ```
 
@@ -513,7 +506,7 @@ for index, row in feat_info.iterrows():
 
 
 ```python
-azdias_filled.to_csv('azdias_filled_nan.csv')  
+azdias_filled.to_csv('azdias_filled_nan.csv',index=False)  
 ```
 
 #### Step 1.1.2: Assess Missing Data in Each Column
@@ -524,6 +517,8 @@ For the remaining features, are there any patterns in which columns have, or sha
 
 
 ```python
+# return te columns list andcorresponding percentages list for nan value percentage in each column larger than n
+
 def get_percentage_larger_than(df, n):
     name_list = []
     percentage_list = []
@@ -547,11 +542,18 @@ azdias_filled_nan = pd.read_csv('azdias_filled_nan.csv')
 ```python
 # Perform an assessment of how much missing data there is in each column of the
 # dataset.
-plt.figure(figsize=(30,15))
 
+# get the columns that has nan value large than 10%
 name_list_10, percentage_list_10 = get_percentage_larger_than(azdias_filled_nan, 0.1)
 
-plt.barh(name_list_10, width = percentage_list_10, orientation='horizontal')
+```
+
+
+```python
+# plot the figure
+plt.figure(figsize=(30,20))
+plt.rcParams.update({'font.size': 22})
+plt.barh(name_list_10, width = percentage_list_10)
 ```
 
 
@@ -562,23 +564,377 @@ plt.barh(name_list_10, width = percentage_list_10, orientation='horizontal')
 
 
 
-![png](output_17_1.png)
+![png](output_18_1.png)
+
+
+# Investigate patterns in the amount of missing data in each column.
+
+As we can see that most of the columns does not appear in the above figure, which means that they have nan value less than 10%.
+
+And we have two columns `KK_KUNDENTYP` and `AGER_TYP` that has much higher missing values, so we gonna remove this two columns from the dataset 
 
 
 
 ```python
-# Investigate patterns in the amount of missing data in each column.
-
-
+azdias_filled_nan.head(5)
 ```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>AGER_TYP</th>
+      <th>ALTERSKATEGORIE_GROB</th>
+      <th>ANREDE_KZ</th>
+      <th>CJT_GESAMTTYP</th>
+      <th>FINANZ_MINIMALIST</th>
+      <th>FINANZ_SPARER</th>
+      <th>FINANZ_VORSORGER</th>
+      <th>FINANZ_ANLEGER</th>
+      <th>FINANZ_UNAUFFAELLIGER</th>
+      <th>FINANZ_HAUSBAUER</th>
+      <th>...</th>
+      <th>PLZ8_ANTG1</th>
+      <th>PLZ8_ANTG2</th>
+      <th>PLZ8_ANTG3</th>
+      <th>PLZ8_ANTG4</th>
+      <th>PLZ8_BAUMAX</th>
+      <th>PLZ8_HHZ</th>
+      <th>PLZ8_GBZ</th>
+      <th>ARBEIT</th>
+      <th>ORTSGR_KLS9</th>
+      <th>RELAT_AB</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>NaN</td>
+      <td>2</td>
+      <td>1</td>
+      <td>2.0</td>
+      <td>3</td>
+      <td>4</td>
+      <td>3</td>
+      <td>5</td>
+      <td>5</td>
+      <td>3</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>NaN</td>
+      <td>1</td>
+      <td>2</td>
+      <td>5.0</td>
+      <td>1</td>
+      <td>5</td>
+      <td>2</td>
+      <td>5</td>
+      <td>4</td>
+      <td>5</td>
+      <td>...</td>
+      <td>2.0</td>
+      <td>3.0</td>
+      <td>2.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>5.0</td>
+      <td>4.0</td>
+      <td>3.0</td>
+      <td>5.0</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>NaN</td>
+      <td>3</td>
+      <td>2</td>
+      <td>3.0</td>
+      <td>1</td>
+      <td>4</td>
+      <td>1</td>
+      <td>2</td>
+      <td>3</td>
+      <td>5</td>
+      <td>...</td>
+      <td>3.0</td>
+      <td>3.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>4.0</td>
+      <td>4.0</td>
+      <td>3.0</td>
+      <td>5.0</td>
+      <td>2.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2.0</td>
+      <td>4</td>
+      <td>2</td>
+      <td>2.0</td>
+      <td>4</td>
+      <td>2</td>
+      <td>5</td>
+      <td>2</td>
+      <td>1</td>
+      <td>2</td>
+      <td>...</td>
+      <td>2.0</td>
+      <td>2.0</td>
+      <td>2.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>3.0</td>
+      <td>4.0</td>
+      <td>2.0</td>
+      <td>3.0</td>
+      <td>3.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>NaN</td>
+      <td>3</td>
+      <td>1</td>
+      <td>5.0</td>
+      <td>4</td>
+      <td>3</td>
+      <td>4</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2</td>
+      <td>...</td>
+      <td>2.0</td>
+      <td>4.0</td>
+      <td>2.0</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>3.0</td>
+      <td>3.0</td>
+      <td>4.0</td>
+      <td>6.0</td>
+      <td>5.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 85 columns</p>
+</div>
+
+
 
 
 ```python
 # Remove the outlier columns from the dataset. (You'll perform other data
 # engineering tasks such as re-encoding and imputation later.)
 
-
+azdias_filled_nan_dropped = azdias_filled_nan.drop(['KK_KUNDENTYP', 'AGER_TYP'], axis = 1)
 ```
+
+
+```python
+azdias_filled_nan_dropped.head(5)
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>ALTERSKATEGORIE_GROB</th>
+      <th>ANREDE_KZ</th>
+      <th>CJT_GESAMTTYP</th>
+      <th>FINANZ_MINIMALIST</th>
+      <th>FINANZ_SPARER</th>
+      <th>FINANZ_VORSORGER</th>
+      <th>FINANZ_ANLEGER</th>
+      <th>FINANZ_UNAUFFAELLIGER</th>
+      <th>FINANZ_HAUSBAUER</th>
+      <th>FINANZTYP</th>
+      <th>...</th>
+      <th>PLZ8_ANTG1</th>
+      <th>PLZ8_ANTG2</th>
+      <th>PLZ8_ANTG3</th>
+      <th>PLZ8_ANTG4</th>
+      <th>PLZ8_BAUMAX</th>
+      <th>PLZ8_HHZ</th>
+      <th>PLZ8_GBZ</th>
+      <th>ARBEIT</th>
+      <th>ORTSGR_KLS9</th>
+      <th>RELAT_AB</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2</td>
+      <td>1</td>
+      <td>2.0</td>
+      <td>3</td>
+      <td>4</td>
+      <td>3</td>
+      <td>5</td>
+      <td>5</td>
+      <td>3</td>
+      <td>4</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>2</td>
+      <td>5.0</td>
+      <td>1</td>
+      <td>5</td>
+      <td>2</td>
+      <td>5</td>
+      <td>4</td>
+      <td>5</td>
+      <td>1</td>
+      <td>...</td>
+      <td>2.0</td>
+      <td>3.0</td>
+      <td>2.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>5.0</td>
+      <td>4.0</td>
+      <td>3.0</td>
+      <td>5.0</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>2</td>
+      <td>3.0</td>
+      <td>1</td>
+      <td>4</td>
+      <td>1</td>
+      <td>2</td>
+      <td>3</td>
+      <td>5</td>
+      <td>1</td>
+      <td>...</td>
+      <td>3.0</td>
+      <td>3.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>4.0</td>
+      <td>4.0</td>
+      <td>3.0</td>
+      <td>5.0</td>
+      <td>2.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>2</td>
+      <td>2.0</td>
+      <td>4</td>
+      <td>2</td>
+      <td>5</td>
+      <td>2</td>
+      <td>1</td>
+      <td>2</td>
+      <td>6</td>
+      <td>...</td>
+      <td>2.0</td>
+      <td>2.0</td>
+      <td>2.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>3.0</td>
+      <td>4.0</td>
+      <td>2.0</td>
+      <td>3.0</td>
+      <td>3.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>3</td>
+      <td>1</td>
+      <td>5.0</td>
+      <td>4</td>
+      <td>3</td>
+      <td>4</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2</td>
+      <td>5</td>
+      <td>...</td>
+      <td>2.0</td>
+      <td>4.0</td>
+      <td>2.0</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>3.0</td>
+      <td>3.0</td>
+      <td>4.0</td>
+      <td>6.0</td>
+      <td>5.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 83 columns</p>
+</div>
+
+
 
 #### Discussion 1.1.2: Assess Missing Data in Each Column
 
