@@ -2503,7 +2503,6 @@ one_hot_data = one_hot_data.drop('PRAEGENDE_JUGENDJAHRE', axis=1)
 print(one_hot_data.shape)
 
 
-
 ```
 
     (891221, 122)
@@ -2610,8 +2609,96 @@ Make sure that for any new columns that you have engineered, that you've exclude
 # Do whatever you need to in order to ensure that the dataframe only contains
 # the columns that should be passed to the algorithm functions.
 
+# we gonna check the data by columnsagain, to make sure our data is correct:
+
+#column
+name_list_10, percentage_list_10 = get_percentage_missing_in_column(one_hot_data, 0.1)
 
 ```
+
+
+```python
+# column, plot the figure:
+
+plt.figure(figsize=(30,20))
+plt.rcParams.update({'font.size': 22})
+plt.barh(name_list_10, width = percentage_list_10)
+```
+
+
+
+
+    <BarContainer object of 34 artists>
+
+
+
+
+![png](output_48_1.png)
+
+
+As we can see, that we have removed those that have very high missing values,
+
+
+```python
+# check that we have dropped the columns with large_level_variables:
+
+for item in large_level_variables:
+    print(item not in one_hot_data.columns.values)
+```
+
+    True
+    True
+    True
+    True
+    True
+
+
+
+```python
+# check we have encoded small_level_variables
+for item in small_level_variables:
+    print(item not in one_hot_data.columns.values)
+    print(item + '_' in ''.join(one_hot_data.columns.values))
+
+```
+
+    True
+    True
+    True
+    True
+    True
+    True
+    True
+    True
+    True
+    True
+    True
+    True
+    True
+    True
+    True
+    True
+    True
+    True
+    True
+    True
+
+
+
+```python
+# check that we have dropped the two Engineered features
+engineered_feature = ['PRAEGENDE_JUGENDJAHRE', 'CAMEO_INTL_2015']
+
+for item in engineered_feature:
+    print(item not in one_hot_data.columns.values)
+    print(item + '_' in ''.join(one_hot_data.columns.values))
+```
+
+    True
+    True
+    True
+    True
+
 
 ### Step 1.3: Create a Cleaning Function
 
