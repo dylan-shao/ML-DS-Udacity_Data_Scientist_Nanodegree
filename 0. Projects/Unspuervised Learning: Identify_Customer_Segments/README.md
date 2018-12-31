@@ -2237,7 +2237,7 @@ def compare_and_plot(label, data1, data2):
     plt.subplot(2,2,2)
     sns.countplot(x=label, data=data2)
 
-compare_labels = ['AGER_TYP', 'ALTERSKATEGORIE_GROB','ANREDE_KZ','FINANZ_MINIMALIST','FINANZ_SPARER','FINANZ_HAUSBAUER']
+compare_labels = ['ALTERSKATEGORIE_GROB','ANREDE_KZ','FINANZ_MINIMALIST','FINANZ_SPARER','FINANZ_HAUSBAUER']
 
 ```
 
@@ -2273,15 +2273,11 @@ for item in compare_labels:
 
 
 
-![png](output_31_5.png)
-
-
-
 ```python
 # get the subsets from indexes,
-# filled data without nan
-filled_subset_below_threshold = azdias_filled_nan.iloc[subset_below_threshold_indexes]
-filled_subset_above_threshold = azdias_filled_nan.iloc[subset_above_threshold_indexes]
+# filled data with nan filled and drop 2 columns
+filled_subset_below_threshold = azdias_filled_nan_dropped.iloc[subset_below_threshold_indexes]
+filled_subset_above_threshold = azdias_filled_nan_dropped.iloc[subset_above_threshold_indexes]
 
 for item in compare_labels:
     compare_and_plot(item, filled_subset_below_threshold, filled_subset_above_threshold)
@@ -2305,10 +2301,6 @@ for item in compare_labels:
 
 
 ![png](output_32_4.png)
-
-
-
-![png](output_32_5.png)
 
 
 #### Discussion 1.1.3: Assess Missing Data in Each Row
@@ -2337,9 +2329,25 @@ Data wrangling is often the trickiest part of the data analysis process, and the
 
 ```python
 # How many features are there of each data type?
+dic = {}
+for item in feat_info['type']:
+    dic[item] = dic[item] + 1 if item in dic else 1
 
+print(dic)
+
+# show in figure
+plt.figure(figsize=(20,6))
+sns.countplot(x='type', data=feat_info)
+plt.show()
 
 ```
+
+    {'categorical': 21, 'ordinal': 49, 'numeric': 7, 'mixed': 7, 'interval': 1}
+
+
+
+![png](output_35_1.png)
+
 
 #### Step 1.2.1: Re-Encode Categorical Features
 
@@ -2352,20 +2360,112 @@ For categorical data, you would ordinarily need to encode the levels as dummy va
 ```python
 # Assess categorical variables: which are binary, which are multi-level, and
 # which one needs to be re-encoded?
+binary_variable = []
+large_level_variables = []
+small_level_variables = []
 
+for index in range(feat_info.shape[0]):
+    type = feat_info['type'][index]
+    
+    if type == 'categorical':
+        attribute = feat_info['attribute'][index]
+        if attribute in azdias_filled_nan_dropped.columns:
+            dimensions = azdias_filled_nan_dropped[attribute].nunique()
+            
+            print(attribute, dimensions)
+            if dimensions == 2:
+                binary_variable.append(attribute)
+            else:
+                if dimensions > 7:
+                    large_level_variables.append(attribute)
+                else:
+                    small_level_variables.append(attribute)
+
+print('\n')
+print('{} binary variables: \n{}\n'.format(len(binary_variable), binary_variable))
+print('{} small-level variables: \n{}\n'.format(len(small_level_variables), small_level_variables))
+print('{} large_level_variables: \n{}\n'.format(len(large_level_variables), large_level_variables))
+```
+
+    ANREDE_KZ 2
+    CJT_GESAMTTYP 6
+    FINANZTYP 6
+    GFK_URLAUBERTYP 12
+    GREEN_AVANTGARDE 2
+    LP_FAMILIE_FEIN 12
+    LP_FAMILIE_GROB 6
+    LP_STATUS_FEIN 10
+    LP_STATUS_GROB 5
+    NATIONALITAET_KZ 4
+    SHOPPER_TYP 5
+    SOHO_KZ 2
+    TITEL_KZ 6
+    VERS_TYP 3
+    ZABEOTYP 6
+    GEBAEUDETYP 7
+    OST_WEST_KZ 2
+    CAMEO_DEUG_2015 10
+    CAMEO_DEU_2015 45
+    
+    
+    4 binary variables: 
+    ['ANREDE_KZ', 'GREEN_AVANTGARDE', 'SOHO_KZ', 'OST_WEST_KZ']
+    
+    10 small-level variables: 
+    ['CJT_GESAMTTYP', 'FINANZTYP', 'LP_FAMILIE_GROB', 'LP_STATUS_GROB', 'NATIONALITAET_KZ', 'SHOPPER_TYP', 'TITEL_KZ', 'VERS_TYP', 'ZABEOTYP', 'GEBAEUDETYP']
+    
+    5 large_level_variables: 
+    ['GFK_URLAUBERTYP', 'LP_FAMILIE_FEIN', 'LP_STATUS_FEIN', 'CAMEO_DEUG_2015', 'CAMEO_DEU_2015']
+    
+
+
+
+```python
+# drop columns:
+print('shape before drop: ', azdias_filled_nan_dropped.shape)
+azdias_filled_nan_dropped_more = azdias_filled_nan_dropped.drop(large_level_variables, axis=1)
+print('shape after drop: ', azdias_filled_nan_dropped_more.shape)
 
 ```
+
+    shape before drop:  (891221, 83)
+    shape after drop:  (891221, 78)
+
+
+
+
+
+    (891221, 83)
+
+
 
 
 ```python
 # Re-encode categorical variable(s) to be kept in the analysis.
+one_hot_data = azdias_filled_nan_dropped_more
 
+for item in small_level_variables:
+    one_hot_data = pd.concat([one_hot_data, pd.get_dummies(one_hot_data[item], prefix=item)], axis=1)
+    one_hot_data = one_hot_data.drop(item, axis=1)
+
+one_hot_data.shape
 
 ```
 
-#### Discussion 1.2.1: Re-Encode Categorical Features
 
-(Double-click this cell and replace this text with your own text, reporting your findings and decisions regarding categorical features. Which ones did you keep, which did you drop, and what engineering steps did you perform?)
+
+
+    (891221, 122)
+
+
+
+## Discussion 1.2.1: Re-Encode Categorical Features
+
+(Double-click this cell and replace this text with your own text, reporting your findings and decisions regarding categorical features. Which ones did you keep, which did you drop, and what engineering steps did you perform?) 
+
+A:
+
+as we can see, we have 4 binary variables, and 15 multi-level variables, in which 5 of them have more than 7 different values, so I dropped those columns, and encoded the other 10 columns
 
 #### Step 1.2.2: Engineer Mixed-Type Features
 
@@ -2379,9 +2479,36 @@ Be sure to check `Data_Dictionary.md` for the details needed to finish these tas
 
 ```python
 # Investigate "PRAEGENDE_JUGENDJAHRE" and engineer two new variables.
+# after observe the Data_Dictionary.md, we could get:
+print(one_hot_data.shape)
+
+criteria = [one_hot_data['PRAEGENDE_JUGENDJAHRE'].between(1, 2),
+            one_hot_data['PRAEGENDE_JUGENDJAHRE'].between(3, 4),
+            one_hot_data['PRAEGENDE_JUGENDJAHRE'].between(5, 7),
+            one_hot_data['PRAEGENDE_JUGENDJAHRE'].between(8, 9),
+            one_hot_data['PRAEGENDE_JUGENDJAHRE'].between(10, 13),
+            one_hot_data['PRAEGENDE_JUGENDJAHRE'].between(14, 15)]
+
+values = [1, 2, 3, 4, 5, 6]
+
+one_hot_data['PRAEGENDE_JUGENDJAHRE_DECADE'] = np.select(criteria, values, 0)
+
+# create new PRAEGENDE_JUGENDJAHRE_MOVEMENT
+# 0 for mainstream, 1 for avantgrade
+mainstream_labels = [1, 3, 5, 8, 10, 12, 14]
+one_hot_data['PRAEGENDE_JUGENDJAHRE_MOVEMENT'] = one_hot_data['PRAEGENDE_JUGENDJAHRE'].isin(mainstream_labels).astype(int)
+
+# drop original column
+one_hot_data = one_hot_data.drop('PRAEGENDE_JUGENDJAHRE', axis=1)
+print(one_hot_data.shape)
+
 
 
 ```
+
+    (891221, 124)
+    (891221, 123)
+
 
 
 ```python
