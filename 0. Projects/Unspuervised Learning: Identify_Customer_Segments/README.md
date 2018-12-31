@@ -2442,6 +2442,7 @@ print('shape after drop: ', azdias_filled_nan_dropped_more.shape)
 
 ```python
 # Re-encode categorical variable(s) to be kept in the analysis.
+
 one_hot_data = azdias_filled_nan_dropped_more
 
 for item in small_level_variables:
@@ -2655,7 +2656,7 @@ for item in large_level_variables:
 
 
 ```python
-# check we have encoded small_level_variables
+# check we have encoded small_level_variables and removed the original columns
 for item in small_level_variables:
     print(item not in one_hot_data.columns.values)
     print(item + '_' in ''.join(one_hot_data.columns.values))
@@ -2686,7 +2687,7 @@ for item in small_level_variables:
 
 
 ```python
-# check that we have dropped the two Engineered features
+# check that we have dropped the two mixed type features, and created Engineered features columns based on that 
 engineered_feature = ['PRAEGENDE_JUGENDJAHRE', 'CAMEO_INTL_2015']
 
 for item in engineered_feature:
@@ -2698,6 +2699,18 @@ for item in engineered_feature:
     True
     True
     True
+
+
+
+```python
+one_hot_data.shape
+```
+
+
+
+
+    (891221, 124)
+
 
 
 ### Step 1.3: Create a Cleaning Function
@@ -2717,16 +2730,92 @@ def clean_data(df):
     
     # Put in code here to execute all main cleaning steps:
     # convert missing value codes into NaNs, ...
-    
+    for index, row in feat_info.iterrows():
+        column_name = row['attribute']
+        missing_or_unknow_list = row['missing_or_unknown'][1:-1].split(',')
+        df[column_name] = df[column_name].replace(missing_or_unknow_list, np.nan)
     
     # remove selected columns and rows, ...
-
+    name_list_20, percentage_list_20 = get_percentage_missing_in_column(df, 0.2)
+    df = df.drop(name_list_20, axis = 1)
     
     # select, re-encode, and engineer column values.
+    # Re-encode categorical variable(s) to be kept in the analysis.
+    # drop columns:
+    large_level_variables = []
+    small_level_variables = []
+
+    for index in range(feat_info.shape[0]):
+        type = feat_info['type'][index]
+
+        if type == 'categorical':
+            attribute = feat_info['attribute'][index]
+            if attribute in df.columns:
+                dimensions = df[attribute].nunique()
+
+                if dimensions > 7:
+                    large_level_variables.append(attribute)
+                else:
+                    small_level_variables.append(attribute)
+                    
+    df = df.drop(large_level_variables, axis=1)
+
+    for item in small_level_variables:
+        df = pd.concat([df, pd.get_dummies(df[item], prefix=item)], axis=1)
+        df = df.drop(item, axis=1)
+    
+    
+    # engineeded:
+    
+    # after observe the Data_Dictionary.md, we could get:
+
+    criteria = [df['PRAEGENDE_JUGENDJAHRE'].between(1, 2),
+                df['PRAEGENDE_JUGENDJAHRE'].between(3, 4),
+                df['PRAEGENDE_JUGENDJAHRE'].between(5, 7),
+                df['PRAEGENDE_JUGENDJAHRE'].between(8, 9),
+                df['PRAEGENDE_JUGENDJAHRE'].between(10, 13),
+                df['PRAEGENDE_JUGENDJAHRE'].between(14, 15)]
+
+    values = [1, 2, 3, 4, 5, 6] # one hot encode this???
+
+    df['PRAEGENDE_JUGENDJAHRE_DECADE'] = np.select(criteria, values, np.nan)
+    # create new PRAEGENDE_JUGENDJAHRE_MOVEMENT
+    # 0 for mainstream, 1 for avantgrade
+    mainstream_labels = [1, 3, 5, 8, 10, 12, 14]
+    df['PRAEGENDE_JUGENDJAHRE_MOVEMENT'] = df['PRAEGENDE_JUGENDJAHRE'].isin(mainstream_labels).astype(int)
+    # drop original column
+    df = df.drop('PRAEGENDE_JUGENDJAHRE', axis=1)
+
+
+    CAMEO_INTL_2015 = df['CAMEO_INTL_2015'].replace('XX', '0').astype(float)
+    # wealth
+    criteria1 = [CAMEO_INTL_2015.between(11, 15),
+                CAMEO_INTL_2015.between(21, 25),
+                CAMEO_INTL_2015.between(31, 35),
+                CAMEO_INTL_2015.between(41, 45),
+                CAMEO_INTL_2015.between(51, 55)]
+
+    values1 = [1, 2, 3, 4, 5]
+    df['CAMEO_INTL_2015_WEALTH'] = np.select(criteria1, values1, np.nan)
+    # life stage
+    life_stage1 = [11,21,31,41,51]
+    life_stage2 = [12,22,32,42,52]
+    life_stage3 = [13,23,33,43,53]
+    life_stage4 = [14,24,34,44,54]
+    life_stage5 = [15,25,35,45,55]
+
+    criteria2 = [CAMEO_INTL_2015.isin(life_stage1),
+                CAMEO_INTL_2015.isin(life_stage2),
+                CAMEO_INTL_2015.isin(life_stage3),
+                CAMEO_INTL_2015.isin(life_stage4),
+                CAMEO_INTL_2015.isin(life_stage5)]
+    df['CAMEO_INTL_2015_LIFE_STAGE'] = np.select(criteria2, values1, np.nan)
+
+    df = df.drop('CAMEO_INTL_2015', axis=1)
 
     
     # Return the cleaned dataframe.
-    
+    return df;
     
 ```
 
