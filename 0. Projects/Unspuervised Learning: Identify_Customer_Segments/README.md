@@ -57,8 +57,100 @@ feat_info = pd.read_csv('AZDIAS_Feature_Summary.csv', delimiter=';')
 
 
 ```python
-# azdias.info()
+azdias.info()
 ```
+
+    <class 'pandas.core.frame.DataFrame'>
+    RangeIndex: 891221 entries, 0 to 891220
+    Data columns (total 85 columns):
+    AGER_TYP                 205378 non-null float64
+    ALTERSKATEGORIE_GROB     891221 non-null int64
+    ANREDE_KZ                891221 non-null int64
+    CJT_GESAMTTYP            886367 non-null float64
+    FINANZ_MINIMALIST        891221 non-null int64
+    FINANZ_SPARER            891221 non-null int64
+    FINANZ_VORSORGER         891221 non-null int64
+    FINANZ_ANLEGER           891221 non-null int64
+    FINANZ_UNAUFFAELLIGER    891221 non-null int64
+    FINANZ_HAUSBAUER         891221 non-null int64
+    FINANZTYP                891221 non-null int64
+    GEBURTSJAHR              891221 non-null int64
+    GFK_URLAUBERTYP          886367 non-null float64
+    GREEN_AVANTGARDE         891221 non-null int64
+    HEALTH_TYP               891221 non-null int64
+    LP_LEBENSPHASE_FEIN      793589 non-null float64
+    LP_LEBENSPHASE_GROB      886367 non-null float64
+    LP_FAMILIE_FEIN          886367 non-null float64
+    LP_FAMILIE_GROB          886367 non-null float64
+    LP_STATUS_FEIN           886367 non-null float64
+    LP_STATUS_GROB           886367 non-null float64
+    NATIONALITAET_KZ         891221 non-null int64
+    PRAEGENDE_JUGENDJAHRE    891221 non-null int64
+    RETOURTYP_BK_S           886367 non-null float64
+    SEMIO_SOZ                891221 non-null int64
+    SEMIO_FAM                891221 non-null int64
+    SEMIO_REL                891221 non-null int64
+    SEMIO_MAT                891221 non-null int64
+    SEMIO_VERT               891221 non-null int64
+    SEMIO_LUST               891221 non-null int64
+    SEMIO_ERL                891221 non-null int64
+    SEMIO_KULT               891221 non-null int64
+    SEMIO_RAT                891221 non-null int64
+    SEMIO_KRIT               891221 non-null int64
+    SEMIO_DOM                891221 non-null int64
+    SEMIO_KAEM               891221 non-null int64
+    SEMIO_PFLICHT            891221 non-null int64
+    SEMIO_TRADV              891221 non-null int64
+    SHOPPER_TYP              891221 non-null int64
+    SOHO_KZ                  817722 non-null float64
+    TITEL_KZ                 817722 non-null float64
+    VERS_TYP                 891221 non-null int64
+    ZABEOTYP                 891221 non-null int64
+    ALTER_HH                 817722 non-null float64
+    ANZ_PERSONEN             817722 non-null float64
+    ANZ_TITEL                817722 non-null float64
+    HH_EINKOMMEN_SCORE       872873 non-null float64
+    KK_KUNDENTYP             306609 non-null float64
+    W_KEIT_KIND_HH           783619 non-null float64
+    WOHNDAUER_2008           817722 non-null float64
+    ANZ_HAUSHALTE_AKTIV      798073 non-null float64
+    ANZ_HH_TITEL             794213 non-null float64
+    GEBAEUDETYP              798073 non-null float64
+    KONSUMNAEHE              817252 non-null float64
+    MIN_GEBAEUDEJAHR         798073 non-null float64
+    OST_WEST_KZ              798073 non-null object
+    WOHNLAGE                 798073 non-null float64
+    CAMEO_DEUG_2015          792242 non-null object
+    CAMEO_DEU_2015           792242 non-null object
+    CAMEO_INTL_2015          792242 non-null object
+    KBA05_ANTG1              757897 non-null float64
+    KBA05_ANTG2              757897 non-null float64
+    KBA05_ANTG3              757897 non-null float64
+    KBA05_ANTG4              757897 non-null float64
+    KBA05_BAUMAX             757897 non-null float64
+    KBA05_GBZ                757897 non-null float64
+    BALLRAUM                 797481 non-null float64
+    EWDICHTE                 797481 non-null float64
+    INNENSTADT               797481 non-null float64
+    GEBAEUDETYP_RASTER       798066 non-null float64
+    KKK                      770025 non-null float64
+    MOBI_REGIO               757897 non-null float64
+    ONLINE_AFFINITAET        886367 non-null float64
+    REGIOTYP                 770025 non-null float64
+    KBA13_ANZAHL_PKW         785421 non-null float64
+    PLZ8_ANTG1               774706 non-null float64
+    PLZ8_ANTG2               774706 non-null float64
+    PLZ8_ANTG3               774706 non-null float64
+    PLZ8_ANTG4               774706 non-null float64
+    PLZ8_BAUMAX              774706 non-null float64
+    PLZ8_HHZ                 774706 non-null float64
+    PLZ8_GBZ                 774706 non-null float64
+    ARBEIT                   794005 non-null float64
+    ORTSGR_KLS9              794005 non-null float64
+    RELAT_AB                 794005 non-null float64
+    dtypes: float64(50), int64(31), object(4)
+    memory usage: 578.0+ MB
+
 
 
 ```python
@@ -112,7 +204,7 @@ azdias.head()
   <tbody>
     <tr>
       <th>0</th>
-      <td>-1</td>
+      <td>NaN</td>
       <td>2</td>
       <td>1</td>
       <td>2.0</td>
@@ -136,7 +228,7 @@ azdias.head()
     </tr>
     <tr>
       <th>1</th>
-      <td>-1</td>
+      <td>NaN</td>
       <td>1</td>
       <td>2</td>
       <td>5.0</td>
@@ -160,7 +252,7 @@ azdias.head()
     </tr>
     <tr>
       <th>2</th>
-      <td>-1</td>
+      <td>NaN</td>
       <td>3</td>
       <td>2</td>
       <td>3.0</td>
@@ -184,7 +276,7 @@ azdias.head()
     </tr>
     <tr>
       <th>3</th>
-      <td>2</td>
+      <td>2.0</td>
       <td>4</td>
       <td>2</td>
       <td>2.0</td>
@@ -208,7 +300,7 @@ azdias.head()
     </tr>
     <tr>
       <th>4</th>
-      <td>-1</td>
+      <td>NaN</td>
       <td>3</td>
       <td>1</td>
       <td>5.0</td>
@@ -518,8 +610,8 @@ For the remaining features, are there any patterns in which columns have, or sha
 
 ```python
 # return te columns list andcorresponding percentages list for nan value percentage in each column larger than n
-
-def get_percentage_larger_than(df, n):
+# by columns
+def get_percentage_missing_in_column(df, n):
     name_list = []
     percentage_list = []
     
@@ -544,7 +636,7 @@ azdias_filled_nan = pd.read_csv('azdias_filled_nan.csv')
 # dataset.
 
 # get the columns that has nan value large than 10%
-name_list_10, percentage_list_10 = get_percentage_larger_than(azdias_filled_nan, 0.1)
+name_list_10, percentage_list_10 = get_percentage_missing_in_column(azdias_filled_nan, 0.1)
 
 ```
 
@@ -568,10 +660,6 @@ plt.barh(name_list_10, width = percentage_list_10)
 
 
 # Investigate patterns in the amount of missing data in each column.
-
-As we can see that most of the columns does not appear in the above figure, which means that they have nan value less than 10%.
-
-And we have two columns `KK_KUNDENTYP` and `AGER_TYP` that has much higher missing values, so we gonna remove this two columns from the dataset 
 
 
 
@@ -938,7 +1026,9 @@ azdias_filled_nan_dropped.head(5)
 
 #### Discussion 1.1.2: Assess Missing Data in Each Column
 
-(Double click this cell and replace this text with your own text, reporting your observations regarding the amount of missing data in each column. Are there any patterns in missing values? Which columns were removed from the dataset?)
+As we can see that most of the columns does not appear in the above figure, which means that they have nan value less than 10%.
+
+And we have two columns `KK_KUNDENTYP` and `AGER_TYP` that has much higher missing values, so we removed this two columns from the dataset above
 
 #### Step 1.1.3: Assess Missing Data in Each Row
 
@@ -954,21 +1044,1182 @@ Depending on what you observe in your comparison, this will have implications on
 ```python
 # How much data is missing in each row of the dataset?
 
+# we have 891221 rows, so I only print out first 1000, so we could 
 
+for i in range(1000):
+    nan_count = pd.isnull(azdias_filled_nan.iloc[i].values).sum()
+    print(nan_count)
 ```
+
+    43
+    2
+    2
+    3
+    1
+    0
+    2
+    2
+    2
+    1
+    2
+    44
+    8
+    10
+    44
+    9
+    4
+    44
+    2
+    2
+    12
+    2
+    2
+    9
+    44
+    4
+    21
+    2
+    2
+    1
+    36
+    2
+    2
+    2
+    1
+    43
+    2
+    1
+    2
+    6
+    5
+    1
+    1
+    1
+    2
+    0
+    37
+    1
+    44
+    2
+    2
+    1
+    1
+    43
+    44
+    2
+    1
+    2
+    1
+    2
+    1
+    43
+    43
+    2
+    4
+    2
+    1
+    1
+    0
+    44
+    8
+    2
+    2
+    10
+    1
+    44
+    43
+    2
+    2
+    1
+    3
+    44
+    1
+    43
+    0
+    2
+    1
+    1
+    8
+    1
+    36
+    2
+    4
+    0
+    5
+    2
+    4
+    44
+    1
+    44
+    1
+    1
+    1
+    44
+    2
+    1
+    43
+    1
+    44
+    43
+    1
+    2
+    44
+    0
+    2
+    0
+    2
+    1
+    4
+    1
+    0
+    1
+    1
+    1
+    1
+    1
+    2
+    1
+    2
+    2
+    2
+    1
+    2
+    44
+    2
+    1
+    2
+    44
+    31
+    2
+    1
+    5
+    19
+    21
+    44
+    2
+    2
+    2
+    2
+    1
+    2
+    1
+    1
+    43
+    44
+    2
+    3
+    10
+    11
+    2
+    1
+    2
+    4
+    44
+    2
+    35
+    2
+    1
+    44
+    1
+    2
+    1
+    0
+    20
+    2
+    44
+    19
+    2
+    21
+    43
+    1
+    2
+    1
+    2
+    12
+    2
+    3
+    1
+    1
+    1
+    2
+    3
+    2
+    3
+    1
+    2
+    2
+    8
+    2
+    36
+    1
+    1
+    3
+    2
+    2
+    43
+    2
+    0
+    2
+    44
+    44
+    1
+    2
+    2
+    2
+    1
+    1
+    2
+    1
+    1
+    1
+    1
+    2
+    1
+    1
+    1
+    2
+    44
+    44
+    36
+    44
+    2
+    2
+    43
+    2
+    2
+    44
+    43
+    2
+    44
+    2
+    0
+    2
+    1
+    43
+    3
+    2
+    1
+    44
+    2
+    44
+    1
+    2
+    1
+    4
+    11
+    1
+    1
+    4
+    1
+    2
+    2
+    1
+    1
+    2
+    8
+    1
+    1
+    1
+    17
+    1
+    2
+    7
+    1
+    1
+    0
+    2
+    2
+    2
+    1
+    4
+    2
+    0
+    0
+    0
+    1
+    35
+    1
+    35
+    2
+    2
+    3
+    2
+    1
+    1
+    1
+    2
+    2
+    1
+    2
+    1
+    2
+    1
+    1
+    1
+    1
+    1
+    2
+    0
+    1
+    1
+    3
+    1
+    1
+    2
+    1
+    2
+    3
+    1
+    2
+    2
+    1
+    1
+    1
+    35
+    2
+    2
+    1
+    2
+    2
+    0
+    0
+    3
+    2
+    0
+    2
+    44
+    2
+    2
+    44
+    9
+    1
+    43
+    4
+    1
+    1
+    2
+    44
+    2
+    2
+    1
+    36
+    2
+    13
+    2
+    2
+    2
+    1
+    1
+    2
+    1
+    1
+    2
+    1
+    3
+    2
+    4
+    1
+    2
+    1
+    0
+    2
+    0
+    2
+    1
+    1
+    10
+    1
+    37
+    2
+    3
+    9
+    2
+    1
+    9
+    2
+    1
+    2
+    44
+    43
+    3
+    1
+    2
+    2
+    2
+    3
+    5
+    2
+    1
+    43
+    0
+    0
+    1
+    0
+    1
+    1
+    1
+    2
+    1
+    43
+    44
+    36
+    2
+    1
+    44
+    10
+    1
+    2
+    2
+    1
+    1
+    1
+    1
+    0
+    2
+    2
+    2
+    2
+    2
+    2
+    44
+    0
+    2
+    1
+    2
+    2
+    2
+    44
+    4
+    44
+    0
+    2
+    10
+    0
+    2
+    2
+    2
+    1
+    2
+    1
+    0
+    2
+    4
+    1
+    2
+    2
+    4
+    4
+    1
+    3
+    0
+    1
+    2
+    0
+    0
+    2
+    0
+    2
+    1
+    1
+    1
+    1
+    12
+    2
+    2
+    2
+    44
+    2
+    2
+    2
+    2
+    2
+    2
+    2
+    4
+    4
+    2
+    3
+    1
+    2
+    1
+    2
+    1
+    2
+    2
+    1
+    0
+    44
+    0
+    1
+    0
+    2
+    2
+    2
+    1
+    2
+    0
+    0
+    2
+    44
+    2
+    2
+    1
+    3
+    11
+    1
+    1
+    10
+    1
+    2
+    2
+    3
+    1
+    34
+    44
+    2
+    2
+    43
+    2
+    36
+    2
+    1
+    44
+    43
+    2
+    0
+    0
+    2
+    1
+    0
+    1
+    1
+    43
+    9
+    2
+    1
+    0
+    2
+    44
+    1
+    1
+    2
+    2
+    2
+    2
+    1
+    2
+    44
+    1
+    2
+    1
+    8
+    1
+    2
+    44
+    44
+    2
+    44
+    2
+    44
+    10
+    1
+    1
+    44
+    2
+    4
+    1
+    2
+    43
+    43
+    1
+    44
+    44
+    44
+    44
+    44
+    1
+    2
+    44
+    44
+    44
+    44
+    2
+    1
+    1
+    35
+    1
+    1
+    44
+    44
+    2
+    2
+    44
+    2
+    44
+    1
+    44
+    0
+    2
+    2
+    1
+    2
+    1
+    44
+    1
+    44
+    44
+    4
+    44
+    2
+    43
+    43
+    2
+    2
+    43
+    1
+    43
+    1
+    3
+    1
+    2
+    1
+    43
+    1
+    1
+    2
+    2
+    2
+    0
+    44
+    1
+    4
+    9
+    2
+    2
+    4
+    1
+    4
+    1
+    43
+    1
+    1
+    2
+    2
+    0
+    1
+    2
+    3
+    36
+    2
+    0
+    1
+    1
+    2
+    2
+    2
+    2
+    1
+    44
+    1
+    1
+    2
+    1
+    2
+    2
+    1
+    43
+    1
+    2
+    1
+    1
+    35
+    2
+    1
+    1
+    0
+    0
+    0
+    1
+    2
+    1
+    0
+    0
+    44
+    1
+    2
+    2
+    1
+    2
+    2
+    2
+    0
+    2
+    18
+    2
+    1
+    5
+    1
+    2
+    2
+    2
+    0
+    1
+    1
+    2
+    16
+    1
+    2
+    2
+    1
+    1
+    44
+    2
+    2
+    2
+    2
+    2
+    1
+    8
+    1
+    2
+    1
+    2
+    2
+    1
+    1
+    1
+    0
+    4
+    2
+    2
+    36
+    2
+    1
+    43
+    43
+    44
+    1
+    3
+    2
+    1
+    2
+    2
+    2
+    44
+    1
+    9
+    2
+    2
+    44
+    0
+    2
+    1
+    2
+    2
+    1
+    1
+    2
+    1
+    44
+    0
+    2
+    2
+    2
+    2
+    2
+    3
+    0
+    7
+    1
+    1
+    44
+    2
+    43
+    44
+    2
+    44
+    3
+    1
+    8
+    3
+    44
+    43
+    1
+    44
+    1
+    43
+    3
+    2
+    0
+    44
+    2
+    44
+    1
+    10
+    44
+    44
+    44
+    0
+    2
+    2
+    4
+    44
+    44
+    43
+    3
+    44
+    1
+    1
+    2
+    3
+    2
+    2
+    2
+    1
+    1
+    1
+    2
+    1
+    1
+    2
+    0
+    44
+    2
+    9
+    4
+    4
+    1
+    1
+    0
+    4
+    11
+    1
+    1
+    1
+    1
+    4
+    1
+    1
+    1
+    1
+    1
+    1
+    0
+    1
+    1
+    2
+    2
+    2
+    1
+    2
+    2
+    1
+    2
+    2
+    2
+    2
+    2
+    3
+    1
+    2
+    1
+    3
+    44
+    35
+    2
+    2
+    43
+    2
+    43
+    2
+    1
+    2
+    9
+    44
+    1
+    1
+    2
+    44
+    2
+    1
+    5
+    7
+    0
+    1
+    2
+    1
+    2
+    2
+    1
+    2
+    2
+    35
+    35
+    2
+    3
+    9
+    2
+    2
+    2
+    1
+    2
+    2
+    1
+    2
+    2
+    2
+    1
+    2
+    2
+    43
+    1
+    2
+    4
+    2
+    2
+    2
+    8
+    43
+    0
+    2
+    2
+    1
+    44
+    1
+    1
+    1
+    8
+    2
+    0
+    2
+    11
+    2
+    1
+    1
+    0
+    1
+    1
+    1
+    2
+    16
+    2
+    2
+    8
+    2
+    2
+    3
+    5
+    2
+    1
+    1
+    3
+    1
+    2
+    2
+    2
+    0
+    2
+    2
+    2
+    8
+    2
+    0
+    0
+    0
+    2
+    2
+    2
+    2
+    1
+    1
+    2
+    2
+    2
+    2
+    4
+    2
+    2
+    2
+    1
+    2
+    44
+    1
+    0
+    2
+    1
+    1
+    1
+    2
+    44
+
+
+As we can see above, most of them are below 10, but there is a high percentage that the total missing values in each rows will be more than 30, so we could seperate the data into two subsets by the wether the missing values are less than 30
+
+
+```python
+# test
+
+# a = np.array([np.nan, 2, 1])
+# aa = pd.DataFrame()
+# np.nansum(2)
+# b = pd.DataFrame([a],columns=list('abq'))
+# # b.append(pd.DataFrame(a,columns=['a','b','q']))
+# # list(azdias_filled_nan.columns.values)
+# aa = aa.append(b, ignore_index = True)
+# aa= aa.append(b, ignore_index = True)
+# aa
+azdias_filled_nan.iloc[[0,2]]
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>AGER_TYP</th>
+      <th>ALTERSKATEGORIE_GROB</th>
+      <th>ANREDE_KZ</th>
+      <th>CJT_GESAMTTYP</th>
+      <th>FINANZ_MINIMALIST</th>
+      <th>FINANZ_SPARER</th>
+      <th>FINANZ_VORSORGER</th>
+      <th>FINANZ_ANLEGER</th>
+      <th>FINANZ_UNAUFFAELLIGER</th>
+      <th>FINANZ_HAUSBAUER</th>
+      <th>...</th>
+      <th>PLZ8_ANTG1</th>
+      <th>PLZ8_ANTG2</th>
+      <th>PLZ8_ANTG3</th>
+      <th>PLZ8_ANTG4</th>
+      <th>PLZ8_BAUMAX</th>
+      <th>PLZ8_HHZ</th>
+      <th>PLZ8_GBZ</th>
+      <th>ARBEIT</th>
+      <th>ORTSGR_KLS9</th>
+      <th>RELAT_AB</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>NaN</td>
+      <td>2</td>
+      <td>1</td>
+      <td>2.0</td>
+      <td>3</td>
+      <td>4</td>
+      <td>3</td>
+      <td>5</td>
+      <td>5</td>
+      <td>3</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>NaN</td>
+      <td>3</td>
+      <td>2</td>
+      <td>3.0</td>
+      <td>1</td>
+      <td>4</td>
+      <td>1</td>
+      <td>2</td>
+      <td>3</td>
+      <td>5</td>
+      <td>...</td>
+      <td>3.0</td>
+      <td>3.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>4.0</td>
+      <td>4.0</td>
+      <td>3.0</td>
+      <td>5.0</td>
+      <td>2.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>2 rows × 85 columns</p>
+</div>
+
+
 
 
 ```python
 # Write code to divide the data into two subsets based on the number of missing
 # values in each row.
+# by rows
 
+# this will take a very long time to run!
+def get_misssing_info_in_row(df, n):
+    subset_below_threshold_indexes = []
+    subset_above_threshold_indexes = []
+    column_names = list(df.columns.values)
+    rows_count = df.shape[0]
+    print_every = rows_count // 10
+    
+    for index in range(rows_count):
+        row_values = df.iloc[index].values
+        nan_count = pd.isnull(row_values).sum()
+        if nan_count > n:
+            subset_above_threshold_indexes.append(index)
+        else:
+            subset_below_threshold_indexes.append(index)
+        if index % print_every == 0:
+            print('{} %'.format(index*10/print_every))
+    print('Done!')
+    return subset_below_threshold_indexes, subset_above_threshold_indexes
 
+subset_below_threshold_indexes, subset_above_threshold_indexes = get_misssing_info_in_row(azdias_filled_nan, 30)
 ```
+
+    0.0 %
+    10.0 %
+    20.0 %
+    30.0 %
+    40.0 %
+    50.0 %
+    60.0 %
+    70.0 %
+    80.0 %
+    90.0 %
+    100.0 %
+    Done!
+
 
 
 ```python
 # Compare the distribution of values for at least five columns where there are
 # no or few missing values, between the two subsets.
+subset_below_threshold = azdias_filled_nan.iloc[subset_below_threshold_indexes]
+subset_above_threshold = azdias_filled_nan.iloc[subset_above_threshold_indexes]
 
 
 ```
