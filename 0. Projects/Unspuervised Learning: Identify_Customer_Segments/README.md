@@ -204,7 +204,7 @@ azdias.head()
   <tbody>
     <tr>
       <th>0</th>
-      <td>NaN</td>
+      <td>-1</td>
       <td>2</td>
       <td>1</td>
       <td>2.0</td>
@@ -228,7 +228,7 @@ azdias.head()
     </tr>
     <tr>
       <th>1</th>
-      <td>NaN</td>
+      <td>-1</td>
       <td>1</td>
       <td>2</td>
       <td>5.0</td>
@@ -252,7 +252,7 @@ azdias.head()
     </tr>
     <tr>
       <th>2</th>
-      <td>NaN</td>
+      <td>-1</td>
       <td>3</td>
       <td>2</td>
       <td>3.0</td>
@@ -276,7 +276,7 @@ azdias.head()
     </tr>
     <tr>
       <th>3</th>
-      <td>2.0</td>
+      <td>2</td>
       <td>4</td>
       <td>2</td>
       <td>2.0</td>
@@ -300,7 +300,7 @@ azdias.head()
     </tr>
     <tr>
       <th>4</th>
-      <td>NaN</td>
+      <td>-1</td>
       <td>3</td>
       <td>1</td>
       <td>5.0</td>
@@ -456,15 +456,15 @@ The fourth column of the feature attributes summary (loaded in above as `feat_in
 
 ```python
 # test
-series = feat_info['attribute']
-# print(series[series == 'HEALTH_TYP'].index[0])
+# series = feat_info['attribute']
+# # print(series[series == 'HEALTH_TYP'].index[0])
 
-# series[15]
-missing_or_unknow_list = list(map(lambda x: int(x), feat_info['missing_or_unknown'][0][1:-1].split(',')))
-missing_or_unknow_count = 0
+# # series[15]
+# missing_or_unknow_list = list(map(lambda x: int(x), feat_info['missing_or_unknown'][0][1:-1].split(',')))
+# missing_or_unknow_count = 0
 
-azdias['AGER_TYP'] = azdias['AGER_TYP'].replace(missing_or_unknow_list, np.nan)
-azdias['AGER_TYP'].isnull().sum() / len(azdias['AGER_TYP'])
+# azdias['AGER_TYP'] = azdias['AGER_TYP'].replace(missing_or_unknow_list, np.nan)
+# azdias['AGER_TYP'].isnull().sum() / len(azdias['AGER_TYP'])
 # for index, value in azdias['LP_LEBENSPHASE_FEIN'].iteritems():
 #     if value in list(map(lambda x: int(x), missing_or_unknow_list)):
 #             azdias_column[c_index] = np.nan
@@ -2197,7 +2197,7 @@ def get_misssing_info_in_row(df, n):
     print('Done!')
     return subset_below_threshold_indexes, subset_above_threshold_indexes
 
-subset_below_threshold_indexes, subset_above_threshold_indexes = get_misssing_info_in_row(azdias_filled_nan, 30)
+subset_below_threshold_indexes, subset_above_threshold_indexes = get_misssing_info_in_row(azdias, 30)
 ```
 
     0.0 %
@@ -2216,17 +2216,112 @@ subset_below_threshold_indexes, subset_above_threshold_indexes = get_misssing_in
 
 
 ```python
-# Compare the distribution of values for at least five columns where there are
-# no or few missing values, between the two subsets.
-subset_below_threshold = azdias_filled_nan.iloc[subset_below_threshold_indexes]
-subset_above_threshold = azdias_filled_nan.iloc[subset_above_threshold_indexes]
+
+print('percentage of rows with a lot of missing data: {0:.2f} %'.format(len(subset_above_threshold_indexes)*100/azdias.shape[0]))
 
 
 ```
 
+    percentage of rows with a lot of missing data: 10.45 %
+
+
+
+```python
+# Compare the distribution of values for at least five columns where there are
+# no or few missing values, between the two subsets.
+
+def compare_and_plot(label, data1, data2):
+    plt.figure(figsize=(20, 10));  
+    plt.subplot(2,2,1)
+    sns.countplot(x=label, data=data1)
+    plt.subplot(2,2,2)
+    sns.countplot(x=label, data=data2)
+
+compare_labels = ['AGER_TYP', 'ALTERSKATEGORIE_GROB','ANREDE_KZ','FINANZ_MINIMALIST','FINANZ_SPARER','FINANZ_HAUSBAUER']
+
+```
+
+
+```python
+# get the subsets from indexes,
+# original data
+subset_below_threshold = azdias.iloc[subset_below_threshold_indexes]
+subset_above_threshold = azdias.iloc[subset_above_threshold_indexes]
+
+for item in compare_labels:
+    compare_and_plot(item, subset_below_threshold, subset_above_threshold)
+```
+
+
+![png](output_31_0.png)
+
+
+
+![png](output_31_1.png)
+
+
+
+![png](output_31_2.png)
+
+
+
+![png](output_31_3.png)
+
+
+
+![png](output_31_4.png)
+
+
+
+![png](output_31_5.png)
+
+
+
+```python
+# get the subsets from indexes,
+# filled data without nan
+filled_subset_below_threshold = azdias_filled_nan.iloc[subset_below_threshold_indexes]
+filled_subset_above_threshold = azdias_filled_nan.iloc[subset_above_threshold_indexes]
+
+for item in compare_labels:
+    compare_and_plot(item, filled_subset_below_threshold, filled_subset_above_threshold)
+```
+
+
+![png](output_32_0.png)
+
+
+
+![png](output_32_1.png)
+
+
+
+![png](output_32_2.png)
+
+
+
+![png](output_32_3.png)
+
+
+
+![png](output_32_4.png)
+
+
+
+![png](output_32_5.png)
+
+
 #### Discussion 1.1.3: Assess Missing Data in Each Row
 
 (Double-click this cell and replace this text with your own text, reporting your observations regarding missing data in rows. Are the data with lots of missing values are qualitatively different from data with few or no missing values?)
+
+A: 
+
+As we can see from the above figures, the two subsets do different from each other a lot except for `ANREDE_KZ`. For other cloumns, they have similiar pattern: in the subset with a lot of missing values, most of the data values goes to near 0 while one of the data value goes higher to almoast 90% of this column. 
+
+And we only have 10.45% of the rows that with a lot of missing data.
+
+Based on the above analysis, I think we should remove those rows with a lot of missing data.
 
 ### Step 1.2: Select and Re-Encode Features
 
