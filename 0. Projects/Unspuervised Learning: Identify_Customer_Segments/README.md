@@ -618,7 +618,7 @@ def get_percentage_missing_in_column(df, n):
     for column_name in df:
         column = df[column_name]
         percentage = column.isnull().sum() / len(column)
-        if percentage > 0.1:
+        if percentage > n:
             name_list.append(column_name)
             percentage_list.append(percentage)
             
@@ -2369,8 +2369,8 @@ for index in range(feat_info.shape[0]):
     
     if type == 'categorical':
         attribute = feat_info['attribute'][index]
-        if attribute in azdias_filled_nan_dropped.columns:
-            dimensions = azdias_filled_nan_dropped[attribute].nunique()
+        if attribute in filled_subset_below_threshold.columns:
+            dimensions = filled_subset_below_threshold[attribute].nunique()
             
             print(attribute, dimensions)
             if dimensions == 2:
@@ -2422,28 +2422,21 @@ print('{} large_level_variables: \n{}\n'.format(len(large_level_variables), larg
 
 ```python
 # drop columns:
-print('shape before drop: ', azdias_filled_nan_dropped.shape)
-azdias_filled_nan_dropped_more = azdias_filled_nan_dropped.drop(large_level_variables, axis=1)
-print('shape after drop: ', azdias_filled_nan_dropped_more.shape)
+print('shape before drop: ', filled_subset_below_threshold.shape)
+filled_subset_below_threshold = filled_subset_below_threshold.drop(large_level_variables, axis=1)
+print('shape after drop: ', filled_subset_below_threshold.shape)
 
 ```
 
-    shape before drop:  (891221, 83)
-    shape after drop:  (891221, 78)
-
-
-
-
-
-    (891221, 83)
-
+    shape before drop:  (798065, 83)
+    shape after drop:  (798065, 78)
 
 
 
 ```python
 # Re-encode categorical variable(s) to be kept in the analysis.
 
-one_hot_data = azdias_filled_nan_dropped_more
+one_hot_data = filled_subset_below_threshold
 
 for item in small_level_variables:
     one_hot_data = pd.concat([one_hot_data, pd.get_dummies(one_hot_data[item], prefix=item)], axis=1)
@@ -2456,7 +2449,7 @@ one_hot_data.shape
 
 
 
-    (891221, 122)
+    (798065, 122)
 
 
 
@@ -2506,20 +2499,20 @@ print(one_hot_data.shape)
 
 ```
 
-    (891221, 122)
-    0    NaN
+    (798065, 122)
     1    6.0
     2    6.0
     3    4.0
     4    4.0
+    5    2.0
     Name: PRAEGENDE_JUGENDJAHRE_DECADE, dtype: float64
-    0    0
     1    1
     2    0
     3    1
     4    1
+    5    1
     Name: PRAEGENDE_JUGENDJAHRE_MOVEMENT, dtype: int64
-    (891221, 123)
+    (798065, 123)
 
 
 
@@ -2560,20 +2553,20 @@ print(one_hot_data.shape)
 
 ```
 
-    (891221, 123)
-    0    NaN
+    (798065, 123)
     1    5.0
     2    2.0
     3    1.0
     4    4.0
+    5    5.0
     Name: CAMEO_INTL_2015_WEALTH, dtype: float64
-    0    NaN
     1    1.0
     2    4.0
     3    2.0
     4    3.0
+    5    4.0
     Name: CAMEO_INTL_2015_LIFE_STAGE, dtype: float64
-    (891221, 124)
+    (798065, 124)
 
 
 #### Discussion 1.2.2: Engineer Mixed-Type Features
@@ -2602,8 +2595,14 @@ Make sure that for any new columns that you have engineered, that you've exclude
 # If there are other re-engineering tasks you need to perform, make sure you
 # take care of them here. (Dealing with missing data will come in step 2.1.)
 
-
 ```
+
+
+
+
+    (798065, 124)
+
+
 
 
 ```python
@@ -2613,8 +2612,7 @@ Make sure that for any new columns that you have engineered, that you've exclude
 # we gonna check the data by columnsagain, to make sure our data is correct:
 
 #column
-name_list_10, percentage_list_10 = get_percentage_missing_in_column(one_hot_data, 0.1)
-
+name_list_10, percentage_list_10 = get_percentage_missing_in_column(one_hot_data, 0)
 ```
 
 
@@ -2637,7 +2635,30 @@ plt.barh(name_list_10, width = percentage_list_10)
 ![png](output_48_1.png)
 
 
-As we can see, that we have removed those that have very high missing values,
+As we can see, that we have removed those that have very high missing values
+
+
+```python
+subset_below_threshold_indexes, subset_above_threshold_indexes = get_misssing_info_in_row(one_hot_data, 30)
+print('percentage of rows with a lot of missing data: {0:.2f} %'.format(len(subset_above_threshold_indexes)*100/one_hot_data.shape[0]))
+
+
+```
+
+    0.0 %
+    10.0 %
+    20.0 %
+    30.0 %
+    40.0 %
+    50.0 %
+    60.0 %
+    70.0 %
+    80.0 %
+    90.0 %
+    100.0 %
+    Done!
+    percentage of rows with a lot of missing data: 0.00 %
+
 
 
 ```python
@@ -2658,7 +2679,9 @@ for item in large_level_variables:
 ```python
 # check we have encoded small_level_variables and removed the original columns
 for item in small_level_variables:
+    # check we removed the original column
     print(item not in one_hot_data.columns.values)
+    # check we created new columns based on the origional column
     print(item + '_' in ''.join(one_hot_data.columns.values))
 
 ```
@@ -2691,7 +2714,9 @@ for item in small_level_variables:
 engineered_feature = ['PRAEGENDE_JUGENDJAHRE', 'CAMEO_INTL_2015']
 
 for item in engineered_feature:
+    # check we removed the original column
     print(item not in one_hot_data.columns.values)
+    # check we created new columns based on the origional column
     print(item + '_' in ''.join(one_hot_data.columns.values))
 ```
 
@@ -2709,7 +2734,7 @@ one_hot_data.shape
 
 
 
-    (891221, 124)
+    (798065, 124)
 
 
 
@@ -2730,21 +2755,30 @@ def clean_data(df):
     
     # Put in code here to execute all main cleaning steps:
     # convert missing value codes into NaNs, ...
+    print('convert missing value codes into NaNs...')
     for index, row in feat_info.iterrows():
         column_name = row['attribute']
         missing_or_unknow_list = row['missing_or_unknown'][1:-1].split(',')
         df[column_name] = df[column_name].replace(missing_or_unknow_list, np.nan)
     
+    print('df shape {}'.format(df.shape))
     # remove selected columns and rows, ...
+    print('drop columns with more than 20% missing values')
     name_list_20, percentage_list_20 = get_percentage_missing_in_column(df, 0.2)
     df = df.drop(name_list_20, axis = 1)
+    
+    print('df shape {}'.format(df.shape))
+    print('selecting rows that has less than 30% of missing values..')
+    df, subset_above_threshold_indexes = get_misssing_info_in_row(df, 30)
+    print('df shape {}'.format(df.shape))
     
     # select, re-encode, and engineer column values.
     # Re-encode categorical variable(s) to be kept in the analysis.
     # drop columns:
     large_level_variables = []
     small_level_variables = []
-
+    print('investgating the categorical variables...')
+    
     for index in range(feat_info.shape[0]):
         type = feat_info['type'][index]
 
@@ -2757,18 +2791,21 @@ def clean_data(df):
                     large_level_variables.append(attribute)
                 else:
                     small_level_variables.append(attribute)
-                    
+    print('drop columns with categorical type that has more than 7 different values')
     df = df.drop(large_level_variables, axis=1)
-
+    print('df shape {}'.format(df.shape))
+    
+    print('one-hot encoding...')
     for item in small_level_variables:
         df = pd.concat([df, pd.get_dummies(df[item], prefix=item)], axis=1)
         df = df.drop(item, axis=1)
     
+    print('df shape {}'.format(df.shape))
     
     # engineeded:
     
     # after observe the Data_Dictionary.md, we could get:
-
+    print('investgating engineered features')
     criteria = [df['PRAEGENDE_JUGENDJAHRE'].between(1, 2),
                 df['PRAEGENDE_JUGENDJAHRE'].between(3, 4),
                 df['PRAEGENDE_JUGENDJAHRE'].between(5, 7),
@@ -2785,7 +2822,8 @@ def clean_data(df):
     df['PRAEGENDE_JUGENDJAHRE_MOVEMENT'] = df['PRAEGENDE_JUGENDJAHRE'].isin(mainstream_labels).astype(int)
     # drop original column
     df = df.drop('PRAEGENDE_JUGENDJAHRE', axis=1)
-
+    
+    
 
     CAMEO_INTL_2015 = df['CAMEO_INTL_2015'].replace('XX', '0').astype(float)
     # wealth
@@ -2812,8 +2850,8 @@ def clean_data(df):
     df['CAMEO_INTL_2015_LIFE_STAGE'] = np.select(criteria2, values1, np.nan)
 
     df = df.drop('CAMEO_INTL_2015', axis=1)
-
-    
+    print('df shape {}'.format(df.shape))
+    print('Done!')
     # Return the cleaned dataframe.
     return df;
     
