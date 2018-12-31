@@ -2489,15 +2489,15 @@ criteria = [one_hot_data['PRAEGENDE_JUGENDJAHRE'].between(1, 2),
             one_hot_data['PRAEGENDE_JUGENDJAHRE'].between(10, 13),
             one_hot_data['PRAEGENDE_JUGENDJAHRE'].between(14, 15)]
 
-values = [1, 2, 3, 4, 5, 6]
+values = [1, 2, 3, 4, 5, 6] # one hot encode this???
 
-one_hot_data['PRAEGENDE_JUGENDJAHRE_DECADE'] = np.select(criteria, values, 0)
-
+one_hot_data['PRAEGENDE_JUGENDJAHRE_DECADE'] = np.select(criteria, values, np.nan)
+print(one_hot_data['PRAEGENDE_JUGENDJAHRE_DECADE'].head())
 # create new PRAEGENDE_JUGENDJAHRE_MOVEMENT
 # 0 for mainstream, 1 for avantgrade
 mainstream_labels = [1, 3, 5, 8, 10, 12, 14]
 one_hot_data['PRAEGENDE_JUGENDJAHRE_MOVEMENT'] = one_hot_data['PRAEGENDE_JUGENDJAHRE'].isin(mainstream_labels).astype(int)
-
+print(one_hot_data['PRAEGENDE_JUGENDJAHRE_MOVEMENT'].head())
 # drop original column
 one_hot_data = one_hot_data.drop('PRAEGENDE_JUGENDJAHRE', axis=1)
 print(one_hot_data.shape)
@@ -2506,20 +2506,87 @@ print(one_hot_data.shape)
 
 ```
 
-    (891221, 124)
+    (891221, 122)
+    0    NaN
+    1    6.0
+    2    6.0
+    3    4.0
+    4    4.0
+    Name: PRAEGENDE_JUGENDJAHRE_DECADE, dtype: float64
+    0    0
+    1    1
+    2    0
+    3    1
+    4    1
+    Name: PRAEGENDE_JUGENDJAHRE_MOVEMENT, dtype: int64
     (891221, 123)
 
 
 
 ```python
 # Investigate "CAMEO_INTL_2015" and engineer two new variables.
+print(one_hot_data.shape)
+
+CAMEO_INTL_2015 = one_hot_data['CAMEO_INTL_2015'].replace('XX', '0').astype(float)
+# wealth
+criteria1 = [CAMEO_INTL_2015.between(11, 15),
+            CAMEO_INTL_2015.between(21, 25),
+            CAMEO_INTL_2015.between(31, 35),
+            CAMEO_INTL_2015.between(41, 45),
+            CAMEO_INTL_2015.between(51, 55)]
+
+values = [1, 2, 3, 4, 5]
+one_hot_data['CAMEO_INTL_2015_WEALTH'] = np.select(criteria1, values, np.nan)
+print(one_hot_data['CAMEO_INTL_2015_WEALTH'].head())
+# life stage
+life_stage1 = [11,21,31,41,51]
+life_stage2 = [12,22,32,42,52]
+life_stage3 = [13,23,33,43,53]
+life_stage4 = [14,24,34,44,54]
+life_stage5 = [15,25,35,45,55]
+
+criteria2 = [CAMEO_INTL_2015.isin(life_stage1),
+            CAMEO_INTL_2015.isin(life_stage2),
+            CAMEO_INTL_2015.isin(life_stage3),
+            CAMEO_INTL_2015.isin(life_stage4),
+            CAMEO_INTL_2015.isin(life_stage5)]
+one_hot_data['CAMEO_INTL_2015_LIFE_STAGE'] = np.select(criteria2, values, np.nan)
+print(one_hot_data['CAMEO_INTL_2015_LIFE_STAGE'].head())
+
+one_hot_data = one_hot_data.drop('CAMEO_INTL_2015', axis=1)
+
+print(one_hot_data.shape)
 
 
 ```
 
+    (891221, 123)
+    0    NaN
+    1    5.0
+    2    2.0
+    3    1.0
+    4    4.0
+    Name: CAMEO_INTL_2015_WEALTH, dtype: float64
+    0    NaN
+    1    1.0
+    2    4.0
+    3    2.0
+    4    3.0
+    Name: CAMEO_INTL_2015_LIFE_STAGE, dtype: float64
+    (891221, 124)
+
+
 #### Discussion 1.2.2: Engineer Mixed-Type Features
 
 (Double-click this cell and replace this text with your own text, reporting your findings and decisions regarding mixed-value features. Which ones did you keep, which did you drop, and what engineering steps did you perform?)
+A:
+
+for `PRAEGENDE_JUGENDJAHRE`, I divided it into two columns, one by DECADE, and one by MOVEMENT,
+
+and for `CAMEO_INTL_2015`, I divided it into two columns, one by WEALTH, and one by LIFE STAGE,
+
+at this time, I am only making two columns changes, and will investgating more in the future
+
 
 #### Step 1.2.3: Complete Feature Selection
 
