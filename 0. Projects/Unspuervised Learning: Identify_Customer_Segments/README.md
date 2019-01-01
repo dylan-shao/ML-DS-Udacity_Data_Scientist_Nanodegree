@@ -2187,9 +2187,48 @@ Before we apply dimensionality reduction techniques to the data, we need to perf
 ```python
 # If you've not yet cleaned the dataset of all NaN values, then investigate and
 # do that now.
+print(one_hot_data.shape)
 
+imp = SimpleImputer(missing_values=np.nan, strategy='mean')
+g = one_hot_data.columns.to_series().groupby(one_hot_data.dtypes).groups
 
+# get none object columns
+list1 = []
+list2 = []
+for k, v in g.items():
+    print(k.name)
+    if k.name != 'object':
+        list1 = list1 + v.tolist()
+    else:
+        list2 = list2 + v.tolist()
+        
+one_hot_data[list]  = imp.fit_transform(one_hot_data[list])
+print(one_hot_data.shape)
 ```
+
+    (797981, 110)
+    uint8
+    int64
+    float64
+    object
+    (797981, 110)
+
+
+
+```python
+# test
+name_list_10, percentage_list_10 = get_percentage_missing_in_column(one_hot_data, 0)
+
+# we can see that there is no nan values in columns
+name_list_10
+```
+
+
+
+
+    []
+
+
 
 
 ```python
