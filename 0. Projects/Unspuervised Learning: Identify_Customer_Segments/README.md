@@ -16,6 +16,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+from sklearn.impute import SimpleImputer
 
 # magic word for producing visualizations in notebook
 %matplotlib inline
@@ -63,7 +64,7 @@ azdias.info()
     <class 'pandas.core.frame.DataFrame'>
     RangeIndex: 891221 entries, 0 to 891220
     Data columns (total 85 columns):
-    AGER_TYP                 205378 non-null float64
+    AGER_TYP                 891221 non-null int64
     ALTERSKATEGORIE_GROB     891221 non-null int64
     ANREDE_KZ                891221 non-null int64
     CJT_GESAMTTYP            886367 non-null float64
@@ -78,7 +79,7 @@ azdias.info()
     GFK_URLAUBERTYP          886367 non-null float64
     GREEN_AVANTGARDE         891221 non-null int64
     HEALTH_TYP               891221 non-null int64
-    LP_LEBENSPHASE_FEIN      793589 non-null float64
+    LP_LEBENSPHASE_FEIN      886367 non-null float64
     LP_LEBENSPHASE_GROB      886367 non-null float64
     LP_FAMILIE_FEIN          886367 non-null float64
     LP_FAMILIE_GROB          886367 non-null float64
@@ -148,7 +149,7 @@ azdias.info()
     ARBEIT                   794005 non-null float64
     ORTSGR_KLS9              794005 non-null float64
     RELAT_AB                 794005 non-null float64
-    dtypes: float64(50), int64(31), object(4)
+    dtypes: float64(49), int64(32), object(4)
     memory usage: 578.0+ MB
 
 
@@ -472,13 +473,6 @@ The fourth column of the feature attributes summary (loaded in above as `feat_in
 ```
 
 
-
-
-    0.7695543529607134
-
-
-
-
 ```python
 type(np.NaN)
 ```
@@ -494,111 +488,284 @@ type(np.NaN)
 ```python
 # Identify missing or unknown data values and convert them to NaNs.
 
-azdias_filled = azdias.copy(deep=True)
-
 for index, row in feat_info.iterrows():
     column_name = row['attribute']
-    azdias_column = azdias_filled[column_name]
     missing_or_unknow_list = row['missing_or_unknown'][1:-1].split(',')
-    missing_or_unknow_count = 0
+    print(column_name)
     
-    azdias_column = azdias_column.replace(missing_or_unknow_list, np.nan)
-    percentage = azdias_column.isnull().sum() / len(azdias_column)
+    missing_or_unknow_count = 0
+    if azdias[column_name].dtypes != 'object' and len(missing_or_unknow_list) != 0 and missing_or_unknow_list[0] != '':
+        missing_or_unknow_list = list(map(float, missing_or_unknow_list))
+    print(missing_or_unknow_list)
+    azdias[column_name] = azdias[column_name].replace(missing_or_unknow_list, np.nan)
+    percentage = azdias[column_name].isnull().sum() / len(azdias[column_name])
     
     print('The percentage of missing value for {} is {}'.format(column_name, percentage))
 
+azdias_filled = azdias
+
 ```
 
+    AGER_TYP
+    [-1.0, 0.0]
     The percentage of missing value for AGER_TYP is 0.7695543529607134
-    The percentage of missing value for ALTERSKATEGORIE_GROB is 0.0
+    ALTERSKATEGORIE_GROB
+    [-1.0, 0.0, 9.0]
+    The percentage of missing value for ALTERSKATEGORIE_GROB is 0.0032326437550282143
+    ANREDE_KZ
+    [-1.0, 0.0]
     The percentage of missing value for ANREDE_KZ is 0.0
+    CJT_GESAMTTYP
+    [0.0]
     The percentage of missing value for CJT_GESAMTTYP is 0.005446460529992
+    FINANZ_MINIMALIST
+    [-1.0]
     The percentage of missing value for FINANZ_MINIMALIST is 0.0
+    FINANZ_SPARER
+    [-1.0]
     The percentage of missing value for FINANZ_SPARER is 0.0
+    FINANZ_VORSORGER
+    [-1.0]
     The percentage of missing value for FINANZ_VORSORGER is 0.0
+    FINANZ_ANLEGER
+    [-1.0]
     The percentage of missing value for FINANZ_ANLEGER is 0.0
+    FINANZ_UNAUFFAELLIGER
+    [-1.0]
     The percentage of missing value for FINANZ_UNAUFFAELLIGER is 0.0
+    FINANZ_HAUSBAUER
+    [-1.0]
     The percentage of missing value for FINANZ_HAUSBAUER is 0.0
+    FINANZTYP
+    [-1.0]
     The percentage of missing value for FINANZTYP is 0.0
-    The percentage of missing value for GEBURTSJAHR is 0.0
+    GEBURTSJAHR
+    [0.0]
+    The percentage of missing value for GEBURTSJAHR is 0.4402028228688507
+    GFK_URLAUBERTYP
+    ['']
     The percentage of missing value for GFK_URLAUBERTYP is 0.005446460529992
+    GREEN_AVANTGARDE
+    ['']
     The percentage of missing value for GREEN_AVANTGARDE is 0.0
-    The percentage of missing value for HEALTH_TYP is 0.0
+    HEALTH_TYP
+    [-1.0, 0.0]
+    The percentage of missing value for HEALTH_TYP is 0.12476815514894735
+    LP_LEBENSPHASE_FEIN
+    [0.0]
     The percentage of missing value for LP_LEBENSPHASE_FEIN is 0.10954858559212585
-    The percentage of missing value for LP_LEBENSPHASE_GROB is 0.005446460529992
-    The percentage of missing value for LP_FAMILIE_FEIN is 0.005446460529992
-    The percentage of missing value for LP_FAMILIE_GROB is 0.005446460529992
+    LP_LEBENSPHASE_GROB
+    [0.0]
+    The percentage of missing value for LP_LEBENSPHASE_GROB is 0.10611509378706292
+    LP_FAMILIE_FEIN
+    [0.0]
+    The percentage of missing value for LP_FAMILIE_FEIN is 0.08728699166648901
+    LP_FAMILIE_GROB
+    [0.0]
+    The percentage of missing value for LP_FAMILIE_GROB is 0.08728699166648901
+    LP_STATUS_FEIN
+    [0.0]
     The percentage of missing value for LP_STATUS_FEIN is 0.005446460529992
+    LP_STATUS_GROB
+    [0.0]
     The percentage of missing value for LP_STATUS_GROB is 0.005446460529992
-    The percentage of missing value for NATIONALITAET_KZ is 0.0
-    The percentage of missing value for PRAEGENDE_JUGENDJAHRE is 0.0
+    NATIONALITAET_KZ
+    [-1.0, 0.0]
+    The percentage of missing value for NATIONALITAET_KZ is 0.12153551139391913
+    PRAEGENDE_JUGENDJAHRE
+    [-1.0, 0.0]
+    The percentage of missing value for PRAEGENDE_JUGENDJAHRE is 0.12136608091595687
+    RETOURTYP_BK_S
+    [0.0]
     The percentage of missing value for RETOURTYP_BK_S is 0.005446460529992
+    SEMIO_SOZ
+    [-1.0, 9.0]
     The percentage of missing value for SEMIO_SOZ is 0.0
+    SEMIO_FAM
+    [-1.0, 9.0]
     The percentage of missing value for SEMIO_FAM is 0.0
+    SEMIO_REL
+    [-1.0, 9.0]
     The percentage of missing value for SEMIO_REL is 0.0
+    SEMIO_MAT
+    [-1.0, 9.0]
     The percentage of missing value for SEMIO_MAT is 0.0
+    SEMIO_VERT
+    [-1.0, 9.0]
     The percentage of missing value for SEMIO_VERT is 0.0
+    SEMIO_LUST
+    [-1.0, 9.0]
     The percentage of missing value for SEMIO_LUST is 0.0
+    SEMIO_ERL
+    [-1.0, 9.0]
     The percentage of missing value for SEMIO_ERL is 0.0
+    SEMIO_KULT
+    [-1.0, 9.0]
     The percentage of missing value for SEMIO_KULT is 0.0
+    SEMIO_RAT
+    [-1.0, 9.0]
     The percentage of missing value for SEMIO_RAT is 0.0
+    SEMIO_KRIT
+    [-1.0, 9.0]
     The percentage of missing value for SEMIO_KRIT is 0.0
+    SEMIO_DOM
+    [-1.0, 9.0]
     The percentage of missing value for SEMIO_DOM is 0.0
+    SEMIO_KAEM
+    [-1.0, 9.0]
     The percentage of missing value for SEMIO_KAEM is 0.0
+    SEMIO_PFLICHT
+    [-1.0, 9.0]
     The percentage of missing value for SEMIO_PFLICHT is 0.0
+    SEMIO_TRADV
+    [-1.0, 9.0]
     The percentage of missing value for SEMIO_TRADV is 0.0
-    The percentage of missing value for SHOPPER_TYP is 0.0
+    SHOPPER_TYP
+    [-1.0]
+    The percentage of missing value for SHOPPER_TYP is 0.12476815514894735
+    SOHO_KZ
+    [-1.0]
     The percentage of missing value for SOHO_KZ is 0.08247000463409188
-    The percentage of missing value for TITEL_KZ is 0.08247000463409188
-    The percentage of missing value for VERS_TYP is 0.0
+    TITEL_KZ
+    [-1.0, 0.0]
+    The percentage of missing value for TITEL_KZ is 0.9975763587258379
+    VERS_TYP
+    [-1.0]
+    The percentage of missing value for VERS_TYP is 0.12476815514894735
+    ZABEOTYP
+    [-1.0, 9.0]
     The percentage of missing value for ZABEOTYP is 0.0
-    The percentage of missing value for ALTER_HH is 0.08247000463409188
+    ALTER_HH
+    [0.0]
+    The percentage of missing value for ALTER_HH is 0.34813699407890975
+    ANZ_PERSONEN
+    ['']
     The percentage of missing value for ANZ_PERSONEN is 0.08247000463409188
+    ANZ_TITEL
+    ['']
     The percentage of missing value for ANZ_TITEL is 0.08247000463409188
+    HH_EINKOMMEN_SCORE
+    [-1.0, 0.0]
     The percentage of missing value for HH_EINKOMMEN_SCORE is 0.020587486156632306
+    KK_KUNDENTYP
+    [-1.0]
     The percentage of missing value for KK_KUNDENTYP is 0.6559674873011295
-    The percentage of missing value for W_KEIT_KIND_HH is 0.12073548536221655
+    W_KEIT_KIND_HH
+    [-1.0, 0.0]
+    The percentage of missing value for W_KEIT_KIND_HH is 0.16605084485217472
+    WOHNDAUER_2008
+    [-1.0, 0.0]
     The percentage of missing value for WOHNDAUER_2008 is 0.08247000463409188
-    The percentage of missing value for ANZ_HAUSHALTE_AKTIV is 0.10451728583594866
+    ANZ_HAUSHALTE_AKTIV
+    [0.0]
+    The percentage of missing value for ANZ_HAUSHALTE_AKTIV is 0.11176913470396231
+    ANZ_HH_TITEL
+    ['']
     The percentage of missing value for ANZ_HH_TITEL is 0.10884842255736793
+    GEBAEUDETYP
+    [-1.0, 0.0]
     The percentage of missing value for GEBAEUDETYP is 0.10451728583594866
+    KONSUMNAEHE
+    ['']
     The percentage of missing value for KONSUMNAEHE is 0.08299737102245122
+    MIN_GEBAEUDEJAHR
+    [0.0]
     The percentage of missing value for MIN_GEBAEUDEJAHR is 0.10451728583594866
+    OST_WEST_KZ
+    ['-1']
     The percentage of missing value for OST_WEST_KZ is 0.10451728583594866
+    WOHNLAGE
+    [-1.0]
     The percentage of missing value for WOHNLAGE is 0.10451728583594866
+    CAMEO_DEUG_2015
+    ['-1', 'X']
     The percentage of missing value for CAMEO_DEUG_2015 is 0.11147852216229195
+    CAMEO_DEU_2015
+    ['XX']
     The percentage of missing value for CAMEO_DEU_2015 is 0.11147852216229195
+    CAMEO_INTL_2015
+    ['-1', 'XX']
     The percentage of missing value for CAMEO_INTL_2015 is 0.11147852216229195
+    KBA05_ANTG1
+    [-1.0]
     The percentage of missing value for KBA05_ANTG1 is 0.14959701353536328
+    KBA05_ANTG2
+    [-1.0]
     The percentage of missing value for KBA05_ANTG2 is 0.14959701353536328
+    KBA05_ANTG3
+    [-1.0]
     The percentage of missing value for KBA05_ANTG3 is 0.14959701353536328
+    KBA05_ANTG4
+    [-1.0]
     The percentage of missing value for KBA05_ANTG4 is 0.14959701353536328
-    The percentage of missing value for KBA05_BAUMAX is 0.14959701353536328
+    KBA05_BAUMAX
+    [-1.0, 0.0]
+    The percentage of missing value for KBA05_BAUMAX is 0.5346866826522265
+    KBA05_GBZ
+    [-1.0, 0.0]
     The percentage of missing value for KBA05_GBZ is 0.14959701353536328
+    BALLRAUM
+    [-1.0]
     The percentage of missing value for BALLRAUM is 0.10518154307405234
+    EWDICHTE
+    [-1.0]
     The percentage of missing value for EWDICHTE is 0.10518154307405234
+    INNENSTADT
+    [-1.0]
     The percentage of missing value for INNENSTADT is 0.10518154307405234
+    GEBAEUDETYP_RASTER
+    ['']
     The percentage of missing value for GEBAEUDETYP_RASTER is 0.10452514022896678
-    The percentage of missing value for KKK is 0.1359887166034014
+    KKK
+    [-1.0, 0.0]
+    The percentage of missing value for KKK is 0.17735668257368262
+    MOBI_REGIO
+    ['']
     The percentage of missing value for MOBI_REGIO is 0.14959701353536328
+    ONLINE_AFFINITAET
+    ['']
     The percentage of missing value for ONLINE_AFFINITAET is 0.005446460529992
-    The percentage of missing value for REGIOTYP is 0.1359887166034014
+    REGIOTYP
+    [-1.0, 0.0]
+    The percentage of missing value for REGIOTYP is 0.17735668257368262
+    KBA13_ANZAHL_PKW
+    ['']
     The percentage of missing value for KBA13_ANZAHL_PKW is 0.11871354018812394
+    PLZ8_ANTG1
+    [-1.0]
     The percentage of missing value for PLZ8_ANTG1 is 0.13073637178657146
+    PLZ8_ANTG2
+    [-1.0]
     The percentage of missing value for PLZ8_ANTG2 is 0.13073637178657146
+    PLZ8_ANTG3
+    [-1.0]
     The percentage of missing value for PLZ8_ANTG3 is 0.13073637178657146
+    PLZ8_ANTG4
+    [-1.0]
     The percentage of missing value for PLZ8_ANTG4 is 0.13073637178657146
+    PLZ8_BAUMAX
+    [-1.0, 0.0]
     The percentage of missing value for PLZ8_BAUMAX is 0.13073637178657146
+    PLZ8_HHZ
+    [-1.0]
     The percentage of missing value for PLZ8_HHZ is 0.13073637178657146
+    PLZ8_GBZ
+    [-1.0]
     The percentage of missing value for PLZ8_GBZ is 0.13073637178657146
-    The percentage of missing value for ARBEIT is 0.10908181023562057
-    The percentage of missing value for ORTSGR_KLS9 is 0.10908181023562057
-    The percentage of missing value for RELAT_AB is 0.10908181023562057
+    ARBEIT
+    [-1.0, 9.0]
+    The percentage of missing value for ARBEIT is 0.10926021716274639
+    ORTSGR_KLS9
+    [-1.0, 0.0]
+    The percentage of missing value for ORTSGR_KLS9 is 0.1091468894920564
+    RELAT_AB
+    [-1.0, 9.0]
+    The percentage of missing value for RELAT_AB is 0.10926021716274639
 
 
 
 ```python
-azdias_filled.to_csv('azdias_filled_nan.csv',index=False)  
+# azdias_filled.to_csv('azdias_filled_nan.csv',index=False)  
 ```
 
 #### Step 1.1.2: Assess Missing Data in Each Column
@@ -611,6 +778,13 @@ For the remaining features, are there any patterns in which columns have, or sha
 ```python
 # return te columns list andcorresponding percentages list for nan value percentage in each column larger than n
 # by columns
+
+# this will take a very long time to run!
+# Params:
+#     df: dataframe
+#     n: percentage in decimal
+# Return: the list of names and percentage of nan values column which large than n
+
 def get_percentage_missing_in_column(df, n):
     name_list = []
     percentage_list = []
@@ -627,7 +801,8 @@ def get_percentage_missing_in_column(df, n):
 
 
 ```python
-azdias_filled_nan = pd.read_csv('azdias_filled_nan.csv')
+# azdias_filled_nan = pd.read_csv('azdias_filled_nan.csv')
+azdias_filled_nan = azdias_filled
 ```
 
 
@@ -651,12 +826,24 @@ plt.barh(name_list_10, width = percentage_list_10)
 
 
 
-    <BarContainer object of 37 artists>
+    <BarContainer object of 46 artists>
 
 
 
 
 ![png](output_18_1.png)
+
+
+
+```python
+azdias_filled_nan.shape
+```
+
+
+
+
+    (891221, 85)
+
 
 
 # Investigate patterns in the amount of missing data in each column.
@@ -715,7 +902,7 @@ azdias_filled_nan.head(5)
     <tr>
       <th>0</th>
       <td>NaN</td>
-      <td>2</td>
+      <td>2.0</td>
       <td>1</td>
       <td>2.0</td>
       <td>3</td>
@@ -739,7 +926,7 @@ azdias_filled_nan.head(5)
     <tr>
       <th>1</th>
       <td>NaN</td>
-      <td>1</td>
+      <td>1.0</td>
       <td>2</td>
       <td>5.0</td>
       <td>1</td>
@@ -763,7 +950,7 @@ azdias_filled_nan.head(5)
     <tr>
       <th>2</th>
       <td>NaN</td>
-      <td>3</td>
+      <td>3.0</td>
       <td>2</td>
       <td>3.0</td>
       <td>1</td>
@@ -787,7 +974,7 @@ azdias_filled_nan.head(5)
     <tr>
       <th>3</th>
       <td>2.0</td>
-      <td>4</td>
+      <td>4.0</td>
       <td>2</td>
       <td>2.0</td>
       <td>4</td>
@@ -811,7 +998,7 @@ azdias_filled_nan.head(5)
     <tr>
       <th>4</th>
       <td>NaN</td>
-      <td>3</td>
+      <td>3.0</td>
       <td>1</td>
       <td>5.0</td>
       <td>4</td>
@@ -843,185 +1030,21 @@ azdias_filled_nan.head(5)
 ```python
 # Remove the outlier columns from the dataset. (You'll perform other data
 # engineering tasks such as re-encoding and imputation later.)
-
-azdias_filled_nan_dropped = azdias_filled_nan.drop(['KK_KUNDENTYP', 'AGER_TYP'], axis = 1)
+print(azdias_filled_nan.shape)
+# as we can see from above fligure, we will remove outliers that has missing values more than 20%
+name_list_20, percentage_list_20 = get_percentage_missing_in_column(azdias_filled_nan, 0.2)
+azdias_filled_nan_dropped = azdias_filled_nan.drop(name_list_20, axis = 1)
 ```
+
+    (891221, 85)
+
 
 
 ```python
-azdias_filled_nan_dropped.head(5)
+print(azdias_filled_nan_dropped.shape)
 ```
 
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>ALTERSKATEGORIE_GROB</th>
-      <th>ANREDE_KZ</th>
-      <th>CJT_GESAMTTYP</th>
-      <th>FINANZ_MINIMALIST</th>
-      <th>FINANZ_SPARER</th>
-      <th>FINANZ_VORSORGER</th>
-      <th>FINANZ_ANLEGER</th>
-      <th>FINANZ_UNAUFFAELLIGER</th>
-      <th>FINANZ_HAUSBAUER</th>
-      <th>FINANZTYP</th>
-      <th>...</th>
-      <th>PLZ8_ANTG1</th>
-      <th>PLZ8_ANTG2</th>
-      <th>PLZ8_ANTG3</th>
-      <th>PLZ8_ANTG4</th>
-      <th>PLZ8_BAUMAX</th>
-      <th>PLZ8_HHZ</th>
-      <th>PLZ8_GBZ</th>
-      <th>ARBEIT</th>
-      <th>ORTSGR_KLS9</th>
-      <th>RELAT_AB</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>2</td>
-      <td>1</td>
-      <td>2.0</td>
-      <td>3</td>
-      <td>4</td>
-      <td>3</td>
-      <td>5</td>
-      <td>5</td>
-      <td>3</td>
-      <td>4</td>
-      <td>...</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>1</td>
-      <td>2</td>
-      <td>5.0</td>
-      <td>1</td>
-      <td>5</td>
-      <td>2</td>
-      <td>5</td>
-      <td>4</td>
-      <td>5</td>
-      <td>1</td>
-      <td>...</td>
-      <td>2.0</td>
-      <td>3.0</td>
-      <td>2.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>5.0</td>
-      <td>4.0</td>
-      <td>3.0</td>
-      <td>5.0</td>
-      <td>4.0</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>3</td>
-      <td>2</td>
-      <td>3.0</td>
-      <td>1</td>
-      <td>4</td>
-      <td>1</td>
-      <td>2</td>
-      <td>3</td>
-      <td>5</td>
-      <td>1</td>
-      <td>...</td>
-      <td>3.0</td>
-      <td>3.0</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>1.0</td>
-      <td>4.0</td>
-      <td>4.0</td>
-      <td>3.0</td>
-      <td>5.0</td>
-      <td>2.0</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>4</td>
-      <td>2</td>
-      <td>2.0</td>
-      <td>4</td>
-      <td>2</td>
-      <td>5</td>
-      <td>2</td>
-      <td>1</td>
-      <td>2</td>
-      <td>6</td>
-      <td>...</td>
-      <td>2.0</td>
-      <td>2.0</td>
-      <td>2.0</td>
-      <td>0.0</td>
-      <td>1.0</td>
-      <td>3.0</td>
-      <td>4.0</td>
-      <td>2.0</td>
-      <td>3.0</td>
-      <td>3.0</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>3</td>
-      <td>1</td>
-      <td>5.0</td>
-      <td>4</td>
-      <td>3</td>
-      <td>4</td>
-      <td>1</td>
-      <td>3</td>
-      <td>2</td>
-      <td>5</td>
-      <td>...</td>
-      <td>2.0</td>
-      <td>4.0</td>
-      <td>2.0</td>
-      <td>1.0</td>
-      <td>2.0</td>
-      <td>3.0</td>
-      <td>3.0</td>
-      <td>4.0</td>
-      <td>6.0</td>
-      <td>5.0</td>
-    </tr>
-  </tbody>
-</table>
-<p>5 rows × 83 columns</p>
-</div>
-
+    (891221, 79)
 
 
 #### Discussion 1.1.2: Assess Missing Data in Each Column
@@ -1044,1013 +1067,313 @@ Depending on what you observe in your comparison, this will have implications on
 ```python
 # How much data is missing in each row of the dataset?
 
-# we have 891221 rows, so I only print out first 1000, so we could 
+# we have 891221 rows, so I only print out first 300, so we could 
 
-for i in range(1000):
+for i in range(300):
     nan_count = pd.isnull(azdias_filled_nan.iloc[i].values).sum()
     print(nan_count)
 ```
 
-    43
+    49
+    4
+    4
+    9
+    3
     2
+    5
+    4
+    4
+    3
+    3
+    53
+    10
+    11
+    53
+    11
+    9
+    53
+    9
+    5
+    16
+    6
+    6
+    11
+    53
+    9
+    24
+    5
+    4
+    4
+    40
+    5
+    3
+    3
+    6
+    49
+    5
+    2
+    5
+    7
+    10
+    2
+    4
+    3
+    4
+    2
+    46
+    2
+    53
+    5
+    5
     2
     3
-    1
-    0
+    49
+    53
+    6
+    3
+    4
     2
-    2
-    2
-    1
-    2
-    44
+    5
     8
+    49
+    49
+    3
+    8
+    6
+    2
+    2
+    2
+    53
     10
-    44
-    9
-    4
-    44
-    2
-    2
+    5
+    7
     12
-    2
-    2
-    9
-    44
     4
-    21
-    2
-    2
-    1
-    36
-    2
-    2
-    2
-    1
-    43
-    2
-    1
+    53
+    49
+    4
+    5
     2
     6
-    5
-    1
-    1
-    1
+    51
     2
-    0
-    37
-    1
-    44
-    2
-    2
-    1
-    1
-    43
-    44
-    2
-    1
-    2
-    1
-    2
-    1
-    43
-    43
-    2
-    4
-    2
-    1
-    1
-    0
-    44
-    8
-    2
-    2
-    10
-    1
-    44
-    43
-    2
-    2
-    1
-    3
-    44
-    1
-    43
-    0
-    2
-    1
-    1
-    8
-    1
-    36
-    2
-    4
-    0
-    5
-    2
-    4
-    44
-    1
-    44
-    1
-    1
-    1
-    44
-    2
-    1
-    43
-    1
-    44
-    43
-    1
-    2
-    44
-    0
-    2
-    0
-    2
-    1
-    4
-    1
-    0
-    1
-    1
-    1
-    1
-    1
-    2
-    1
-    2
-    2
-    2
-    1
-    2
-    44
-    2
-    1
-    2
-    44
-    31
-    2
+    49
     1
     5
-    19
-    21
-    44
-    2
-    2
-    2
-    2
-    1
-    2
-    1
-    1
-    43
-    44
     2
     3
-    10
     11
+    7
+    40
+    3
+    5
+    3
+    9
+    6
+    9
+    53
     2
+    53
+    3
+    3
+    5
+    53
+    3
+    2
+    49
+    3
+    53
+    49
+    2
+    5
+    53
+    2
+    6
     1
+    4
+    3
+    11
+    3
+    4
+    2
+    2
+    5
+    4
+    4
+    4
+    2
+    3
+    5
+    7
+    2
+    3
+    53
+    5
+    2
+    7
+    53
+    33
+    5
+    3
+    9
+    21
+    23
+    53
+    6
+    3
+    4
+    4
+    3
+    3
     2
     4
-    44
+    49
+    53
+    6
+    14
+    11
+    22
+    12
     2
-    35
+    4
+    9
+    53
+    6
+    38
+    6
     2
-    1
-    44
-    1
+    53
     2
-    1
-    0
+    3
+    2
+    2
+    23
+    5
+    53
     20
-    2
-    44
-    19
-    2
-    21
-    43
-    1
-    2
-    1
-    2
-    12
-    2
+    6
+    22
+    49
     3
-    1
-    1
-    1
-    2
-    3
-    2
-    3
-    1
-    2
-    2
-    8
-    2
-    36
-    1
-    1
-    3
-    2
-    2
-    43
-    2
-    0
-    2
-    44
-    44
-    1
-    2
-    2
-    2
-    1
-    1
-    2
-    1
-    1
-    1
-    1
-    2
-    1
-    1
-    1
-    2
-    44
-    44
-    36
-    44
-    2
-    2
-    43
-    2
-    2
-    44
-    43
-    2
-    44
-    2
-    0
-    2
-    1
-    43
-    3
-    2
-    1
-    44
-    2
-    44
-    1
-    2
-    1
     4
-    11
-    1
-    1
-    4
-    1
-    2
-    2
-    1
-    1
-    2
-    8
-    1
-    1
-    1
-    17
-    1
-    2
-    7
-    1
-    1
-    0
-    2
-    2
-    2
-    1
-    4
-    2
-    0
-    0
-    0
-    1
-    35
-    1
-    35
-    2
-    2
-    3
-    2
-    1
-    1
-    1
-    2
-    2
-    1
-    2
-    1
-    2
-    1
-    1
-    1
-    1
-    1
-    2
-    0
-    1
-    1
-    3
-    1
-    1
-    2
-    1
-    2
-    3
-    1
-    2
-    2
-    1
-    1
-    1
-    35
-    2
-    2
-    1
-    2
-    2
-    0
-    0
-    3
-    2
-    0
-    2
-    44
-    2
-    2
-    44
+    5
+    6
+    14
+    6
     9
-    1
-    43
+    3
+    3
+    2
+    5
+    14
     4
-    1
-    1
+    12
+    3
+    6
+    7
+    9
+    4
+    39
     2
-    44
-    2
-    2
-    1
-    36
-    2
+    3
     13
-    2
-    2
-    2
-    1
-    1
-    2
-    1
-    1
-    2
-    1
     3
-    2
+    3
+    49
     4
     1
-    2
-    1
-    0
-    2
-    0
-    2
-    1
-    1
-    10
-    1
-    37
+    8
+    53
+    53
+    3
+    3
+    7
+    4
+    3
     2
     3
-    9
-    2
-    1
-    9
-    2
-    1
-    2
-    44
-    43
     3
-    1
-    2
-    2
     2
     3
+    2
+    3
+    4
+    3
+    4
+    5
+    53
+    53
+    39
+    53
+    4
+    5
+    49
+    5
+    6
+    53
+    49
+    3
+    53
+    4
+    2
     5
     2
-    1
-    43
-    0
-    0
-    1
-    0
-    1
-    1
-    1
-    2
-    1
-    43
-    44
-    36
-    2
-    1
-    44
-    10
-    1
-    2
-    2
-    1
-    1
-    1
-    1
-    0
-    2
-    2
-    2
-    2
-    2
-    2
-    44
-    0
-    2
-    1
-    2
-    2
-    2
-    44
-    4
-    44
-    0
-    2
-    10
-    0
-    2
-    2
-    2
-    1
-    2
-    1
-    0
-    2
-    4
-    1
-    2
-    2
-    4
-    4
-    1
+    49
+    7
     3
-    0
-    1
+    4
+    53
+    3
+    53
     2
-    0
-    0
-    2
-    0
-    2
-    1
-    1
-    1
-    1
+    6
+    3
+    8
     12
     2
-    2
-    2
-    44
-    2
-    2
-    2
-    2
-    2
-    2
-    2
-    4
-    4
-    2
     3
-    1
-    2
-    1
-    2
-    1
-    2
-    2
-    1
-    0
-    44
-    0
-    1
-    0
-    2
-    2
-    2
-    1
-    2
-    0
-    0
-    2
-    44
-    2
-    2
-    1
+    10
     3
+    4
+    5
+    3
+    2
+    5
     11
-    1
-    1
-    10
-    1
-    2
-    2
     3
-    1
-    34
-    44
-    2
-    2
-    43
-    2
-    36
-    2
-    1
-    44
-    43
-    2
-    0
-    0
-    2
-    1
-    0
-    1
-    1
-    43
-    9
-    2
-    1
-    0
-    2
-    44
-    1
-    1
-    2
-    2
-    2
-    2
-    1
-    2
-    44
-    1
-    2
-    1
-    8
-    1
-    2
-    44
-    44
-    2
-    44
-    2
-    44
-    10
-    1
-    1
-    44
-    2
-    4
-    1
-    2
-    43
-    43
-    1
-    44
-    44
-    44
-    44
-    44
-    1
-    2
-    44
-    44
-    44
-    44
-    2
-    1
-    1
-    35
-    1
-    1
-    44
-    44
-    2
-    2
-    44
-    2
-    44
-    1
-    44
-    0
-    2
-    2
-    1
-    2
-    1
-    44
-    1
-    44
-    44
-    4
-    44
-    2
-    43
-    43
-    2
-    2
-    43
-    1
-    43
-    1
+    7
     3
-    1
-    2
-    1
-    43
-    1
-    1
-    2
-    2
-    2
-    0
-    44
-    1
-    4
-    9
-    2
-    2
-    4
-    1
-    4
-    1
-    43
-    1
-    1
-    2
-    2
-    0
-    1
-    2
-    3
-    36
-    2
-    0
-    1
-    1
-    2
-    2
-    2
-    2
-    1
-    44
-    1
-    1
-    2
-    1
-    2
-    2
-    1
-    43
-    1
-    2
-    1
-    1
-    35
-    2
-    1
-    1
-    0
-    0
-    0
-    1
-    2
-    1
-    0
-    0
-    44
-    1
-    2
-    2
-    1
-    2
-    2
-    2
-    0
-    2
     18
-    2
-    1
+    3
     5
-    1
+    13
+    3
+    5
     2
-    2
-    2
-    0
-    1
-    1
-    2
-    16
-    1
-    2
-    2
-    1
-    1
-    44
-    2
-    2
-    2
-    2
-    2
-    1
-    8
-    1
-    2
-    1
-    2
-    2
-    1
-    1
-    1
-    0
+    5
+    3
     4
-    2
-    2
-    36
-    2
-    1
-    43
-    43
-    44
-    1
     3
-    2
-    1
-    2
-    2
-    2
-    44
-    1
-    9
-    2
-    2
-    44
-    0
-    2
-    1
-    2
-    2
-    1
-    1
-    2
-    1
-    44
-    0
-    2
-    2
-    2
-    2
-    2
-    3
-    0
-    7
-    1
-    1
-    44
-    2
-    43
-    44
-    2
-    44
-    3
-    1
-    8
-    3
-    44
-    43
-    1
-    44
-    1
-    43
-    3
-    2
-    0
-    44
-    2
-    44
-    1
-    10
-    44
-    44
-    44
-    0
-    2
-    2
-    4
-    44
-    44
-    43
-    3
-    44
-    1
-    1
-    2
-    3
-    2
-    2
-    2
-    1
-    1
-    1
-    2
-    1
-    1
-    2
-    0
-    44
-    2
-    9
-    4
-    4
-    1
-    1
-    0
-    4
     11
-    1
-    1
-    1
-    1
     4
     1
-    1
-    1
-    1
-    1
-    1
-    0
-    1
-    1
-    2
-    2
-    2
-    1
-    2
-    2
-    1
-    2
-    2
-    2
-    2
     2
     3
-    1
     2
-    1
+    37
     3
-    44
-    35
-    2
-    2
-    43
-    2
-    43
-    2
-    1
-    2
-    9
-    44
-    1
-    1
-    2
-    44
-    2
-    1
-    5
-    7
-    0
-    1
-    2
-    1
-    2
-    2
-    1
-    2
-    2
-    35
-    35
-    2
-    3
-    9
-    2
-    2
-    2
-    1
-    2
-    2
-    1
-    2
-    2
-    2
-    1
-    2
-    2
-    43
-    1
-    2
-    4
-    2
-    2
-    2
-    8
-    43
-    0
-    2
-    2
-    1
-    44
-    1
-    1
-    1
-    8
-    2
-    0
-    2
-    11
-    2
-    1
-    1
-    0
-    1
-    1
-    1
-    2
-    16
-    2
-    2
-    8
-    2
-    2
+    37
     3
     5
-    2
-    1
-    1
-    3
-    1
-    2
-    2
-    2
-    0
-    2
-    2
-    2
-    8
-    2
-    0
-    0
-    0
-    2
-    2
-    2
-    2
-    1
-    1
-    2
-    2
-    2
-    2
+    13
     4
     2
+    6
     2
+    5
+    6
     2
-    1
-    2
-    44
-    1
-    0
-    2
-    1
-    1
-    1
-    2
-    44
+    5
 
 
 As we can see above, most of them are below 10, but there is a high percentage that the total missing values in each rows will be more than 30, so we could seperate the data into two subsets by the wether the missing values are less than 30
@@ -2119,7 +1442,7 @@ azdias_filled_nan.iloc[[0,2]]
     <tr>
       <th>0</th>
       <td>NaN</td>
-      <td>2</td>
+      <td>2.0</td>
       <td>1</td>
       <td>2.0</td>
       <td>3</td>
@@ -2143,7 +1466,7 @@ azdias_filled_nan.iloc[[0,2]]
     <tr>
       <th>2</th>
       <td>NaN</td>
-      <td>3</td>
+      <td>3.0</td>
       <td>2</td>
       <td>3.0</td>
       <td>1</td>
@@ -2178,6 +1501,11 @@ azdias_filled_nan.iloc[[0,2]]
 # by rows
 
 # this will take a very long time to run!
+# Params:
+#     df: dataframe
+#     n: threshold
+# Return: list of index below threshold and above threshold
+
 def get_misssing_info_in_row(df, n):
     subset_below_threshold_indexes = []
     subset_above_threshold_indexes = []
@@ -2222,7 +1550,7 @@ print('percentage of rows with a lot of missing data: {0:.2f} %'.format(len(subs
 
 ```
 
-    percentage of rows with a lot of missing data: 10.45 %
+    percentage of rows with a lot of missing data: 10.46 %
 
 
 
@@ -2253,37 +1581,6 @@ for item in compare_labels:
 ```
 
 
-![png](output_31_0.png)
-
-
-
-![png](output_31_1.png)
-
-
-
-![png](output_31_2.png)
-
-
-
-![png](output_31_3.png)
-
-
-
-![png](output_31_4.png)
-
-
-
-```python
-# get the subsets from indexes,
-# filled data with nan filled and drop 2 columns
-filled_subset_below_threshold = azdias_filled_nan_dropped.iloc[subset_below_threshold_indexes]
-filled_subset_above_threshold = azdias_filled_nan_dropped.iloc[subset_above_threshold_indexes]
-
-for item in compare_labels:
-    compare_and_plot(item, filled_subset_below_threshold, filled_subset_above_threshold)
-```
-
-
 ![png](output_32_0.png)
 
 
@@ -2301,6 +1598,37 @@ for item in compare_labels:
 
 
 ![png](output_32_4.png)
+
+
+
+```python
+# get the subsets from indexes,
+# filled data with nan filled and drop 2 columns
+filled_subset_below_threshold = azdias_filled_nan_dropped.iloc[subset_below_threshold_indexes]
+filled_subset_above_threshold = azdias_filled_nan_dropped.iloc[subset_above_threshold_indexes]
+
+for item in compare_labels:
+    compare_and_plot(item, filled_subset_below_threshold, filled_subset_above_threshold)
+```
+
+
+![png](output_33_0.png)
+
+
+
+![png](output_33_1.png)
+
+
+
+![png](output_33_2.png)
+
+
+
+![png](output_33_3.png)
+
+
+
+![png](output_33_4.png)
 
 
 #### Discussion 1.1.3: Assess Missing Data in Each Row
@@ -2346,7 +1674,7 @@ plt.show()
 
 
 
-![png](output_35_1.png)
+![png](output_36_1.png)
 
 
 #### Step 1.2.1: Re-Encode Categorical Features
@@ -2392,27 +1720,26 @@ print('{} large_level_variables: \n{}\n'.format(len(large_level_variables), larg
     FINANZTYP 6
     GFK_URLAUBERTYP 12
     GREEN_AVANTGARDE 2
-    LP_FAMILIE_FEIN 12
-    LP_FAMILIE_GROB 6
+    LP_FAMILIE_FEIN 11
+    LP_FAMILIE_GROB 5
     LP_STATUS_FEIN 10
     LP_STATUS_GROB 5
-    NATIONALITAET_KZ 4
-    SHOPPER_TYP 5
+    NATIONALITAET_KZ 3
+    SHOPPER_TYP 4
     SOHO_KZ 2
-    TITEL_KZ 6
-    VERS_TYP 3
+    VERS_TYP 2
     ZABEOTYP 6
     GEBAEUDETYP 7
     OST_WEST_KZ 2
-    CAMEO_DEUG_2015 10
-    CAMEO_DEU_2015 45
+    CAMEO_DEUG_2015 9
+    CAMEO_DEU_2015 44
     
     
-    4 binary variables: 
-    ['ANREDE_KZ', 'GREEN_AVANTGARDE', 'SOHO_KZ', 'OST_WEST_KZ']
+    5 binary variables: 
+    ['ANREDE_KZ', 'GREEN_AVANTGARDE', 'SOHO_KZ', 'VERS_TYP', 'OST_WEST_KZ']
     
-    10 small-level variables: 
-    ['CJT_GESAMTTYP', 'FINANZTYP', 'LP_FAMILIE_GROB', 'LP_STATUS_GROB', 'NATIONALITAET_KZ', 'SHOPPER_TYP', 'TITEL_KZ', 'VERS_TYP', 'ZABEOTYP', 'GEBAEUDETYP']
+    8 small-level variables: 
+    ['CJT_GESAMTTYP', 'FINANZTYP', 'LP_FAMILIE_GROB', 'LP_STATUS_GROB', 'NATIONALITAET_KZ', 'SHOPPER_TYP', 'ZABEOTYP', 'GEBAEUDETYP']
     
     5 large_level_variables: 
     ['GFK_URLAUBERTYP', 'LP_FAMILIE_FEIN', 'LP_STATUS_FEIN', 'CAMEO_DEUG_2015', 'CAMEO_DEU_2015']
@@ -2428,8 +1755,8 @@ print('shape after drop: ', filled_subset_below_threshold.shape)
 
 ```
 
-    shape before drop:  (798065, 83)
-    shape after drop:  (798065, 78)
+    shape before drop:  (797981, 79)
+    shape after drop:  (797981, 74)
 
 
 
@@ -2449,7 +1776,7 @@ one_hot_data.shape
 
 
 
-    (798065, 122)
+    (797981, 108)
 
 
 
@@ -2459,7 +1786,7 @@ one_hot_data.shape
 
 A:
 
-as we can see, we have 4 binary variables, and 15 multi-level variables, in which 5 of them have more than 7 different values, so I dropped those columns, and encoded the other 10 columns
+as we can see, we have 4 binary variables, and 13 multi-level variables, in which 5 of them have more than 7 different values, so I dropped those columns, and encoded the other 8 columns
 
 #### Step 1.2.2: Engineer Mixed-Type Features
 
@@ -2499,7 +1826,7 @@ print(one_hot_data.shape)
 
 ```
 
-    (798065, 122)
+    (797981, 108)
     1    6.0
     2    6.0
     3    4.0
@@ -2512,7 +1839,7 @@ print(one_hot_data.shape)
     4    1
     5    1
     Name: PRAEGENDE_JUGENDJAHRE_MOVEMENT, dtype: int64
-    (798065, 123)
+    (797981, 109)
 
 
 
@@ -2553,7 +1880,7 @@ print(one_hot_data.shape)
 
 ```
 
-    (798065, 123)
+    (797981, 109)
     1    5.0
     2    2.0
     3    1.0
@@ -2566,7 +1893,7 @@ print(one_hot_data.shape)
     4    3.0
     5    4.0
     Name: CAMEO_INTL_2015_LIFE_STAGE, dtype: float64
-    (798065, 124)
+    (797981, 110)
 
 
 #### Discussion 1.2.2: Engineer Mixed-Type Features
@@ -2598,13 +1925,6 @@ Make sure that for any new columns that you have engineered, that you've exclude
 ```
 
 
-
-
-    (798065, 124)
-
-
-
-
 ```python
 # Do whatever you need to in order to ensure that the dataframe only contains
 # the columns that should be passed to the algorithm functions.
@@ -2627,15 +1947,15 @@ plt.barh(name_list_10, width = percentage_list_10)
 
 
 
-    <BarContainer object of 34 artists>
+    <BarContainer object of 37 artists>
 
 
 
 
-![png](output_48_1.png)
+![png](output_49_1.png)
 
 
-As we can see, that we have removed those that have very high missing values
+As we can see, that we have removed those that have missing values large than 20%
 
 
 ```python
@@ -2702,10 +2022,6 @@ for item in small_level_variables:
     True
     True
     True
-    True
-    True
-    True
-    True
 
 
 
@@ -2734,7 +2050,7 @@ one_hot_data.shape
 
 
 
-    (798065, 124)
+    (797981, 110)
 
 
 
