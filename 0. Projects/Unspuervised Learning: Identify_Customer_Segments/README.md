@@ -2540,33 +2540,918 @@ As a reminder, each principal component is a unit vector that points in the dire
 
 
 ```python
+def plot_component(pca, comp):
+    '''
+    Plots an image associated with each component to understand how the weighting
+    of the components
+    INPUT:
+          pca - pca object created from PCA in sklearn
+          comp - int - the component you want to see starting at 0
+    OUTPUT
+          None
+    '''
+    if comp <= len(pca.components_):
+        mat_data = np.asmatrix(pca.components_[comp])
+        plt.imshow(mat_data); #plot the data
+        plt.xticks([]) #removes numbered labels on x-axis
+        plt.yticks([]) #removes numbered labels on y-axis
+    else:
+        print('That is not the right input, please read the docstring before continuing.')
+
+```
+
+
+```python
 # Map weights for the first principal component to corresponding feature names
 # and then print the linked values, sorted by weight.
 # HINT: Try defining a function here or in a new cell that you can reuse in the
 # other cells.
 
+def get_format(n):
+    n = n + 1
+    if n == 1:
+        return '1st'
+    elif n == 2:
+        return '2nd'
+    elif n == 3:
+        return '3rd'
+    else:
+        return str(n) + 'th'
+    
+def get_sorted_name_weights_dic(pca, n):
+    df = pd.DataFrame(pca.components_[n])
+    df.index = one_hot_data.columns
+    column_name = 'weights of {} principal component'.format(get_format(n))
+    df.columns = [column_name]
+    return df.sort_values(by=[column_name], ascending=False)
 
+get_sorted_name_weights_dic(pca, 0)
 ```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>weights of 1st principal component</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>LP_STATUS_GROB_1.0</th>
+      <td>0.199146</td>
+    </tr>
+    <tr>
+      <th>PLZ8_ANTG3</th>
+      <td>0.193288</td>
+    </tr>
+    <tr>
+      <th>PLZ8_ANTG4</th>
+      <td>0.188476</td>
+    </tr>
+    <tr>
+      <th>HH_EINKOMMEN_SCORE</th>
+      <td>0.185999</td>
+    </tr>
+    <tr>
+      <th>PLZ8_BAUMAX</th>
+      <td>0.184342</td>
+    </tr>
+    <tr>
+      <th>CAMEO_INTL_2015_WEALTH</th>
+      <td>0.179197</td>
+    </tr>
+    <tr>
+      <th>ORTSGR_KLS9</th>
+      <td>0.168464</td>
+    </tr>
+    <tr>
+      <th>EWDICHTE</th>
+      <td>0.166664</td>
+    </tr>
+    <tr>
+      <th>FINANZ_HAUSBAUER</th>
+      <td>0.150310</td>
+    </tr>
+    <tr>
+      <th>KBA05_ANTG4</th>
+      <td>0.132956</td>
+    </tr>
+    <tr>
+      <th>PLZ8_ANTG2</th>
+      <td>0.131750</td>
+    </tr>
+    <tr>
+      <th>FINANZ_SPARER</th>
+      <td>0.129032</td>
+    </tr>
+    <tr>
+      <th>FINANZTYP_1</th>
+      <td>0.123087</td>
+    </tr>
+    <tr>
+      <th>ANZ_HAUSHALTE_AKTIV</th>
+      <td>0.119826</td>
+    </tr>
+    <tr>
+      <th>ARBEIT</th>
+      <td>0.119287</td>
+    </tr>
+    <tr>
+      <th>KBA05_ANTG3</th>
+      <td>0.117854</td>
+    </tr>
+    <tr>
+      <th>RELAT_AB</th>
+      <td>0.113317</td>
+    </tr>
+    <tr>
+      <th>SEMIO_PFLICHT</th>
+      <td>0.096835</td>
+    </tr>
+    <tr>
+      <th>LP_FAMILIE_GROB_1.0</th>
+      <td>0.094797</td>
+    </tr>
+    <tr>
+      <th>SEMIO_REL</th>
+      <td>0.092340</td>
+    </tr>
+    <tr>
+      <th>PRAEGENDE_JUGENDJAHRE_DECADE</th>
+      <td>0.087147</td>
+    </tr>
+    <tr>
+      <th>PRAEGENDE_JUGENDJAHRE_MOVEMENT</th>
+      <td>0.085115</td>
+    </tr>
+    <tr>
+      <th>ZABEOTYP_5</th>
+      <td>0.085076</td>
+    </tr>
+    <tr>
+      <th>SEMIO_RAT</th>
+      <td>0.081126</td>
+    </tr>
+    <tr>
+      <th>SEMIO_TRADV</th>
+      <td>0.073789</td>
+    </tr>
+    <tr>
+      <th>GEBAEUDETYP_3.0</th>
+      <td>0.072711</td>
+    </tr>
+    <tr>
+      <th>FINANZ_UNAUFFAELLIGER</th>
+      <td>0.064767</td>
+    </tr>
+    <tr>
+      <th>SEMIO_MAT</th>
+      <td>0.063422</td>
+    </tr>
+    <tr>
+      <th>FINANZ_ANLEGER</th>
+      <td>0.062088</td>
+    </tr>
+    <tr>
+      <th>SEMIO_FAM</th>
+      <td>0.060544</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>FINANZTYP_3</th>
+      <td>-0.051226</td>
+    </tr>
+    <tr>
+      <th>WOHNDAUER_2008</th>
+      <td>-0.056687</td>
+    </tr>
+    <tr>
+      <th>SEMIO_ERL</th>
+      <td>-0.058970</td>
+    </tr>
+    <tr>
+      <th>SEMIO_LUST</th>
+      <td>-0.060174</td>
+    </tr>
+    <tr>
+      <th>KBA13_ANZAHL_PKW</th>
+      <td>-0.065006</td>
+    </tr>
+    <tr>
+      <th>WOHNLAGE</th>
+      <td>-0.069836</td>
+    </tr>
+    <tr>
+      <th>NATIONALITAET_KZ_1.0</th>
+      <td>-0.071501</td>
+    </tr>
+    <tr>
+      <th>LP_FAMILIE_GROB_5.0</th>
+      <td>-0.076301</td>
+    </tr>
+    <tr>
+      <th>FINANZTYP_2</th>
+      <td>-0.086611</td>
+    </tr>
+    <tr>
+      <th>ANZ_PERSONEN</th>
+      <td>-0.090912</td>
+    </tr>
+    <tr>
+      <th>GEBAEUDETYP_1.0</th>
+      <td>-0.095247</td>
+    </tr>
+    <tr>
+      <th>ZABEOTYP_1</th>
+      <td>-0.096650</td>
+    </tr>
+    <tr>
+      <th>FINANZ_VORSORGER</th>
+      <td>-0.098494</td>
+    </tr>
+    <tr>
+      <th>ALTERSKATEGORIE_GROB</th>
+      <td>-0.099887</td>
+    </tr>
+    <tr>
+      <th>GREEN_AVANTGARDE</th>
+      <td>-0.100927</td>
+    </tr>
+    <tr>
+      <th>GEBAEUDETYP_RASTER</th>
+      <td>-0.105172</td>
+    </tr>
+    <tr>
+      <th>BALLRAUM</th>
+      <td>-0.107318</td>
+    </tr>
+    <tr>
+      <th>CAMEO_INTL_2015_LIFE_STAGE</th>
+      <td>-0.108549</td>
+    </tr>
+    <tr>
+      <th>LP_STATUS_GROB_5.0</th>
+      <td>-0.113988</td>
+    </tr>
+    <tr>
+      <th>LP_STATUS_GROB_4.0</th>
+      <td>-0.117623</td>
+    </tr>
+    <tr>
+      <th>LP_LEBENSPHASE_GROB</th>
+      <td>-0.128741</td>
+    </tr>
+    <tr>
+      <th>INNENSTADT</th>
+      <td>-0.139374</td>
+    </tr>
+    <tr>
+      <th>PLZ8_GBZ</th>
+      <td>-0.142044</td>
+    </tr>
+    <tr>
+      <th>LP_LEBENSPHASE_FEIN</th>
+      <td>-0.143316</td>
+    </tr>
+    <tr>
+      <th>KONSUMNAEHE</th>
+      <td>-0.145795</td>
+    </tr>
+    <tr>
+      <th>KBA05_GBZ</th>
+      <td>-0.188553</td>
+    </tr>
+    <tr>
+      <th>PLZ8_ANTG1</th>
+      <td>-0.193206</td>
+    </tr>
+    <tr>
+      <th>KBA05_ANTG1</th>
+      <td>-0.197480</td>
+    </tr>
+    <tr>
+      <th>FINANZ_MINIMALIST</th>
+      <td>-0.201979</td>
+    </tr>
+    <tr>
+      <th>MOBI_REGIO</th>
+      <td>-0.211696</td>
+    </tr>
+  </tbody>
+</table>
+<p>110 rows × 1 columns</p>
+</div>
+
+
 
 
 ```python
 # Map weights for the second principal component to corresponding feature names
 # and then print the linked values, sorted by weight.
 
-
+get_sorted_name_weights_dic(pca, 1)
 ```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>weights of 2nd principal component</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>ALTERSKATEGORIE_GROB</th>
+      <td>0.235719</td>
+    </tr>
+    <tr>
+      <th>FINANZ_VORSORGER</th>
+      <td>0.220082</td>
+    </tr>
+    <tr>
+      <th>ZABEOTYP_3</th>
+      <td>0.207098</td>
+    </tr>
+    <tr>
+      <th>SEMIO_ERL</th>
+      <td>0.193173</td>
+    </tr>
+    <tr>
+      <th>SEMIO_LUST</th>
+      <td>0.165727</td>
+    </tr>
+    <tr>
+      <th>RETOURTYP_BK_S</th>
+      <td>0.155718</td>
+    </tr>
+    <tr>
+      <th>W_KEIT_KIND_HH</th>
+      <td>0.127412</td>
+    </tr>
+    <tr>
+      <th>CJT_GESAMTTYP_2.0</th>
+      <td>0.110429</td>
+    </tr>
+    <tr>
+      <th>FINANZ_HAUSBAUER</th>
+      <td>0.102384</td>
+    </tr>
+    <tr>
+      <th>FINANZTYP_5</th>
+      <td>0.096051</td>
+    </tr>
+    <tr>
+      <th>FINANZTYP_2</th>
+      <td>0.091564</td>
+    </tr>
+    <tr>
+      <th>SEMIO_KRIT</th>
+      <td>0.087287</td>
+    </tr>
+    <tr>
+      <th>SHOPPER_TYP_3.0</th>
+      <td>0.077749</td>
+    </tr>
+    <tr>
+      <th>PLZ8_ANTG3</th>
+      <td>0.077107</td>
+    </tr>
+    <tr>
+      <th>SEMIO_KAEM</th>
+      <td>0.075962</td>
+    </tr>
+    <tr>
+      <th>PLZ8_ANTG4</th>
+      <td>0.074067</td>
+    </tr>
+    <tr>
+      <th>EWDICHTE</th>
+      <td>0.073913</td>
+    </tr>
+    <tr>
+      <th>FINANZ_MINIMALIST</th>
+      <td>0.073546</td>
+    </tr>
+    <tr>
+      <th>ORTSGR_KLS9</th>
+      <td>0.073529</td>
+    </tr>
+    <tr>
+      <th>CJT_GESAMTTYP_1.0</th>
+      <td>0.071663</td>
+    </tr>
+    <tr>
+      <th>PLZ8_BAUMAX</th>
+      <td>0.070269</td>
+    </tr>
+    <tr>
+      <th>FINANZTYP_6</th>
+      <td>0.067682</td>
+    </tr>
+    <tr>
+      <th>NATIONALITAET_KZ_1.0</th>
+      <td>0.064421</td>
+    </tr>
+    <tr>
+      <th>CAMEO_INTL_2015_WEALTH</th>
+      <td>0.063768</td>
+    </tr>
+    <tr>
+      <th>LP_FAMILIE_GROB_1.0</th>
+      <td>0.063729</td>
+    </tr>
+    <tr>
+      <th>KBA05_ANTG4</th>
+      <td>0.057803</td>
+    </tr>
+    <tr>
+      <th>ANREDE_KZ</th>
+      <td>0.057265</td>
+    </tr>
+    <tr>
+      <th>ARBEIT</th>
+      <td>0.056868</td>
+    </tr>
+    <tr>
+      <th>ANZ_HAUSHALTE_AKTIV</th>
+      <td>0.054404</td>
+    </tr>
+    <tr>
+      <th>WOHNDAUER_2008</th>
+      <td>0.053050</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>SHOPPER_TYP_0.0</th>
+      <td>-0.056755</td>
+    </tr>
+    <tr>
+      <th>CJT_GESAMTTYP_4.0</th>
+      <td>-0.057513</td>
+    </tr>
+    <tr>
+      <th>KONSUMNAEHE</th>
+      <td>-0.058863</td>
+    </tr>
+    <tr>
+      <th>INNENSTADT</th>
+      <td>-0.059213</td>
+    </tr>
+    <tr>
+      <th>PLZ8_GBZ</th>
+      <td>-0.060143</td>
+    </tr>
+    <tr>
+      <th>KBA05_ANTG1</th>
+      <td>-0.065853</td>
+    </tr>
+    <tr>
+      <th>LP_FAMILIE_GROB_4.0</th>
+      <td>-0.066109</td>
+    </tr>
+    <tr>
+      <th>ANZ_PERSONEN</th>
+      <td>-0.070774</td>
+    </tr>
+    <tr>
+      <th>ZABEOTYP_1</th>
+      <td>-0.071498</td>
+    </tr>
+    <tr>
+      <th>KBA05_GBZ</th>
+      <td>-0.072870</td>
+    </tr>
+    <tr>
+      <th>MOBI_REGIO</th>
+      <td>-0.074073</td>
+    </tr>
+    <tr>
+      <th>SEMIO_SOZ</th>
+      <td>-0.074733</td>
+    </tr>
+    <tr>
+      <th>PLZ8_ANTG1</th>
+      <td>-0.075885</td>
+    </tr>
+    <tr>
+      <th>FINANZTYP_3</th>
+      <td>-0.082279</td>
+    </tr>
+    <tr>
+      <th>ZABEOTYP_5</th>
+      <td>-0.089197</td>
+    </tr>
+    <tr>
+      <th>FINANZTYP_4</th>
+      <td>-0.093072</td>
+    </tr>
+    <tr>
+      <th>ZABEOTYP_4</th>
+      <td>-0.102913</td>
+    </tr>
+    <tr>
+      <th>FINANZTYP_1</th>
+      <td>-0.123810</td>
+    </tr>
+    <tr>
+      <th>SEMIO_MAT</th>
+      <td>-0.137692</td>
+    </tr>
+    <tr>
+      <th>SEMIO_FAM</th>
+      <td>-0.147841</td>
+    </tr>
+    <tr>
+      <th>SEMIO_RAT</th>
+      <td>-0.163756</td>
+    </tr>
+    <tr>
+      <th>ONLINE_AFFINITAET</th>
+      <td>-0.166338</td>
+    </tr>
+    <tr>
+      <th>SEMIO_KULT</th>
+      <td>-0.179815</td>
+    </tr>
+    <tr>
+      <th>FINANZ_ANLEGER</th>
+      <td>-0.197333</td>
+    </tr>
+    <tr>
+      <th>SEMIO_PFLICHT</th>
+      <td>-0.207318</td>
+    </tr>
+    <tr>
+      <th>SEMIO_TRADV</th>
+      <td>-0.211909</td>
+    </tr>
+    <tr>
+      <th>FINANZ_UNAUFFAELLIGER</th>
+      <td>-0.216559</td>
+    </tr>
+    <tr>
+      <th>SEMIO_REL</th>
+      <td>-0.222329</td>
+    </tr>
+    <tr>
+      <th>FINANZ_SPARER</th>
+      <td>-0.224208</td>
+    </tr>
+    <tr>
+      <th>PRAEGENDE_JUGENDJAHRE_DECADE</th>
+      <td>-0.238449</td>
+    </tr>
+  </tbody>
+</table>
+<p>110 rows × 1 columns</p>
+</div>
+
+
 
 
 ```python
 # Map weights for the third principal component to corresponding feature names
 # and then print the linked values, sorted by weight.
 
-
+get_sorted_name_weights_dic(pca, 2)
 ```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>weights of 3rd principal component</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>SEMIO_VERT</th>
+      <td>0.326021</td>
+    </tr>
+    <tr>
+      <th>SEMIO_SOZ</th>
+      <td>0.257104</td>
+    </tr>
+    <tr>
+      <th>SEMIO_FAM</th>
+      <td>0.256383</td>
+    </tr>
+    <tr>
+      <th>SEMIO_KULT</th>
+      <td>0.244876</td>
+    </tr>
+    <tr>
+      <th>FINANZTYP_5</th>
+      <td>0.139606</td>
+    </tr>
+    <tr>
+      <th>FINANZ_MINIMALIST</th>
+      <td>0.136630</td>
+    </tr>
+    <tr>
+      <th>SHOPPER_TYP_0.0</th>
+      <td>0.125754</td>
+    </tr>
+    <tr>
+      <th>ZABEOTYP_1</th>
+      <td>0.110223</td>
+    </tr>
+    <tr>
+      <th>SEMIO_REL</th>
+      <td>0.098434</td>
+    </tr>
+    <tr>
+      <th>RETOURTYP_BK_S</th>
+      <td>0.087432</td>
+    </tr>
+    <tr>
+      <th>W_KEIT_KIND_HH</th>
+      <td>0.079010</td>
+    </tr>
+    <tr>
+      <th>SEMIO_MAT</th>
+      <td>0.077754</td>
+    </tr>
+    <tr>
+      <th>FINANZ_VORSORGER</th>
+      <td>0.068228</td>
+    </tr>
+    <tr>
+      <th>GREEN_AVANTGARDE</th>
+      <td>0.055407</td>
+    </tr>
+    <tr>
+      <th>SHOPPER_TYP_1.0</th>
+      <td>0.053662</td>
+    </tr>
+    <tr>
+      <th>ORTSGR_KLS9</th>
+      <td>0.053376</td>
+    </tr>
+    <tr>
+      <th>EWDICHTE</th>
+      <td>0.052722</td>
+    </tr>
+    <tr>
+      <th>PLZ8_BAUMAX</th>
+      <td>0.051329</td>
+    </tr>
+    <tr>
+      <th>ZABEOTYP_6</th>
+      <td>0.050859</td>
+    </tr>
+    <tr>
+      <th>PLZ8_ANTG4</th>
+      <td>0.048327</td>
+    </tr>
+    <tr>
+      <th>PLZ8_ANTG3</th>
+      <td>0.047263</td>
+    </tr>
+    <tr>
+      <th>ALTERSKATEGORIE_GROB</th>
+      <td>0.037971</td>
+    </tr>
+    <tr>
+      <th>LP_STATUS_GROB_5.0</th>
+      <td>0.037375</td>
+    </tr>
+    <tr>
+      <th>SEMIO_LUST</th>
+      <td>0.037016</td>
+    </tr>
+    <tr>
+      <th>ARBEIT</th>
+      <td>0.033560</td>
+    </tr>
+    <tr>
+      <th>PLZ8_ANTG2</th>
+      <td>0.032407</td>
+    </tr>
+    <tr>
+      <th>RELAT_AB</th>
+      <td>0.031977</td>
+    </tr>
+    <tr>
+      <th>GEBAEUDETYP_3.0</th>
+      <td>0.028236</td>
+    </tr>
+    <tr>
+      <th>CJT_GESAMTTYP_1.0</th>
+      <td>0.026000</td>
+    </tr>
+    <tr>
+      <th>LP_STATUS_GROB_3.0</th>
+      <td>0.025650</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>WOHNLAGE</th>
+      <td>-0.028477</td>
+    </tr>
+    <tr>
+      <th>ZABEOTYP_5</th>
+      <td>-0.033457</td>
+    </tr>
+    <tr>
+      <th>NATIONALITAET_KZ_3.0</th>
+      <td>-0.034874</td>
+    </tr>
+    <tr>
+      <th>CJT_GESAMTTYP_6.0</th>
+      <td>-0.035436</td>
+    </tr>
+    <tr>
+      <th>ONLINE_AFFINITAET</th>
+      <td>-0.036263</td>
+    </tr>
+    <tr>
+      <th>PLZ8_GBZ</th>
+      <td>-0.037726</td>
+    </tr>
+    <tr>
+      <th>GEBAEUDETYP_RASTER</th>
+      <td>-0.037816</td>
+    </tr>
+    <tr>
+      <th>SEMIO_TRADV</th>
+      <td>-0.038813</td>
+    </tr>
+    <tr>
+      <th>BALLRAUM</th>
+      <td>-0.041014</td>
+    </tr>
+    <tr>
+      <th>KONSUMNAEHE</th>
+      <td>-0.043320</td>
+    </tr>
+    <tr>
+      <th>PRAEGENDE_JUGENDJAHRE_MOVEMENT</th>
+      <td>-0.043358</td>
+    </tr>
+    <tr>
+      <th>SEMIO_PFLICHT</th>
+      <td>-0.043621</td>
+    </tr>
+    <tr>
+      <th>PLZ8_ANTG1</th>
+      <td>-0.047465</td>
+    </tr>
+    <tr>
+      <th>INNENSTADT</th>
+      <td>-0.048335</td>
+    </tr>
+    <tr>
+      <th>FINANZ_HAUSBAUER</th>
+      <td>-0.048559</td>
+    </tr>
+    <tr>
+      <th>SHOPPER_TYP_3.0</th>
+      <td>-0.050006</td>
+    </tr>
+    <tr>
+      <th>LP_FAMILIE_GROB_3.0</th>
+      <td>-0.050191</td>
+    </tr>
+    <tr>
+      <th>FINANZ_UNAUFFAELLIGER</th>
+      <td>-0.068754</td>
+    </tr>
+    <tr>
+      <th>ZABEOTYP_4</th>
+      <td>-0.070104</td>
+    </tr>
+    <tr>
+      <th>PRAEGENDE_JUGENDJAHRE_DECADE</th>
+      <td>-0.072983</td>
+    </tr>
+    <tr>
+      <th>FINANZ_SPARER</th>
+      <td>-0.074752</td>
+    </tr>
+    <tr>
+      <th>SHOPPER_TYP_2.0</th>
+      <td>-0.097402</td>
+    </tr>
+    <tr>
+      <th>FINANZTYP_1</th>
+      <td>-0.111522</td>
+    </tr>
+    <tr>
+      <th>FINANZ_ANLEGER</th>
+      <td>-0.163142</td>
+    </tr>
+    <tr>
+      <th>SEMIO_RAT</th>
+      <td>-0.175939</td>
+    </tr>
+    <tr>
+      <th>SEMIO_ERL</th>
+      <td>-0.197009</td>
+    </tr>
+    <tr>
+      <th>SEMIO_KRIT</th>
+      <td>-0.269879</td>
+    </tr>
+    <tr>
+      <th>SEMIO_DOM</th>
+      <td>-0.295520</td>
+    </tr>
+    <tr>
+      <th>SEMIO_KAEM</th>
+      <td>-0.323738</td>
+    </tr>
+    <tr>
+      <th>ANREDE_KZ</th>
+      <td>-0.352053</td>
+    </tr>
+  </tbody>
+</table>
+<p>110 rows × 1 columns</p>
+</div>
+
+
 
 ### Discussion 2.3: Interpret Principal Components
 
 (Double-click this cell and replace this text with your own text, reporting your observations from detailed investigation of the first few principal components generated. Can we interpret positive and negative values from them in a meaningful way?)
+
+A:
+
+1. For the **1st** principal component:
+
+we can see that `low-income earners` has higher positive weights, while `houseowners` and `top earners` has lower negative weight; same thing for `PLZ8_ANTG`, while if you have more than 6 family houses in the PLZ8 region, you get higher weights, but if you have Number of 1-2 family houses in the PLZ8 region, you got very low negative weights. So probably the 1st principal component is about the `wealth` of the family.
+
+2. For the **2nd** principal component:
+
+as we can see that the very top positive element `ALTERSKATEGORIE_GROB` and the very bottom element `PRAEGENDE_JUGENDJAHRE_DECADE` are all about the age of the person, but the second, and third from top and the second from bottom are all about the `typology` in finical, energy, so it's hard to say, probably this component will about both `age` and `typology`
+
+3. For the **3rd** principal component:
+
+most of the elements from both top and bottom are about `Financial typology`
+
+
+
 
 ## Step 3: Clustering
 
