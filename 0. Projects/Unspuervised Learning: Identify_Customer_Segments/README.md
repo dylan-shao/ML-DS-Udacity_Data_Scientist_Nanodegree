@@ -17,6 +17,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.impute import SimpleImputer
+from sklearn import preprocessing as p
+from sklearn.decomposition import PCA
 
 # magic word for producing visualizations in notebook
 %matplotlib inline
@@ -1509,7 +1511,7 @@ azdias_filled_nan.iloc[[0,2]]
 def get_misssing_info_in_row(df, n):
     subset_below_threshold_indexes = []
     subset_above_threshold_indexes = []
-    column_names = list(df.columns.values)
+#     column_names = list(df.columns.values)
     rows_count = df.shape[0]
     print_every = rows_count // 10
     
@@ -1688,6 +1690,7 @@ For categorical data, you would ordinarily need to encode the levels as dummy va
 ```python
 # Assess categorical variables: which are binary, which are multi-level, and
 # which one needs to be re-encoded?
+object_variable = []
 binary_variable = []
 large_level_variables = []
 small_level_variables = []
@@ -1702,7 +1705,10 @@ for index in range(feat_info.shape[0]):
             
             print(attribute, dimensions)
             if dimensions == 2:
-                binary_variable.append(attribute)
+                if filled_subset_below_threshold[attribute].dtype == 'O':
+                    object_variable.append(attribute)
+                else:
+                    binary_variable.append(attribute)
             else:
                 if dimensions > 7:
                     large_level_variables.append(attribute)
@@ -1711,6 +1717,7 @@ for index in range(feat_info.shape[0]):
 
 print('\n')
 print('{} binary variables: \n{}\n'.format(len(binary_variable), binary_variable))
+print('{} object_variable: \n{}\n'.format(len(object_variable), object_variable))
 print('{} small-level variables: \n{}\n'.format(len(small_level_variables), small_level_variables))
 print('{} large_level_variables: \n{}\n'.format(len(large_level_variables), large_level_variables))
 ```
@@ -1735,8 +1742,11 @@ print('{} large_level_variables: \n{}\n'.format(len(large_level_variables), larg
     CAMEO_DEU_2015 44
     
     
-    5 binary variables: 
-    ['ANREDE_KZ', 'GREEN_AVANTGARDE', 'SOHO_KZ', 'VERS_TYP', 'OST_WEST_KZ']
+    4 binary variables: 
+    ['ANREDE_KZ', 'GREEN_AVANTGARDE', 'SOHO_KZ', 'VERS_TYP']
+    
+    1 object_variable: 
+    ['OST_WEST_KZ']
     
     8 small-level variables: 
     ['CJT_GESAMTTYP', 'FINANZTYP', 'LP_FAMILIE_GROB', 'LP_STATUS_GROB', 'NATIONALITAET_KZ', 'SHOPPER_TYP', 'ZABEOTYP', 'GEBAEUDETYP']
@@ -1769,6 +1779,7 @@ for item in small_level_variables:
     one_hot_data = pd.concat([one_hot_data, pd.get_dummies(one_hot_data[item], prefix=item)], axis=1)
     one_hot_data = one_hot_data.drop(item, axis=1)
 
+
 one_hot_data.shape
 
 ```
@@ -1780,6 +1791,12 @@ one_hot_data.shape
 
 
 
+
+```python
+one_hot_data['OST_WEST_KZ'] = one_hot_data['OST_WEST_KZ'].replace(['O','W'], [0,1])
+
+```
+
 ## Discussion 1.2.1: Re-Encode Categorical Features
 
 (Double-click this cell and replace this text with your own text, reporting your findings and decisions regarding categorical features. Which ones did you keep, which did you drop, and what engineering steps did you perform?) 
@@ -1787,6 +1804,8 @@ one_hot_data.shape
 A:
 
 as we can see, we have 4 binary variables, and 13 multi-level variables, in which 5 of them have more than 7 different values, so I dropped those columns, and encoded the other 8 columns
+
+special treatment was applied to `OST_WEST_KZ`, since it only has 2 dimensions but value is not numerical, I converted it to binary values
 
 #### Step 1.2.2: Engineer Mixed-Type Features
 
@@ -1952,7 +1971,7 @@ plt.barh(name_list_10, width = percentage_list_10)
 
 
 
-![png](output_49_1.png)
+![png](output_50_1.png)
 
 
 As we can see, that we have removed those that have missing values large than 20%
@@ -2116,6 +2135,9 @@ def clean_data(df):
         df = pd.concat([df, pd.get_dummies(df[item], prefix=item)], axis=1)
         df = df.drop(item, axis=1)
     
+    # special treatment to OST_WEST_KZ
+    df['OST_WEST_KZ'] = df['OST_WEST_KZ'].replace(['O','W'], [0,1])
+
     print('df shape {}'.format(df.shape))
     
     # engineeded:
@@ -2187,30 +2209,35 @@ Before we apply dimensionality reduction techniques to the data, we need to perf
 ```python
 # If you've not yet cleaned the dataset of all NaN values, then investigate and
 # do that now.
-print(one_hot_data.shape)
+def get_none_object_list(df):
+    g = df.columns.to_series().groupby(df.dtypes).groups
 
-imp = SimpleImputer(missing_values=np.nan, strategy='mean')
-g = one_hot_data.columns.to_series().groupby(one_hot_data.dtypes).groups
+    # get none object columns
+    list1 = []
+    for k, v in g.items():
+        print(k.name)
+        if k.name != 'object':
+            list1 = list1 + v.tolist()
+    return list1
 
-# get none object columns
-list1 = []
-list2 = []
-for k, v in g.items():
-    print(k.name)
-    if k.name != 'object':
-        list1 = list1 + v.tolist()
-    else:
-        list2 = list2 + v.tolist()
-        
-one_hot_data[list]  = imp.fit_transform(one_hot_data[list])
-print(one_hot_data.shape)
+def replace_missing_values(df):
+    print(df.shape)
+
+    imp = SimpleImputer(missing_values=np.nan, strategy='mean')
+    
+    list1 = get_none_object_list(df)
+
+    df[list1]  = imp.fit_transform(df[list1])
+    print(df.shape)
+    return df
+
+one_hot_data = replace_missing_values(one_hot_data)
 ```
 
     (797981, 110)
     uint8
     int64
     float64
-    object
     (797981, 110)
 
 
@@ -2234,12 +2261,200 @@ name_list_10
 ```python
 # Apply feature scaling to the general population demographics data.
 
+def feature_scale(df):
+    list1 = get_none_object_list(df)
+    df[list1] = p.StandardScaler().fit_transform(df[list1]) 
+    return df
 
+one_hot_data = feature_scale(one_hot_data)
 ```
+
+    float64
+
+
+
+```python
+one_hot_data.head()
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>ALTERSKATEGORIE_GROB</th>
+      <th>ANREDE_KZ</th>
+      <th>FINANZ_MINIMALIST</th>
+      <th>FINANZ_SPARER</th>
+      <th>FINANZ_VORSORGER</th>
+      <th>FINANZ_ANLEGER</th>
+      <th>FINANZ_UNAUFFAELLIGER</th>
+      <th>FINANZ_HAUSBAUER</th>
+      <th>GREEN_AVANTGARDE</th>
+      <th>HEALTH_TYP</th>
+      <th>...</th>
+      <th>GEBAEUDETYP_2.0</th>
+      <th>GEBAEUDETYP_3.0</th>
+      <th>GEBAEUDETYP_4.0</th>
+      <th>GEBAEUDETYP_5.0</th>
+      <th>GEBAEUDETYP_6.0</th>
+      <th>GEBAEUDETYP_8.0</th>
+      <th>PRAEGENDE_JUGENDJAHRE_DECADE</th>
+      <th>PRAEGENDE_JUGENDJAHRE_MOVEMENT</th>
+      <th>CAMEO_INTL_2015_WEALTH</th>
+      <th>CAMEO_INTL_2015_LIFE_STAGE</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>-1.766017</td>
+      <td>0.957942</td>
+      <td>-1.494612</td>
+      <td>1.537983</td>
+      <td>-1.040686</td>
+      <td>1.466053</td>
+      <td>0.958791</td>
+      <td>1.339250</td>
+      <td>-0.530436</td>
+      <td>1.085897</td>
+      <td>...</td>
+      <td>-0.0787</td>
+      <td>-0.537083</td>
+      <td>-0.033584</td>
+      <td>-0.001119</td>
+      <td>-0.02802</td>
+      <td>2.057585</td>
+      <td>1.165655</td>
+      <td>0.585899</td>
+      <td>1.191260</td>
+      <td>-1.266372</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.201260</td>
+      <td>0.957942</td>
+      <td>-1.494612</td>
+      <td>0.864615</td>
+      <td>-1.766961</td>
+      <td>-0.570962</td>
+      <td>0.244236</td>
+      <td>1.339250</td>
+      <td>1.885243</td>
+      <td>1.085897</td>
+      <td>...</td>
+      <td>-0.0787</td>
+      <td>-0.537083</td>
+      <td>-0.033584</td>
+      <td>-0.001119</td>
+      <td>-0.02802</td>
+      <td>-0.486007</td>
+      <td>1.165655</td>
+      <td>-1.706778</td>
+      <td>-0.865143</td>
+      <td>0.761955</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1.184898</td>
+      <td>0.957942</td>
+      <td>0.683135</td>
+      <td>-0.482122</td>
+      <td>1.138139</td>
+      <td>-0.570962</td>
+      <td>-1.184875</td>
+      <td>-0.791295</td>
+      <td>-0.530436</td>
+      <td>-0.269842</td>
+      <td>...</td>
+      <td>-0.0787</td>
+      <td>-0.537083</td>
+      <td>-0.033584</td>
+      <td>-0.001119</td>
+      <td>-0.02802</td>
+      <td>-0.486007</td>
+      <td>-0.232000</td>
+      <td>0.585899</td>
+      <td>-1.550611</td>
+      <td>-0.590263</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.201260</td>
+      <td>-1.043905</td>
+      <td>0.683135</td>
+      <td>0.191246</td>
+      <td>0.411864</td>
+      <td>-1.249968</td>
+      <td>0.244236</td>
+      <td>-0.791295</td>
+      <td>-0.530436</td>
+      <td>1.085897</td>
+      <td>...</td>
+      <td>-0.0787</td>
+      <td>-0.537083</td>
+      <td>-0.033584</td>
+      <td>-0.001119</td>
+      <td>-0.02802</td>
+      <td>-0.486007</td>
+      <td>-0.232000</td>
+      <td>0.585899</td>
+      <td>0.505792</td>
+      <td>0.085846</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>-1.766017</td>
+      <td>0.957942</td>
+      <td>-0.042781</td>
+      <td>-1.155491</td>
+      <td>1.138139</td>
+      <td>-0.570962</td>
+      <td>-0.470319</td>
+      <td>1.339250</td>
+      <td>-0.530436</td>
+      <td>1.085897</td>
+      <td>...</td>
+      <td>-0.0787</td>
+      <td>-0.537083</td>
+      <td>-0.033584</td>
+      <td>-0.001119</td>
+      <td>-0.02802</td>
+      <td>-0.486007</td>
+      <td>-1.629656</td>
+      <td>0.585899</td>
+      <td>1.191260</td>
+      <td>0.761955</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 110 columns</p>
+</div>
+
+
 
 ### Discussion 2.1: Apply Feature Scaling
 
 (Double-click this cell and replace this text with your own text, reporting your decisions regarding feature scaling.)
+A:
+
+Applied StandardScaler feature scaling from sklearn to only the none-object type.
 
 ### Step 2.2: Perform Dimensionality Reduction
 
@@ -2251,28 +2466,68 @@ On your scaled data, you are now ready to apply dimensionality reduction techniq
 
 
 ```python
+def scree_plot(pca):
+    '''
+    Creates a scree plot associated with the principal components
+
+    INPUT: pca - the result of instantian of PCA in scikit learn
+
+    OUTPUT: None
+    '''
+    num_components=len(pca.explained_variance_ratio_)
+    ind = np.arange(num_components)
+    vals = pca.explained_variance_ratio_
+
+    plt.figure(figsize=(10, 6))
+    ax = plt.subplot(111)
+    cumvals = np.cumsum(vals)
+    ax.bar(ind, vals)
+    ax.plot(ind, cumvals)
+    for i in range(num_components):
+        ax.annotate(r"%s%%" % ((str(vals[i]*100)[:4])), (ind[i]+0.2, vals[i]), va="bottom", ha="center", fontsize=12)
+
+    ax.xaxis.set_tick_params(width=0)
+    ax.yaxis.set_tick_params(width=2, length=12)
+
+    ax.set_xlabel("Principal Component")
+    ax.set_ylabel("Variance Explained (%)")
+    plt.title('Explained Variance Per Principal Component')
+
+
+```
+
+
+```python
 # Apply PCA to the data.
 
-
+pca = PCA()
+one_hot_data_pca = pca.fit_transform(one_hot_data)
 ```
 
 
 ```python
 # Investigate the variance accounted for by each principal component.
 
-
+scree_plot(pca)
 ```
+
+
+![png](output_68_0.png)
+
 
 
 ```python
 # Re-apply PCA to the data while selecting for number of components to retain.
 
-
+pca = PCA(80)
+one_hot_data_pca = pca.fit_transform(one_hot_data)
 ```
 
 ### Discussion 2.2: Perform Dimensionality Reduction
 
 (Double-click this cell and replace this text with your own text, reporting your findings and decisions regarding dimensionality reduction. How many principal components / transformed features are you retaining for the next step of the analysis?)
+
+As we can see from the above figure, with 80 components, it will explain about 95% explained_variance_ratio_, so we gonan use 80
 
 ### Step 2.3: Interpret Principal Components
 

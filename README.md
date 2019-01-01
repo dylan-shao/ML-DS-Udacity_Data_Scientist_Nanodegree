@@ -4,9 +4,9 @@
 
 [Supervised Learning: Finding Donors for CharityML](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/0.%20Projects/Supervised%20Learning%3A%20Finding%20Donors%20for%20CharityML)
 
-[Unspuervised Learning: Identify_Customer_Segments](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/0.%20Projects/Unspuervised%20Learning%3A%20Identify_Customer_Segments)
-
 ## 1. Supervised Learning Projects
+
+[Unspuervised Learning: Identify_Customer_Segments](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/0.%20Projects/Unspuervised%20Learning%3A%20Identify_Customer_Segments)
 
 [DecisionTrees-bugSpecies](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/DecisionTrees-bugSpecies)
 
@@ -18,9 +18,9 @@
 
 [Grid Search](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/Grid%20Search)
 
-[Learning Curves](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/Learning%20Curves)
-
 [LinearRegression_multiVariables](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/LinearRegression_multiVariables)
+
+[Learning Curves](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/Learning%20Curves)
 
 [LinearRegression_singleVariable](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/LinearRegression_singleVariable)
 
@@ -38,9 +38,9 @@
 
 [SVM](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/SVM)
 
-[Spam_&_Ensembles](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/Spam_%26_Ensembles)
-
 [Spam_Classifier](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/Spam_Classifier)
+
+[Spam_&_Ensembles](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/Spam_%26_Ensembles)
 
 ## 2. Deep learning
 
