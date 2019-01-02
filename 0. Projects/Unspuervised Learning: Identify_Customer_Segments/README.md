@@ -19,6 +19,7 @@ import seaborn as sns
 from sklearn.impute import SimpleImputer
 from sklearn import preprocessing as p
 from sklearn.decomposition import PCA
+from sklearn.cluster import KMeans
 
 # magic word for producing visualizations in notebook
 %matplotlib inline
@@ -2523,6 +2524,18 @@ pca = PCA(80)
 one_hot_data_pca = pca.fit_transform(one_hot_data)
 ```
 
+
+```python
+one_hot_data_pca.shape
+```
+
+
+
+
+    (797981, 80)
+
+
+
 ### Discussion 2.2: Perform Dimensionality Reduction
 
 (Double-click this cell and replace this text with your own text, reporting your findings and decisions regarding dimensionality reduction. How many principal components / transformed features are you retaining for the next step of the analysis?)
@@ -2537,28 +2550,6 @@ As a reminder, each principal component is a unit vector that points in the dire
 
 - To investigate the features, you should map each weight to their corresponding feature name, then sort the features according to weight. The most interesting features for each principal component, then, will be those at the beginning and end of the sorted list. Use the data dictionary document to help you understand these most prominent features, their relationships, and what a positive or negative value on the principal component might indicate.
 - You should investigate and interpret feature associations from the first three principal components in this substep. To help facilitate this, you should write a function that you can call at any time to print the sorted list of feature weights, for the *i*-th principal component. This might come in handy in the next step of the project, when you interpret the tendencies of the discovered clusters.
-
-
-```python
-def plot_component(pca, comp):
-    '''
-    Plots an image associated with each component to understand how the weighting
-    of the components
-    INPUT:
-          pca - pca object created from PCA in sklearn
-          comp - int - the component you want to see starting at 0
-    OUTPUT
-          None
-    '''
-    if comp <= len(pca.components_):
-        mat_data = np.asmatrix(pca.components_[comp])
-        plt.imshow(mat_data); #plot the data
-        plt.xticks([]) #removes numbered labels on x-axis
-        plt.yticks([]) #removes numbered labels on y-axis
-    else:
-        print('That is not the right input, please read the docstring before continuing.')
-
-```
 
 
 ```python
@@ -3466,6 +3457,38 @@ You've assessed and cleaned the demographics data, then scaled and transformed t
 
 
 ```python
+def get_kmeans_score(data, center):
+    '''
+    returns the kmeans score regarding SSE for points to centers
+    INPUT:
+        data - the dataset you want to fit kmeans to
+        center - the number of centers you want (the k value)
+    OUTPUT:
+        score - the SSE score for the kmeans model fit to the data
+    '''
+    #instantiate kmeans
+    kmeans = KMeans(n_clusters=center)
+
+    # Then fit the model to your data using the fit method
+    model = kmeans.fit(data)
+
+    # Obtain a score related to the model fit
+    score = np.abs(model.score(data))
+
+    return score
+
+def fit_mods(data, range_list):
+    scores = []
+
+    for center in range_list:
+        print('applying {} clusters'.format(center))
+        scores.append(get_kmeans_score(data, center))
+
+    return scores
+```
+
+
+```python
 # Over a number of different cluster counts...
 
 
@@ -3474,16 +3497,126 @@ You've assessed and cleaned the demographics data, then scaled and transformed t
     
     # compute the average within-cluster distances.
     
-    
+centers = range(5, 40, 5)
+scores = fit_mods(one_hot_data_pca, centers)
 ```
+
+    applying 5 clusters
+    applying 10 clusters
+    applying 15 clusters
+    applying 20 clusters
+    applying 25 clusters
+    applying 30 clusters
+    applying 35 clusters
+
 
 
 ```python
 # Investigate the change in within-cluster distance across number of clusters.
 # HINT: Use matplotlib's plot function to visualize this relationship.
 
-
+plt.plot(centers, scores, linestyle='--', marker='o', color='b');
+plt.xlabel('K');
+plt.ylabel('SSE');
+plt.title('SSE vs. K');
 ```
+
+
+![png](output_80_0.png)
+
+
+
+```python
+scores
+```
+
+
+
+
+    [68656673.77467142,
+     63310659.966458,
+     60575304.883048564,
+     58127808.65660498,
+     56196627.50945433,
+     54419207.460554905,
+     52622383.92164255]
+
+
+
+
+```python
+centers2 = range(40, 60, 5)
+scores2 = fit_mods(one_hot_data_pca, centers2)
+```
+
+    applying 40 clusters
+    applying 45 clusters
+    applying 50 clusters
+
+
+
+    ---------------------------------------------------------------------------
+
+    KeyboardInterrupt                         Traceback (most recent call last)
+
+    <ipython-input-400-e954de9881df> in <module>
+          1 centers2 = range(40, 60, 5)
+    ----> 2 scores2 = fit_mods(one_hot_data_pca, centers2)
+    
+
+    <ipython-input-397-525b3f259968> in fit_mods(data, range_list)
+         24     for center in range_list:
+         25         print('applying {} clusters'.format(center))
+    ---> 26         scores.append(get_kmeans_score(data, center))
+         27 
+         28     return scores
+
+
+    <ipython-input-397-525b3f259968> in get_kmeans_score(data, center)
+         12 
+         13     # Then fit the model to your data using the fit method
+    ---> 14     model = kmeans.fit(data)
+         15 
+         16     # Obtain a score related to the model fit
+
+
+    ~/anaconda3/envs/py36/lib/python3.6/site-packages/sklearn/cluster/k_means_.py in fit(self, X, y, sample_weight)
+        969                 tol=self.tol, random_state=random_state, copy_x=self.copy_x,
+        970                 n_jobs=self.n_jobs, algorithm=self.algorithm,
+    --> 971                 return_n_iter=True)
+        972         return self
+        973 
+
+
+    ~/anaconda3/envs/py36/lib/python3.6/site-packages/sklearn/cluster/k_means_.py in k_means(X, n_clusters, sample_weight, init, precompute_distances, n_init, max_iter, verbose, tol, random_state, copy_x, n_jobs, algorithm, return_n_iter)
+        378                 verbose=verbose, precompute_distances=precompute_distances,
+        379                 tol=tol, x_squared_norms=x_squared_norms,
+    --> 380                 random_state=random_state)
+        381             # determine if these results are the best so far
+        382             if best_inertia is None or inertia < best_inertia:
+
+
+    ~/anaconda3/envs/py36/lib/python3.6/site-packages/sklearn/cluster/k_means_.py in _kmeans_single_elkan(X, sample_weight, n_clusters, max_iter, init, verbose, x_squared_norms, random_state, tol, precompute_distances)
+        442     centers, labels, n_iter = k_means_elkan(X, checked_sample_weight,
+        443                                             n_clusters, centers, tol=tol,
+    --> 444                                             max_iter=max_iter, verbose=verbose)
+        445     if sample_weight is None:
+        446         inertia = np.sum((X - centers[labels]) ** 2, dtype=np.float64)
+
+
+    sklearn/cluster/_k_means_elkan.pyx in sklearn.cluster._k_means_elkan.k_means_elkan()
+
+
+    ~/anaconda3/envs/py36/lib/python3.6/site-packages/numpy/core/fromnumeric.py in sum(a, axis, dtype, out, keepdims, initial)
+       1819 
+       1820 
+    -> 1821 def sum(a, axis=None, dtype=None, out=None, keepdims=np._NoValue, initial=np._NoValue):
+       1822     """
+       1823     Sum of array elements over a given axis.
+
+
+    KeyboardInterrupt: 
+
 
 
 ```python
@@ -3497,6 +3630,10 @@ You've assessed and cleaned the demographics data, then scaled and transformed t
 
 (Double-click this cell and replace this text with your own text, reporting your findings and decisions regarding clustering. Into how many clusters have you decided to segment the population?)
 
+A:
+
+As we can see from the above figure, the score decrease along with the clusters, but when clusters equal to , it goes slowly, so I took the "elbow" point which is 
+
 ### Step 3.2: Apply All Steps to the Customer Data
 
 Now that you have clusters and cluster centers for the general population, it's time to see how the customer data maps on to those clusters. Take care to not confuse this for re-fitting all of the models to the customer data. Instead, you're going to use the fits from the general population to clean, transform, and cluster the customer data. In the last step of the project, you will interpret how the general population fits apply to the customer data.
@@ -3508,7 +3645,7 @@ Now that you have clusters and cluster centers for the general population, it's 
 
 ```python
 # Load in the customer demographics data.
-customers = 
+customers = pd.read_csv('Udacity_CUSTOMERS_Subset.csv', delimiter=';')
 ```
 
 
