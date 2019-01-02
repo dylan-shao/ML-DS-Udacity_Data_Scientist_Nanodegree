@@ -3545,6 +3545,8 @@ scores
 
 
 ```python
+# this takes 2-3 hours to run in mac pro
+
 centers2 = range(40, 60, 5)
 scores2 = fit_mods(one_hot_data_pca, centers2)
 ```
@@ -3552,79 +3554,37 @@ scores2 = fit_mods(one_hot_data_pca, centers2)
     applying 40 clusters
     applying 45 clusters
     applying 50 clusters
-
-
-
-    ---------------------------------------------------------------------------
-
-    KeyboardInterrupt                         Traceback (most recent call last)
-
-    <ipython-input-400-e954de9881df> in <module>
-          1 centers2 = range(40, 60, 5)
-    ----> 2 scores2 = fit_mods(one_hot_data_pca, centers2)
-    
-
-    <ipython-input-397-525b3f259968> in fit_mods(data, range_list)
-         24     for center in range_list:
-         25         print('applying {} clusters'.format(center))
-    ---> 26         scores.append(get_kmeans_score(data, center))
-         27 
-         28     return scores
-
-
-    <ipython-input-397-525b3f259968> in get_kmeans_score(data, center)
-         12 
-         13     # Then fit the model to your data using the fit method
-    ---> 14     model = kmeans.fit(data)
-         15 
-         16     # Obtain a score related to the model fit
-
-
-    ~/anaconda3/envs/py36/lib/python3.6/site-packages/sklearn/cluster/k_means_.py in fit(self, X, y, sample_weight)
-        969                 tol=self.tol, random_state=random_state, copy_x=self.copy_x,
-        970                 n_jobs=self.n_jobs, algorithm=self.algorithm,
-    --> 971                 return_n_iter=True)
-        972         return self
-        973 
-
-
-    ~/anaconda3/envs/py36/lib/python3.6/site-packages/sklearn/cluster/k_means_.py in k_means(X, n_clusters, sample_weight, init, precompute_distances, n_init, max_iter, verbose, tol, random_state, copy_x, n_jobs, algorithm, return_n_iter)
-        378                 verbose=verbose, precompute_distances=precompute_distances,
-        379                 tol=tol, x_squared_norms=x_squared_norms,
-    --> 380                 random_state=random_state)
-        381             # determine if these results are the best so far
-        382             if best_inertia is None or inertia < best_inertia:
-
-
-    ~/anaconda3/envs/py36/lib/python3.6/site-packages/sklearn/cluster/k_means_.py in _kmeans_single_elkan(X, sample_weight, n_clusters, max_iter, init, verbose, x_squared_norms, random_state, tol, precompute_distances)
-        442     centers, labels, n_iter = k_means_elkan(X, checked_sample_weight,
-        443                                             n_clusters, centers, tol=tol,
-    --> 444                                             max_iter=max_iter, verbose=verbose)
-        445     if sample_weight is None:
-        446         inertia = np.sum((X - centers[labels]) ** 2, dtype=np.float64)
-
-
-    sklearn/cluster/_k_means_elkan.pyx in sklearn.cluster._k_means_elkan.k_means_elkan()
-
-
-    ~/anaconda3/envs/py36/lib/python3.6/site-packages/numpy/core/fromnumeric.py in sum(a, axis, dtype, out, keepdims, initial)
-       1819 
-       1820 
-    -> 1821 def sum(a, axis=None, dtype=None, out=None, keepdims=np._NoValue, initial=np._NoValue):
-       1822     """
-       1823     Sum of array elements over a given axis.
-
-
-    KeyboardInterrupt: 
+    applying 55 clusters
 
 
 
 ```python
 # Re-fit the k-means model with the selected number of clusters and obtain
 # cluster predictions for the general population demographics data.
-
+scores2
 
 ```
+
+
+
+
+    [51523235.04840434, 50750805.60020616, 49738061.95247968, 49021509.485105716]
+
+
+
+
+```python
+score_total = scores + scores2
+range_total = range(5, 60, 5)
+plt.plot(range_total, score_total, linestyle='--', marker='o', color='b');
+plt.xlabel('K');
+plt.ylabel('SSE');
+plt.title('SSE vs. K');
+```
+
+
+![png](output_84_0.png)
+
 
 ### Discussion 3.1: Apply Clustering to General Population
 

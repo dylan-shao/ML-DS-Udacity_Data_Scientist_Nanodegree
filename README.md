@@ -10,9 +10,9 @@
 
 [DecisionTrees-bugSpecies](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/DecisionTrees-bugSpecies)
 
-[DecisionTrees-sklearn_DecisionTreeClassifier](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/DecisionTrees-sklearn_DecisionTreeClassifier)
-
 [DecisionTrees-titanic_survival_exploration](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/DecisionTrees-titanic_survival_exploration)
+
+[DecisionTrees-sklearn_DecisionTreeClassifier](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/DecisionTrees-sklearn_DecisionTreeClassifier)
 
 [Diabetes case](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/1.%20Supervised%20Learning%20Projects/Diabetes%20case)
 
@@ -56,9 +56,9 @@
 
 [StudentAdmissions in Keras](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/2.%20Deep%20learning/StudentAdmissions%20in%20Keras)
 
-[XOR Keras](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/2.%20Deep%20learning/XOR%20Keras)
-
 [StudentAdmissions with hidden layer](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/2.%20Deep%20learning/StudentAdmissions%20with%20hidden%20layer)
+
+[XOR Keras](https://github.com/dylan-shao/ML-DS-Udacity_Data_Scientist_Nanodegree/blob/master/2.%20Deep%20learning/XOR%20Keras)
 
 ## 3. Unsupervised Learning
 
