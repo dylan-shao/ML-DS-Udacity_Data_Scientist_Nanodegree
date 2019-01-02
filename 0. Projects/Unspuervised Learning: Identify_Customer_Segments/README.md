@@ -2080,7 +2080,7 @@ Even though you've finished cleaning up the general population demographics data
 
 
 ```python
-def clean_data(df):
+def clean_data(df, config):
     """
     Perform feature trimming, re-encoding, and engineering for demographics
     data
@@ -2099,13 +2099,18 @@ def clean_data(df):
     
     print('df shape {}'.format(df.shape))
     # remove selected columns and rows, ...
-    print('drop columns with more than 20% missing values')
-    name_list_20, percentage_list_20 = get_percentage_missing_in_column(df, 0.2)
+    
+    name_list_20, percentage_list_20 = get_percentage_missing_in_column(df, config['column_missing_percentage'])
+    print('drop columns with more than {}% missing values'.format(config['column_missing_percentage']*100))
+    print(name_list_20)
     df = df.drop(name_list_20, axis = 1)
     
     print('df shape {}'.format(df.shape))
     print('selecting rows that has less than 30% of missing values..')
-    df, subset_above_threshold_indexes = get_misssing_info_in_row(df, 30)
+    subset_below_threshold_indexes, subset_above_threshold_indexes = get_misssing_info_in_row(df, 30)
+    print('percentage of rows with a lot of missing data: {0:.2f} %'.format(len(subset_above_threshold_indexes)*100/azdias.shape[0]))
+    df = df.iloc[subset_below_threshold_indexes]
+
     print('df shape {}'.format(df.shape))
     
     # select, re-encode, and engineer column values.
@@ -2127,17 +2132,20 @@ def clean_data(df):
                     large_level_variables.append(attribute)
                 else:
                     small_level_variables.append(attribute)
-    print('drop columns with categorical type that has more than 7 different values')
+    print('drop columns with categorical type that has more than 7 different values:')
+    print(large_level_variables)
     df = df.drop(large_level_variables, axis=1)
     print('df shape {}'.format(df.shape))
     
     print('one-hot encoding...')
     for item in small_level_variables:
         df = pd.concat([df, pd.get_dummies(df[item], prefix=item)], axis=1)
+        print('drop {}'.format(item))
         df = df.drop(item, axis=1)
     
     # special treatment to OST_WEST_KZ
-    df['OST_WEST_KZ'] = df['OST_WEST_KZ'].replace(['O','W'], [0,1])
+    if 'OST_WEST_KZ' in df.columns.values:
+        df['OST_WEST_KZ'] = df['OST_WEST_KZ'].replace(['O','W'], [0,1])
 
     print('df shape {}'.format(df.shape))
     
@@ -3559,8 +3567,7 @@ scores2 = fit_mods(one_hot_data_pca, centers2)
 
 
 ```python
-# Re-fit the k-means model with the selected number of clusters and obtain
-# cluster predictions for the general population demographics data.
+
 scores2
 
 ```
@@ -3586,13 +3593,27 @@ plt.title('SSE vs. K');
 ![png](output_84_0.png)
 
 
+
+```python
+# Re-fit the k-means model with the selected number of clusters and obtain
+# cluster predictions for the general population demographics data.
+
+kmeans = KMeans(n_clusters=55)
+model = kmeans.fit(one_hot_data_pca)
+```
+
+
+```python
+labels_general = model.predict(one_hot_data_pca)
+```
+
 ### Discussion 3.1: Apply Clustering to General Population
 
 (Double-click this cell and replace this text with your own text, reporting your findings and decisions regarding clustering. Into how many clusters have you decided to segment the population?)
 
 A:
 
-As we can see from the above figure, the score decrease along with the clusters, but when clusters equal to , it goes slowly, so I took the "elbow" point which is 
+As we can see from the above figure, the score decrease along with the number of clusters increasing, even though it's not showing a very good "elbow" curve, we can see that the curve become more "flat", at this time, I will choose 55 as the number of clusters, and will do more in the future with a better machine.
 
 ### Step 3.2: Apply All Steps to the Customer Data
 
@@ -3606,6 +3627,7 @@ Now that you have clusters and cluster centers for the general population, it's 
 ```python
 # Load in the customer demographics data.
 customers = pd.read_csv('Udacity_CUSTOMERS_Subset.csv', delimiter=';')
+
 ```
 
 
@@ -3613,6 +3635,93 @@ customers = pd.read_csv('Udacity_CUSTOMERS_Subset.csv', delimiter=';')
 # Apply preprocessing, feature transformation, and clustering from the general
 # demographics onto the customer data, obtaining cluster predictions for the
 # customer demographics data.
+
+```
+
+
+```python
+
+customers_data = clean_data(customers, {'column_missing_percentage': 0.3})
+```
+
+    convert missing value codes into NaNs...
+    df shape (191652, 85)
+    drop columns with more than 30.0% missing values
+    ['KK_KUNDENTYP']
+    df shape (191652, 84)
+    selecting rows that has less than 30% of missing values..
+    0.0 %
+    10.0 %
+    20.0 %
+    30.0 %
+    40.0 %
+    50.0 %
+    60.0 %
+    70.0 %
+    80.0 %
+    90.0 %
+    100.0 %
+    Done!
+    percentage of rows with a lot of missing data: 5.60 %
+    df shape (141725, 84)
+    investgating the categorical variables...
+    drop columns with categorical type that has more than 7 different values:
+    ['GFK_URLAUBERTYP', 'LP_FAMILIE_FEIN', 'LP_STATUS_FEIN', 'CAMEO_DEUG_2015', 'CAMEO_DEU_2015']
+    df shape (141725, 79)
+    one-hot encoding...
+    drop AGER_TYP
+    drop ANREDE_KZ
+    drop CJT_GESAMTTYP
+    drop FINANZTYP
+    drop GREEN_AVANTGARDE
+    drop LP_FAMILIE_GROB
+    drop LP_STATUS_GROB
+    drop NATIONALITAET_KZ
+    drop SHOPPER_TYP
+    drop SOHO_KZ
+    drop TITEL_KZ
+    drop VERS_TYP
+    drop ZABEOTYP
+    drop GEBAEUDETYP
+    drop OST_WEST_KZ
+    df shape (141725, 129)
+    investgating engineered features
+    df shape (141725, 131)
+    Done!
+
+
+
+```python
+# standard scaling
+customers_data = replace_missing_values(customers_data)
+customers_data = feature_scale(customers_data)
+
+```
+
+    (141725, 131)
+    uint8
+    int64
+    float64
+    (141725, 131)
+    float64
+
+
+
+```python
+# PCA
+customers_data = pca.fit_transform(customers_data)
+
+```
+
+
+```python
+    
+# clustering
+labels_customers = model.predict(customers_data)
+```
+
+
+```python
 
 
 ```
