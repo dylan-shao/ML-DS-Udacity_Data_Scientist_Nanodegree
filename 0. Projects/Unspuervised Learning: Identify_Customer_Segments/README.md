@@ -1979,26 +1979,11 @@ As we can see, that we have removed those that have missing values large than 20
 
 
 ```python
-subset_below_threshold_indexes, subset_above_threshold_indexes = get_misssing_info_in_row(one_hot_data, 30)
-print('percentage of rows with a lot of missing data: {0:.2f} %'.format(len(subset_above_threshold_indexes)*100/one_hot_data.shape[0]))
+# subset_below_threshold_indexes2, subset_above_threshold_indexes2 = get_misssing_info_in_row(one_hot_data, 30)
+# print('percentage of rows with a lot of missing data: {0:.2f} %'.format(len(subset_above_threshold_indexes2)*100/one_hot_data.shape[0]))
 
 
 ```
-
-    0.0 %
-    10.0 %
-    20.0 %
-    30.0 %
-    40.0 %
-    50.0 %
-    60.0 %
-    70.0 %
-    80.0 %
-    90.0 %
-    100.0 %
-    Done!
-    percentage of rows with a lot of missing data: 0.00 %
-
 
 
 ```python
@@ -2080,7 +2065,7 @@ Even though you've finished cleaning up the general population demographics data
 
 
 ```python
-def clean_data(df, config):
+def clean_data(df):
     """
     Perform feature trimming, re-encoding, and engineering for demographics
     data
@@ -2100,38 +2085,38 @@ def clean_data(df, config):
     print('df shape {}'.format(df.shape))
     # remove selected columns and rows, ...
     
-    name_list_20, percentage_list_20 = get_percentage_missing_in_column(df, config['column_missing_percentage'])
-    print('drop columns with more than {}% missing values'.format(config['column_missing_percentage']*100))
+#     name_list_20, percentage_list_20 = get_percentage_missing_in_column(df, config['column_missing_percentage'])
+    print('drop columns:')
     print(name_list_20)
     df = df.drop(name_list_20, axis = 1)
     
     print('df shape {}'.format(df.shape))
-    print('selecting rows that has less than 30% of missing values..')
-    subset_below_threshold_indexes, subset_above_threshold_indexes = get_misssing_info_in_row(df, 30)
-    print('percentage of rows with a lot of missing data: {0:.2f} %'.format(len(subset_above_threshold_indexes)*100/azdias.shape[0]))
-    df = df.iloc[subset_below_threshold_indexes]
+#     print('selecting rows that has less than 30% of missing values..')
+#     subset_below_threshold_indexes, subset_above_threshold_indexes = get_misssing_info_in_row(df, 30)
+#     print('percentage of rows with a lot of missing data: {0:.2f} %'.format(len(subset_above_threshold_indexes)*100/azdias.shape[0]))
+#     df = df.iloc[subset_below_threshold_indexes]
 
     print('df shape {}'.format(df.shape))
     
     # select, re-encode, and engineer column values.
     # Re-encode categorical variable(s) to be kept in the analysis.
     # drop columns:
-    large_level_variables = []
-    small_level_variables = []
-    print('investgating the categorical variables...')
+#     large_level_variables = []
+#     small_level_variables = []
+#     print('investgating the categorical variables...')
     
-    for index in range(feat_info.shape[0]):
-        type = feat_info['type'][index]
+#     for index in range(feat_info.shape[0]):
+#         type = feat_info['type'][index]
 
-        if type == 'categorical':
-            attribute = feat_info['attribute'][index]
-            if attribute in df.columns:
-                dimensions = df[attribute].nunique()
+#         if type == 'categorical':
+#             attribute = feat_info['attribute'][index]
+#             if attribute in df.columns:
+#                 dimensions = df[attribute].nunique()
 
-                if dimensions > 7:
-                    large_level_variables.append(attribute)
-                else:
-                    small_level_variables.append(attribute)
+#                 if dimensions > 7:
+#                     large_level_variables.append(attribute)
+#                 else:
+#                     small_level_variables.append(attribute)
     print('drop columns with categorical type that has more than 7 different values:')
     print(large_level_variables)
     df = df.drop(large_level_variables, axis=1)
@@ -3506,17 +3491,18 @@ def fit_mods(data, range_list):
     # compute the average within-cluster distances.
     
 centers = range(5, 40, 5)
-scores = fit_mods(one_hot_data_pca, centers)
+# scores = fit_mods(one_hot_data_pca, centers)
+
+# memorized, as it will take hours, sometimes I need to rerun entire notebook, 
+# I saved the values here so I don't need to run it again if the code above does not change
+scores = [68656673.77467142,
+ 63310659.966458,
+ 60575304.883048564,
+ 58127808.65660498,
+ 56196627.50945433,
+ 54419207.460554905,
+ 52622383.92164255]
 ```
-
-    applying 5 clusters
-    applying 10 clusters
-    applying 15 clusters
-    applying 20 clusters
-    applying 25 clusters
-    applying 30 clusters
-    applying 35 clusters
-
 
 
 ```python
@@ -3535,49 +3521,20 @@ plt.title('SSE vs. K');
 
 
 ```python
-scores
-```
-
-
-
-
-    [68656673.77467142,
-     63310659.966458,
-     60575304.883048564,
-     58127808.65660498,
-     56196627.50945433,
-     54419207.460554905,
-     52622383.92164255]
-
-
-
-
-```python
 # this takes 2-3 hours to run in mac pro
 
 centers2 = range(40, 60, 5)
-scores2 = fit_mods(one_hot_data_pca, centers2)
+# scores2 = fit_mods(one_hot_data_pca, centers2)
+
+# result is [51523235.04840434, 50750805.60020616, 49738061.95247968, 49021509.485105716]
 ```
-
-    applying 40 clusters
-    applying 45 clusters
-    applying 50 clusters
-    applying 55 clusters
-
 
 
 ```python
 
-scores2
+scores2 = [51523235.04840434, 50750805.60020616, 49738061.95247968, 49021509.485105716]
 
 ```
-
-
-
-
-    [51523235.04840434, 50750805.60020616, 49738061.95247968, 49021509.485105716]
-
-
 
 
 ```python
@@ -3590,7 +3547,7 @@ plt.title('SSE vs. K');
 ```
 
 
-![png](output_84_0.png)
+![png](output_83_0.png)
 
 
 
@@ -3598,7 +3555,7 @@ plt.title('SSE vs. K');
 # Re-fit the k-means model with the selected number of clusters and obtain
 # cluster predictions for the general population demographics data.
 
-kmeans = KMeans(n_clusters=55)
+kmeans = KMeans(n_clusters=40)
 model = kmeans.fit(one_hot_data_pca)
 ```
 
@@ -3613,7 +3570,7 @@ labels_general = model.predict(one_hot_data_pca)
 
 A:
 
-As we can see from the above figure, the score decrease along with the number of clusters increasing, even though it's not showing a very good "elbow" curve, we can see that the curve become more "flat", at this time, I will choose 55 as the number of clusters, and will do more in the future with a better machine.
+As we can see from the above figure, the score decrease along with the number of clusters increasing, even though it's not showing a very good "elbow" curve, we can see that the curve become more "flat" after 35 or 40, that's why I choose 40 as the number of clusters.
 
 ### Step 3.2: Apply All Steps to the Customer Data
 
@@ -3635,58 +3592,43 @@ customers = pd.read_csv('Udacity_CUSTOMERS_Subset.csv', delimiter=';')
 # Apply preprocessing, feature transformation, and clustering from the general
 # demographics onto the customer data, obtaining cluster predictions for the
 # customer demographics data.
-
+customers.shape
 ```
+
+
+
+
+    (191652, 85)
+
+
 
 
 ```python
 
-customers_data = clean_data(customers, {'column_missing_percentage': 0.3})
+customers_data = clean_data(customers)
 ```
 
     convert missing value codes into NaNs...
     df shape (191652, 85)
-    drop columns with more than 30.0% missing values
-    ['KK_KUNDENTYP']
-    df shape (191652, 84)
-    selecting rows that has less than 30% of missing values..
-    0.0 %
-    10.0 %
-    20.0 %
-    30.0 %
-    40.0 %
-    50.0 %
-    60.0 %
-    70.0 %
-    80.0 %
-    90.0 %
-    100.0 %
-    Done!
-    percentage of rows with a lot of missing data: 5.60 %
-    df shape (141725, 84)
-    investgating the categorical variables...
+    drop columns:
+    ['AGER_TYP', 'GEBURTSJAHR', 'TITEL_KZ', 'ALTER_HH', 'KK_KUNDENTYP', 'KBA05_BAUMAX']
+    df shape (191652, 79)
+    df shape (191652, 79)
     drop columns with categorical type that has more than 7 different values:
     ['GFK_URLAUBERTYP', 'LP_FAMILIE_FEIN', 'LP_STATUS_FEIN', 'CAMEO_DEUG_2015', 'CAMEO_DEU_2015']
-    df shape (141725, 79)
+    df shape (191652, 74)
     one-hot encoding...
-    drop AGER_TYP
-    drop ANREDE_KZ
     drop CJT_GESAMTTYP
     drop FINANZTYP
-    drop GREEN_AVANTGARDE
     drop LP_FAMILIE_GROB
     drop LP_STATUS_GROB
     drop NATIONALITAET_KZ
     drop SHOPPER_TYP
-    drop SOHO_KZ
-    drop TITEL_KZ
-    drop VERS_TYP
     drop ZABEOTYP
     drop GEBAEUDETYP
-    drop OST_WEST_KZ
-    df shape (141725, 129)
+    df shape (191652, 110)
     investgating engineered features
-    df shape (141725, 131)
+    df shape (191652, 112)
     Done!
 
 
@@ -3698,20 +3640,41 @@ customers_data = feature_scale(customers_data)
 
 ```
 
-    (141725, 131)
+    (191652, 112)
     uint8
     int64
     float64
-    (141725, 131)
+    (191652, 112)
     float64
 
 
 
 ```python
 # PCA
-customers_data = pca.fit_transform(customers_data)
+customers_data = pca.transform(customers_data)
 
 ```
+
+
+    ---------------------------------------------------------------------------
+
+    ValueError                                Traceback (most recent call last)
+
+    <ipython-input-67-8a6d703e5894> in <module>
+          1 # PCA
+    ----> 2 customers_data = pca.transform(customers_data)
+    
+
+    ~/anaconda3/envs/py36/lib/python3.6/site-packages/sklearn/decomposition/base.py in transform(self, X)
+        128         X = check_array(X)
+        129         if self.mean_ is not None:
+    --> 130             X = X - self.mean_
+        131         X_transformed = np.dot(X, self.components_.T)
+        132         if self.whiten:
+
+
+    ValueError: operands could not be broadcast together with shapes (191652,112) (110,) 
+
 
 
 ```python
@@ -3744,7 +3707,8 @@ Take a look at the following points in this step:
 # Compare the proportion of data in each cluster for the customer data to the
 # proportion of data in each cluster for the general population.
 
-
+# sns.countplot(x=list(range(0,len(labels_general))),data=pd.DataFrame(labels_general))
+labels_general
 ```
 
 
