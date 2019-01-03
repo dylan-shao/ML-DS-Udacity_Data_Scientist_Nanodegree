@@ -1050,11 +1050,24 @@ print(azdias_filled_nan_dropped.shape)
     (891221, 79)
 
 
+
+```python
+# Dropped columns:
+print(name_list_20)
+dropped_columns = []
+dropped_columns += name_list_20
+```
+
+    ['AGER_TYP', 'GEBURTSJAHR', 'TITEL_KZ', 'ALTER_HH', 'KK_KUNDENTYP', 'KBA05_BAUMAX']
+
+
 #### Discussion 1.1.2: Assess Missing Data in Each Column
 
-As we can see that most of the columns does not appear in the above figure, which means that they have nan value less than 10%.
+As we can see that most of the columns does not appear in the above figure, which means that they have nan value less than 10%. And got those above 10% of missing data, most of than are within 20%, so I removed those data that has missing data large than 20%.
 
-And we have two columns `KK_KUNDENTYP` and `AGER_TYP` that has much higher missing values, so we removed this two columns from the dataset above
+Patterns: 
+
+As we can see, for the missing value percentage between 10% to 20%, there are some group of columns that have silimar missing percentage, such as `PLZ8 macro-cell features`, `RR3 micro-cell features`(KBA_*), `RR4 micro-cell features` (CAMEO_*) and so on, this probably means that those data are actually coming from the **same dataset**, and each column represents information about the dataset from different aspect.  
 
 #### Step 1.1.3: Assess Missing Data in Each Row
 
@@ -1548,12 +1561,12 @@ subset_below_threshold_indexes, subset_above_threshold_indexes = get_misssing_in
 
 ```python
 
-print('percentage of rows with a lot of missing data: {0:.2f} %'.format(len(subset_above_threshold_indexes)*100/azdias.shape[0]))
+print('percentage of rows with more than 30 missing data: {0:.2f} %'.format(len(subset_above_threshold_indexes)*100/azdias.shape[0]))
 
 
 ```
 
-    percentage of rows with a lot of missing data: 10.46 %
+    percentage of rows with more than 30 missing data: 10.46 %
 
 
 
@@ -1584,37 +1597,6 @@ for item in compare_labels:
 ```
 
 
-![png](output_32_0.png)
-
-
-
-![png](output_32_1.png)
-
-
-
-![png](output_32_2.png)
-
-
-
-![png](output_32_3.png)
-
-
-
-![png](output_32_4.png)
-
-
-
-```python
-# get the subsets from indexes,
-# filled data with nan filled and drop 2 columns
-filled_subset_below_threshold = azdias_filled_nan_dropped.iloc[subset_below_threshold_indexes]
-filled_subset_above_threshold = azdias_filled_nan_dropped.iloc[subset_above_threshold_indexes]
-
-for item in compare_labels:
-    compare_and_plot(item, filled_subset_below_threshold, filled_subset_above_threshold)
-```
-
-
 ![png](output_33_0.png)
 
 
@@ -1632,6 +1614,37 @@ for item in compare_labels:
 
 
 ![png](output_33_4.png)
+
+
+
+```python
+# get the subsets from indexes,
+# filled data with nan filled and drop 2 columns
+filled_subset_below_threshold = azdias_filled_nan_dropped.iloc[subset_below_threshold_indexes]
+filled_subset_above_threshold = azdias_filled_nan_dropped.iloc[subset_above_threshold_indexes]
+
+for item in compare_labels:
+    compare_and_plot(item, filled_subset_below_threshold, filled_subset_above_threshold)
+```
+
+
+![png](output_34_0.png)
+
+
+
+![png](output_34_1.png)
+
+
+
+![png](output_34_2.png)
+
+
+
+![png](output_34_3.png)
+
+
+
+![png](output_34_4.png)
 
 
 #### Discussion 1.1.3: Assess Missing Data in Each Row
@@ -1677,7 +1690,7 @@ plt.show()
 
 
 
-![png](output_36_1.png)
+![png](output_37_1.png)
 
 
 #### Step 1.2.1: Re-Encode Categorical Features
@@ -1772,6 +1785,36 @@ print('shape after drop: ', filled_subset_below_threshold.shape)
 
 
 ```python
+# Dropped columns with more than 7 dimensions:
+print(large_level_variables)
+dropped_columns += large_level_variables
+print(len(dropped_columns))
+dropped_columns
+```
+
+    ['GFK_URLAUBERTYP', 'LP_FAMILIE_FEIN', 'LP_STATUS_FEIN', 'CAMEO_DEUG_2015', 'CAMEO_DEU_2015']
+    11
+
+
+
+
+
+    ['AGER_TYP',
+     'GEBURTSJAHR',
+     'TITEL_KZ',
+     'ALTER_HH',
+     'KK_KUNDENTYP',
+     'KBA05_BAUMAX',
+     'GFK_URLAUBERTYP',
+     'LP_FAMILIE_FEIN',
+     'LP_STATUS_FEIN',
+     'CAMEO_DEUG_2015',
+     'CAMEO_DEU_2015']
+
+
+
+
+```python
 # Re-encode categorical variable(s) to be kept in the analysis.
 
 one_hot_data = filled_subset_below_threshold
@@ -1816,6 +1859,90 @@ There are a handful of features that are marked as "mixed" in the feature summar
 - If you decide to keep or engineer new features around the other mixed-type features, make sure you note your steps in the Discussion section.
 
 Be sure to check `Data_Dictionary.md` for the details needed to finish these tasks.
+
+
+```python
+# get the attribute that are mixed AND not dropped
+mixed_attr_exists = feat_info[(feat_info.type == 'mixed') & (~feat_info.attribute.isin(dropped_columns))]
+mixed_attr_exists
+
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>attribute</th>
+      <th>information_level</th>
+      <th>type</th>
+      <th>missing_or_unknown</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>15</th>
+      <td>LP_LEBENSPHASE_FEIN</td>
+      <td>person</td>
+      <td>mixed</td>
+      <td>[0]</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>LP_LEBENSPHASE_GROB</td>
+      <td>person</td>
+      <td>mixed</td>
+      <td>[0]</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>PRAEGENDE_JUGENDJAHRE</td>
+      <td>person</td>
+      <td>mixed</td>
+      <td>[-1,0]</td>
+    </tr>
+    <tr>
+      <th>56</th>
+      <td>WOHNLAGE</td>
+      <td>building</td>
+      <td>mixed</td>
+      <td>[-1]</td>
+    </tr>
+    <tr>
+      <th>59</th>
+      <td>CAMEO_INTL_2015</td>
+      <td>microcell_rr4</td>
+      <td>mixed</td>
+      <td>[-1,XX]</td>
+    </tr>
+    <tr>
+      <th>79</th>
+      <td>PLZ8_BAUMAX</td>
+      <td>macrocell_plz8</td>
+      <td>mixed</td>
+      <td>[-1,0]</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
 
 
 ```python
@@ -1916,6 +2043,51 @@ print(one_hot_data.shape)
     (797981, 110)
 
 
+
+```python
+# remove those two investaged attribute above
+mixed_drop_list = list(mixed_attr_exists.attribute.values)
+
+mixed_drop_list.remove('PRAEGENDE_JUGENDJAHRE')
+mixed_drop_list.remove('CAMEO_INTL_2015')
+mixed_drop_list
+```
+
+
+
+
+    ['LP_LEBENSPHASE_FEIN', 'LP_LEBENSPHASE_GROB', 'WOHNLAGE', 'PLZ8_BAUMAX']
+
+
+
+
+```python
+# TODO: investage more mixed type in the future
+# for now, I gonna remove them from the dataset
+one_hot_data = one_hot_data.drop(mixed_drop_list, axis=1)
+dropped_columns += mixed_drop_list
+print(dropped_columns)
+```
+
+    ['AGER_TYP', 'GEBURTSJAHR', 'TITEL_KZ', 'ALTER_HH', 'KK_KUNDENTYP', 'KBA05_BAUMAX', 'GFK_URLAUBERTYP', 'LP_FAMILIE_FEIN', 'LP_STATUS_FEIN', 'CAMEO_DEUG_2015', 'CAMEO_DEU_2015', 'LP_LEBENSPHASE_FEIN', 'LP_LEBENSPHASE_GROB', 'WOHNLAGE', 'PLZ8_BAUMAX']
+
+
+
+```python
+print(len(dropped_columns))
+one_hot_data.shape
+```
+
+    15
+
+
+
+
+
+    (797981, 106)
+
+
+
 #### Discussion 1.2.2: Engineer Mixed-Type Features
 
 (Double-click this cell and replace this text with your own text, reporting your findings and decisions regarding mixed-value features. Which ones did you keep, which did you drop, and what engineering steps did you perform?)
@@ -1925,7 +2097,7 @@ for `PRAEGENDE_JUGENDJAHRE`, I divided it into two columns, one by DECADE, and o
 
 and for `CAMEO_INTL_2015`, I divided it into two columns, one by WEALTH, and one by LIFE STAGE,
 
-at this time, I am only making two columns changes, and will investgating more in the future
+for the rest of the mixed type features, I removed them from the dataset.
 
 
 #### Step 1.2.3: Complete Feature Selection
@@ -1967,12 +2139,12 @@ plt.barh(name_list_10, width = percentage_list_10)
 
 
 
-    <BarContainer object of 37 artists>
+    <BarContainer object of 34 artists>
 
 
 
 
-![png](output_50_1.png)
+![png](output_56_1.png)
 
 
 As we can see, that we have removed those that have missing values large than 20%
@@ -2039,8 +2211,28 @@ for item in engineered_feature:
     print(item not in one_hot_data.columns.values)
     # check we created new columns based on the origional column
     print(item + '_' in ''.join(one_hot_data.columns.values))
+    
+for item in dropped_columns:
+    print(item not in one_hot_data.columns.values)
+    
+    
 ```
 
+    True
+    True
+    True
+    True
+    True
+    True
+    True
+    True
+    True
+    True
+    True
+    True
+    True
+    True
+    True
     True
     True
     True
@@ -2055,7 +2247,7 @@ one_hot_data.shape
 
 
 
-    (797981, 110)
+    (797981, 106)
 
 
 
@@ -2087,8 +2279,8 @@ def clean_data(df):
     
 #     name_list_20, percentage_list_20 = get_percentage_missing_in_column(df, config['column_missing_percentage'])
     print('drop columns:')
-    print(name_list_20)
-    df = df.drop(name_list_20, axis = 1)
+    print(dropped_columns)
+    df = df.drop(dropped_columns, axis = 1)
     
     print('df shape {}'.format(df.shape))
 #     print('selecting rows that has less than 30% of missing values..')
@@ -2117,10 +2309,10 @@ def clean_data(df):
 #                     large_level_variables.append(attribute)
 #                 else:
 #                     small_level_variables.append(attribute)
-    print('drop columns with categorical type that has more than 7 different values:')
-    print(large_level_variables)
-    df = df.drop(large_level_variables, axis=1)
-    print('df shape {}'.format(df.shape))
+#     print('drop columns with categorical type that has more than 7 different values:')
+#     print(large_level_variables)
+#     df = df.drop(large_level_variables, axis=1)
+#     print('df shape {}'.format(df.shape))
     
     print('one-hot encoding...')
     for item in small_level_variables:
@@ -2223,16 +2415,16 @@ def replace_missing_values(df):
 
     df[list1]  = imp.fit_transform(df[list1])
     print(df.shape)
-    return df
+    return df, imp, list1
 
-one_hot_data = replace_missing_values(one_hot_data)
+one_hot_data, imp, imp_list = replace_missing_values(one_hot_data)
 ```
 
-    (797981, 110)
+    (797981, 106)
     uint8
     int64
     float64
-    (797981, 110)
+    (797981, 106)
 
 
 
@@ -2257,10 +2449,11 @@ name_list_10
 
 def feature_scale(df):
     list1 = get_none_object_list(df)
-    df[list1] = p.StandardScaler().fit_transform(df[list1]) 
-    return df
+    scaler = p.StandardScaler()
+    df[list1] = scaler.fit_transform(df[list1]) 
+    return df, scaler
 
-one_hot_data = feature_scale(one_hot_data)
+one_hot_data, scaler = feature_scale(one_hot_data)
 ```
 
     float64
@@ -2438,7 +2631,7 @@ one_hot_data.head()
     </tr>
   </tbody>
 </table>
-<p>5 rows × 110 columns</p>
+<p>5 rows × 106 columns</p>
 </div>
 
 
@@ -2448,7 +2641,9 @@ one_hot_data.head()
 (Double-click this cell and replace this text with your own text, reporting your decisions regarding feature scaling.)
 A:
 
-Applied StandardScaler feature scaling from sklearn to only the none-object type.
+Imputation was applied with `mean` substitution because it has benefit of not changing the sample mean for that variable.
+
+And because the features has different scales, this can greatly impact the clusters you get when using K-Means. So I applied StandardScaler feature scaling from sklearn to only the none-object type.
 
 ### Step 2.2: Perform Dimensionality Reduction
 
@@ -2506,7 +2701,7 @@ scree_plot(pca)
 ```
 
 
-![png](output_68_0.png)
+![png](output_74_0.png)
 
 
 
@@ -2533,7 +2728,7 @@ one_hot_data_pca.shape
 
 (Double-click this cell and replace this text with your own text, reporting your findings and decisions regarding dimensionality reduction. How many principal components / transformed features are you retaining for the next step of the analysis?)
 
-As we can see from the above figure, with 80 components, it will explain about 95% explained_variance_ratio_, so we gonan use 80
+As we can see from the above figure, with 80 components, it will explain about 95% explained_variance_ratio_, and also it's started to drop off around 60-70, but we gonan use 80 here to cover more variance.
 
 ### Step 2.3: Interpret Principal Components
 
@@ -2599,251 +2794,251 @@ get_sorted_name_weights_dic(pca, 0)
   <tbody>
     <tr>
       <th>LP_STATUS_GROB_1.0</th>
-      <td>0.199146</td>
+      <td>0.202742</td>
     </tr>
     <tr>
       <th>PLZ8_ANTG3</th>
-      <td>0.193288</td>
-    </tr>
-    <tr>
-      <th>PLZ8_ANTG4</th>
-      <td>0.188476</td>
+      <td>0.189457</td>
     </tr>
     <tr>
       <th>HH_EINKOMMEN_SCORE</th>
-      <td>0.185999</td>
+      <td>0.187241</td>
     </tr>
     <tr>
-      <th>PLZ8_BAUMAX</th>
-      <td>0.184342</td>
+      <th>PLZ8_ANTG4</th>
+      <td>0.184098</td>
     </tr>
     <tr>
       <th>CAMEO_INTL_2015_WEALTH</th>
-      <td>0.179197</td>
+      <td>0.178886</td>
     </tr>
     <tr>
       <th>ORTSGR_KLS9</th>
-      <td>0.168464</td>
+      <td>0.164229</td>
     </tr>
     <tr>
       <th>EWDICHTE</th>
-      <td>0.166664</td>
-    </tr>
-    <tr>
-      <th>FINANZ_HAUSBAUER</th>
-      <td>0.150310</td>
-    </tr>
-    <tr>
-      <th>KBA05_ANTG4</th>
-      <td>0.132956</td>
-    </tr>
-    <tr>
-      <th>PLZ8_ANTG2</th>
-      <td>0.131750</td>
+      <td>0.162805</td>
     </tr>
     <tr>
       <th>FINANZ_SPARER</th>
-      <td>0.129032</td>
+      <td>0.159814</td>
+    </tr>
+    <tr>
+      <th>FINANZ_HAUSBAUER</th>
+      <td>0.144376</td>
     </tr>
     <tr>
       <th>FINANZTYP_1</th>
-      <td>0.123087</td>
+      <td>0.143032</td>
     </tr>
     <tr>
-      <th>ANZ_HAUSHALTE_AKTIV</th>
-      <td>0.119826</td>
+      <th>KBA05_ANTG4</th>
+      <td>0.131174</td>
     </tr>
     <tr>
-      <th>ARBEIT</th>
-      <td>0.119287</td>
-    </tr>
-    <tr>
-      <th>KBA05_ANTG3</th>
-      <td>0.117854</td>
-    </tr>
-    <tr>
-      <th>RELAT_AB</th>
-      <td>0.113317</td>
+      <th>PLZ8_ANTG2</th>
+      <td>0.129511</td>
     </tr>
     <tr>
       <th>SEMIO_PFLICHT</th>
-      <td>0.096835</td>
-    </tr>
-    <tr>
-      <th>LP_FAMILIE_GROB_1.0</th>
-      <td>0.094797</td>
+      <td>0.124466</td>
     </tr>
     <tr>
       <th>SEMIO_REL</th>
-      <td>0.092340</td>
+      <td>0.119929</td>
+    </tr>
+    <tr>
+      <th>KBA05_ANTG3</th>
+      <td>0.118537</td>
+    </tr>
+    <tr>
+      <th>ANZ_HAUSHALTE_AKTIV</th>
+      <td>0.118061</td>
     </tr>
     <tr>
       <th>PRAEGENDE_JUGENDJAHRE_DECADE</th>
-      <td>0.087147</td>
+      <td>0.117874</td>
     </tr>
     <tr>
-      <th>PRAEGENDE_JUGENDJAHRE_MOVEMENT</th>
-      <td>0.085115</td>
+      <th>ARBEIT</th>
+      <td>0.116960</td>
     </tr>
     <tr>
-      <th>ZABEOTYP_5</th>
-      <td>0.085076</td>
+      <th>RELAT_AB</th>
+      <td>0.111495</td>
     </tr>
     <tr>
       <th>SEMIO_RAT</th>
-      <td>0.081126</td>
+      <td>0.104451</td>
     </tr>
     <tr>
       <th>SEMIO_TRADV</th>
-      <td>0.073789</td>
+      <td>0.100227</td>
     </tr>
     <tr>
-      <th>GEBAEUDETYP_3.0</th>
-      <td>0.072711</td>
+      <th>ZABEOTYP_5</th>
+      <td>0.096338</td>
     </tr>
     <tr>
       <th>FINANZ_UNAUFFAELLIGER</th>
-      <td>0.064767</td>
-    </tr>
-    <tr>
-      <th>SEMIO_MAT</th>
-      <td>0.063422</td>
+      <td>0.091384</td>
     </tr>
     <tr>
       <th>FINANZ_ANLEGER</th>
-      <td>0.062088</td>
+      <td>0.089575</td>
+    </tr>
+    <tr>
+      <th>PRAEGENDE_JUGENDJAHRE_MOVEMENT</th>
+      <td>0.088140</td>
+    </tr>
+    <tr>
+      <th>SEMIO_MAT</th>
+      <td>0.079927</td>
+    </tr>
+    <tr>
+      <th>LP_FAMILIE_GROB_1.0</th>
+      <td>0.076372</td>
     </tr>
     <tr>
       <th>SEMIO_FAM</th>
-      <td>0.060544</td>
+      <td>0.076329</td>
+    </tr>
+    <tr>
+      <th>SEMIO_KULT</th>
+      <td>0.074604</td>
+    </tr>
+    <tr>
+      <th>GEBAEUDETYP_3.0</th>
+      <td>0.071807</td>
     </tr>
     <tr>
       <th>...</th>
       <td>...</td>
     </tr>
     <tr>
-      <th>FINANZTYP_3</th>
-      <td>-0.051226</td>
+      <th>ZABEOTYP_2</th>
+      <td>-0.045896</td>
     </tr>
     <tr>
-      <th>WOHNDAUER_2008</th>
-      <td>-0.056687</td>
+      <th>ZABEOTYP_3</th>
+      <td>-0.046640</td>
     </tr>
     <tr>
-      <th>SEMIO_ERL</th>
-      <td>-0.058970</td>
-    </tr>
-    <tr>
-      <th>SEMIO_LUST</th>
-      <td>-0.060174</td>
-    </tr>
-    <tr>
-      <th>KBA13_ANZAHL_PKW</th>
-      <td>-0.065006</td>
-    </tr>
-    <tr>
-      <th>WOHNLAGE</th>
-      <td>-0.069836</td>
-    </tr>
-    <tr>
-      <th>NATIONALITAET_KZ_1.0</th>
-      <td>-0.071501</td>
+      <th>SHOPPER_TYP_3.0</th>
+      <td>-0.047475</td>
     </tr>
     <tr>
       <th>LP_FAMILIE_GROB_5.0</th>
-      <td>-0.076301</td>
+      <td>-0.057713</td>
     </tr>
     <tr>
-      <th>FINANZTYP_2</th>
-      <td>-0.086611</td>
+      <th>WOHNDAUER_2008</th>
+      <td>-0.061447</td>
+    </tr>
+    <tr>
+      <th>KBA13_ANZAHL_PKW</th>
+      <td>-0.062849</td>
+    </tr>
+    <tr>
+      <th>CJT_GESAMTTYP_2.0</th>
+      <td>-0.065772</td>
     </tr>
     <tr>
       <th>ANZ_PERSONEN</th>
-      <td>-0.090912</td>
+      <td>-0.073524</td>
     </tr>
     <tr>
-      <th>GEBAEUDETYP_1.0</th>
-      <td>-0.095247</td>
+      <th>SEMIO_ERL</th>
+      <td>-0.080337</td>
+    </tr>
+    <tr>
+      <th>SEMIO_LUST</th>
+      <td>-0.080947</td>
+    </tr>
+    <tr>
+      <th>NATIONALITAET_KZ_1.0</th>
+      <td>-0.083087</td>
     </tr>
     <tr>
       <th>ZABEOTYP_1</th>
-      <td>-0.096650</td>
+      <td>-0.092545</td>
     </tr>
     <tr>
-      <th>FINANZ_VORSORGER</th>
-      <td>-0.098494</td>
+      <th>GEBAEUDETYP_1.0</th>
+      <td>-0.094725</td>
     </tr>
     <tr>
-      <th>ALTERSKATEGORIE_GROB</th>
-      <td>-0.099887</td>
-    </tr>
-    <tr>
-      <th>GREEN_AVANTGARDE</th>
-      <td>-0.100927</td>
+      <th>FINANZTYP_2</th>
+      <td>-0.100288</td>
     </tr>
     <tr>
       <th>GEBAEUDETYP_RASTER</th>
-      <td>-0.105172</td>
+      <td>-0.102889</td>
+    </tr>
+    <tr>
+      <th>GREEN_AVANTGARDE</th>
+      <td>-0.104115</td>
     </tr>
     <tr>
       <th>BALLRAUM</th>
-      <td>-0.107318</td>
+      <td>-0.105301</td>
     </tr>
     <tr>
       <th>CAMEO_INTL_2015_LIFE_STAGE</th>
-      <td>-0.108549</td>
+      <td>-0.112828</td>
     </tr>
     <tr>
       <th>LP_STATUS_GROB_5.0</th>
-      <td>-0.113988</td>
+      <td>-0.117967</td>
     </tr>
     <tr>
       <th>LP_STATUS_GROB_4.0</th>
-      <td>-0.117623</td>
+      <td>-0.118847</td>
     </tr>
     <tr>
-      <th>LP_LEBENSPHASE_GROB</th>
-      <td>-0.128741</td>
+      <th>FINANZ_VORSORGER</th>
+      <td>-0.126539</td>
+    </tr>
+    <tr>
+      <th>ALTERSKATEGORIE_GROB</th>
+      <td>-0.130293</td>
     </tr>
     <tr>
       <th>INNENSTADT</th>
-      <td>-0.139374</td>
+      <td>-0.136496</td>
     </tr>
     <tr>
       <th>PLZ8_GBZ</th>
-      <td>-0.142044</td>
-    </tr>
-    <tr>
-      <th>LP_LEBENSPHASE_FEIN</th>
-      <td>-0.143316</td>
+      <td>-0.138405</td>
     </tr>
     <tr>
       <th>KONSUMNAEHE</th>
-      <td>-0.145795</td>
+      <td>-0.142673</td>
     </tr>
     <tr>
       <th>KBA05_GBZ</th>
-      <td>-0.188553</td>
+      <td>-0.187487</td>
     </tr>
     <tr>
       <th>PLZ8_ANTG1</th>
-      <td>-0.193206</td>
+      <td>-0.189348</td>
     </tr>
     <tr>
       <th>KBA05_ANTG1</th>
-      <td>-0.197480</td>
-    </tr>
-    <tr>
-      <th>FINANZ_MINIMALIST</th>
-      <td>-0.201979</td>
+      <td>-0.197247</td>
     </tr>
     <tr>
       <th>MOBI_REGIO</th>
-      <td>-0.211696</td>
+      <td>-0.210702</td>
+    </tr>
+    <tr>
+      <th>FINANZ_MINIMALIST</th>
+      <td>-0.218556</td>
     </tr>
   </tbody>
 </table>
-<p>110 rows × 1 columns</p>
+<p>106 rows × 1 columns</p>
 </div>
 
 
@@ -2883,123 +3078,123 @@ get_sorted_name_weights_dic(pca, 1)
   <tbody>
     <tr>
       <th>ALTERSKATEGORIE_GROB</th>
-      <td>0.235719</td>
+      <td>0.220430</td>
     </tr>
     <tr>
       <th>FINANZ_VORSORGER</th>
-      <td>0.220082</td>
+      <td>0.205153</td>
     </tr>
     <tr>
       <th>ZABEOTYP_3</th>
-      <td>0.207098</td>
+      <td>0.204246</td>
     </tr>
     <tr>
       <th>SEMIO_ERL</th>
-      <td>0.193173</td>
+      <td>0.187003</td>
     </tr>
     <tr>
       <th>SEMIO_LUST</th>
-      <td>0.165727</td>
+      <td>0.156676</td>
     </tr>
     <tr>
       <th>RETOURTYP_BK_S</th>
-      <td>0.155718</td>
+      <td>0.152799</td>
     </tr>
     <tr>
       <th>W_KEIT_KIND_HH</th>
-      <td>0.127412</td>
-    </tr>
-    <tr>
-      <th>CJT_GESAMTTYP_2.0</th>
-      <td>0.110429</td>
+      <td>0.127966</td>
     </tr>
     <tr>
       <th>FINANZ_HAUSBAUER</th>
-      <td>0.102384</td>
-    </tr>
-    <tr>
-      <th>FINANZTYP_5</th>
-      <td>0.096051</td>
-    </tr>
-    <tr>
-      <th>FINANZTYP_2</th>
-      <td>0.091564</td>
-    </tr>
-    <tr>
-      <th>SEMIO_KRIT</th>
-      <td>0.087287</td>
-    </tr>
-    <tr>
-      <th>SHOPPER_TYP_3.0</th>
-      <td>0.077749</td>
+      <td>0.127194</td>
     </tr>
     <tr>
       <th>PLZ8_ANTG3</th>
-      <td>0.077107</td>
+      <td>0.106495</td>
     </tr>
     <tr>
-      <th>SEMIO_KAEM</th>
-      <td>0.075962</td>
+      <th>CJT_GESAMTTYP_2.0</th>
+      <td>0.102348</td>
     </tr>
     <tr>
       <th>PLZ8_ANTG4</th>
-      <td>0.074067</td>
+      <td>0.102313</td>
     </tr>
     <tr>
       <th>EWDICHTE</th>
-      <td>0.073913</td>
-    </tr>
-    <tr>
-      <th>FINANZ_MINIMALIST</th>
-      <td>0.073546</td>
+      <td>0.098913</td>
     </tr>
     <tr>
       <th>ORTSGR_KLS9</th>
-      <td>0.073529</td>
+      <td>0.098390</td>
     </tr>
     <tr>
-      <th>CJT_GESAMTTYP_1.0</th>
-      <td>0.071663</td>
-    </tr>
-    <tr>
-      <th>PLZ8_BAUMAX</th>
-      <td>0.070269</td>
-    </tr>
-    <tr>
-      <th>FINANZTYP_6</th>
-      <td>0.067682</td>
-    </tr>
-    <tr>
-      <th>NATIONALITAET_KZ_1.0</th>
-      <td>0.064421</td>
+      <th>FINANZTYP_5</th>
+      <td>0.095105</td>
     </tr>
     <tr>
       <th>CAMEO_INTL_2015_WEALTH</th>
-      <td>0.063768</td>
+      <td>0.093123</td>
     </tr>
     <tr>
-      <th>LP_FAMILIE_GROB_1.0</th>
-      <td>0.063729</td>
+      <th>SEMIO_KRIT</th>
+      <td>0.091240</td>
+    </tr>
+    <tr>
+      <th>SEMIO_KAEM</th>
+      <td>0.086210</td>
+    </tr>
+    <tr>
+      <th>HH_EINKOMMEN_SCORE</th>
+      <td>0.079710</td>
     </tr>
     <tr>
       <th>KBA05_ANTG4</th>
-      <td>0.057803</td>
+      <td>0.079324</td>
     </tr>
     <tr>
-      <th>ANREDE_KZ</th>
-      <td>0.057265</td>
+      <th>FINANZTYP_2</th>
+      <td>0.077960</td>
     </tr>
     <tr>
       <th>ARBEIT</th>
-      <td>0.056868</td>
+      <td>0.075607</td>
     </tr>
     <tr>
       <th>ANZ_HAUSHALTE_AKTIV</th>
-      <td>0.054404</td>
+      <td>0.073856</td>
     </tr>
     <tr>
-      <th>WOHNDAUER_2008</th>
-      <td>0.053050</td>
+      <th>SHOPPER_TYP_3.0</th>
+      <td>0.072677</td>
+    </tr>
+    <tr>
+      <th>PLZ8_ANTG2</th>
+      <td>0.072668</td>
+    </tr>
+    <tr>
+      <th>RELAT_AB</th>
+      <td>0.070765</td>
+    </tr>
+    <tr>
+      <th>LP_FAMILIE_GROB_1.0</th>
+      <td>0.068448</td>
+    </tr>
+    <tr>
+      <th>CJT_GESAMTTYP_1.0</th>
+      <td>0.067973</td>
+    </tr>
+    <tr>
+      <th>ANREDE_KZ</th>
+      <td>0.063582</td>
+    </tr>
+    <tr>
+      <th>LP_STATUS_GROB_1.0</th>
+      <td>0.063254</td>
+    </tr>
+    <tr>
+      <th>FINANZTYP_6</th>
+      <td>0.063159</td>
     </tr>
     <tr>
       <th>...</th>
@@ -3007,127 +3202,127 @@ get_sorted_name_weights_dic(pca, 1)
     </tr>
     <tr>
       <th>SHOPPER_TYP_0.0</th>
-      <td>-0.056755</td>
+      <td>-0.060952</td>
     </tr>
     <tr>
-      <th>CJT_GESAMTTYP_4.0</th>
-      <td>-0.057513</td>
-    </tr>
-    <tr>
-      <th>KONSUMNAEHE</th>
-      <td>-0.058863</td>
-    </tr>
-    <tr>
-      <th>INNENSTADT</th>
-      <td>-0.059213</td>
-    </tr>
-    <tr>
-      <th>PLZ8_GBZ</th>
-      <td>-0.060143</td>
-    </tr>
-    <tr>
-      <th>KBA05_ANTG1</th>
-      <td>-0.065853</td>
+      <th>BALLRAUM</th>
+      <td>-0.063582</td>
     </tr>
     <tr>
       <th>LP_FAMILIE_GROB_4.0</th>
-      <td>-0.066109</td>
-    </tr>
-    <tr>
-      <th>ANZ_PERSONEN</th>
-      <td>-0.070774</td>
-    </tr>
-    <tr>
-      <th>ZABEOTYP_1</th>
-      <td>-0.071498</td>
-    </tr>
-    <tr>
-      <th>KBA05_GBZ</th>
-      <td>-0.072870</td>
-    </tr>
-    <tr>
-      <th>MOBI_REGIO</th>
-      <td>-0.074073</td>
+      <td>-0.068905</td>
     </tr>
     <tr>
       <th>SEMIO_SOZ</th>
-      <td>-0.074733</td>
+      <td>-0.073132</td>
     </tr>
     <tr>
-      <th>PLZ8_ANTG1</th>
-      <td>-0.075885</td>
-    </tr>
-    <tr>
-      <th>FINANZTYP_3</th>
-      <td>-0.082279</td>
+      <th>ANZ_PERSONEN</th>
+      <td>-0.076242</td>
     </tr>
     <tr>
       <th>ZABEOTYP_5</th>
-      <td>-0.089197</td>
+      <td>-0.077196</td>
+    </tr>
+    <tr>
+      <th>INNENSTADT</th>
+      <td>-0.080321</td>
+    </tr>
+    <tr>
+      <th>KONSUMNAEHE</th>
+      <td>-0.080786</td>
+    </tr>
+    <tr>
+      <th>PLZ8_GBZ</th>
+      <td>-0.081780</td>
+    </tr>
+    <tr>
+      <th>ZABEOTYP_1</th>
+      <td>-0.088048</td>
+    </tr>
+    <tr>
+      <th>FINANZTYP_3</th>
+      <td>-0.090945</td>
     </tr>
     <tr>
       <th>FINANZTYP_4</th>
-      <td>-0.093072</td>
+      <td>-0.092363</td>
     </tr>
     <tr>
       <th>ZABEOTYP_4</th>
-      <td>-0.102913</td>
+      <td>-0.094339</td>
+    </tr>
+    <tr>
+      <th>KBA05_ANTG1</th>
+      <td>-0.097828</td>
     </tr>
     <tr>
       <th>FINANZTYP_1</th>
-      <td>-0.123810</td>
+      <td>-0.103168</td>
+    </tr>
+    <tr>
+      <th>KBA05_GBZ</th>
+      <td>-0.103527</td>
+    </tr>
+    <tr>
+      <th>PLZ8_ANTG1</th>
+      <td>-0.105374</td>
+    </tr>
+    <tr>
+      <th>MOBI_REGIO</th>
+      <td>-0.108000</td>
     </tr>
     <tr>
       <th>SEMIO_MAT</th>
-      <td>-0.137692</td>
+      <td>-0.129339</td>
     </tr>
     <tr>
       <th>SEMIO_FAM</th>
-      <td>-0.147841</td>
+      <td>-0.141743</td>
     </tr>
     <tr>
       <th>SEMIO_RAT</th>
-      <td>-0.163756</td>
+      <td>-0.149523</td>
     </tr>
     <tr>
       <th>ONLINE_AFFINITAET</th>
-      <td>-0.166338</td>
+      <td>-0.171347</td>
     </tr>
     <tr>
       <th>SEMIO_KULT</th>
-      <td>-0.179815</td>
+      <td>-0.174158</td>
     </tr>
     <tr>
       <th>FINANZ_ANLEGER</th>
-      <td>-0.197333</td>
+      <td>-0.185150</td>
     </tr>
     <tr>
       <th>SEMIO_PFLICHT</th>
-      <td>-0.207318</td>
+      <td>-0.191967</td>
     </tr>
     <tr>
       <th>SEMIO_TRADV</th>
-      <td>-0.211909</td>
-    </tr>
-    <tr>
-      <th>FINANZ_UNAUFFAELLIGER</th>
-      <td>-0.216559</td>
-    </tr>
-    <tr>
-      <th>SEMIO_REL</th>
-      <td>-0.222329</td>
+      <td>-0.200962</td>
     </tr>
     <tr>
       <th>FINANZ_SPARER</th>
-      <td>-0.224208</td>
+      <td>-0.203546</td>
+    </tr>
+    <tr>
+      <th>FINANZ_UNAUFFAELLIGER</th>
+      <td>-0.207119</td>
+    </tr>
+    <tr>
+      <th>SEMIO_REL</th>
+      <td>-0.209323</td>
     </tr>
     <tr>
       <th>PRAEGENDE_JUGENDJAHRE_DECADE</th>
-      <td>-0.238449</td>
+      <td>-0.224676</td>
     </tr>
   </tbody>
 </table>
-<p>110 rows × 1 columns</p>
+<p>106 rows × 1 columns</p>
 </div>
 
 
@@ -3167,251 +3362,251 @@ get_sorted_name_weights_dic(pca, 2)
   <tbody>
     <tr>
       <th>SEMIO_VERT</th>
-      <td>0.326021</td>
+      <td>0.325066</td>
     </tr>
     <tr>
       <th>SEMIO_SOZ</th>
-      <td>0.257104</td>
+      <td>0.257374</td>
     </tr>
     <tr>
       <th>SEMIO_FAM</th>
-      <td>0.256383</td>
+      <td>0.256760</td>
     </tr>
     <tr>
       <th>SEMIO_KULT</th>
-      <td>0.244876</td>
+      <td>0.244683</td>
     </tr>
     <tr>
       <th>FINANZTYP_5</th>
-      <td>0.139606</td>
+      <td>0.140538</td>
     </tr>
     <tr>
       <th>FINANZ_MINIMALIST</th>
-      <td>0.136630</td>
+      <td>0.131131</td>
     </tr>
     <tr>
       <th>SHOPPER_TYP_0.0</th>
-      <td>0.125754</td>
+      <td>0.125114</td>
     </tr>
     <tr>
       <th>ZABEOTYP_1</th>
-      <td>0.110223</td>
+      <td>0.104788</td>
     </tr>
     <tr>
       <th>SEMIO_REL</th>
-      <td>0.098434</td>
+      <td>0.097958</td>
     </tr>
     <tr>
       <th>RETOURTYP_BK_S</th>
-      <td>0.087432</td>
+      <td>0.090117</td>
     </tr>
     <tr>
       <th>W_KEIT_KIND_HH</th>
-      <td>0.079010</td>
+      <td>0.083405</td>
     </tr>
     <tr>
       <th>SEMIO_MAT</th>
-      <td>0.077754</td>
+      <td>0.077439</td>
     </tr>
     <tr>
       <th>FINANZ_VORSORGER</th>
-      <td>0.068228</td>
-    </tr>
-    <tr>
-      <th>GREEN_AVANTGARDE</th>
-      <td>0.055407</td>
-    </tr>
-    <tr>
-      <th>SHOPPER_TYP_1.0</th>
-      <td>0.053662</td>
+      <td>0.069927</td>
     </tr>
     <tr>
       <th>ORTSGR_KLS9</th>
-      <td>0.053376</td>
+      <td>0.055547</td>
     </tr>
     <tr>
       <th>EWDICHTE</th>
-      <td>0.052722</td>
+      <td>0.055255</td>
     </tr>
     <tr>
-      <th>PLZ8_BAUMAX</th>
-      <td>0.051329</td>
+      <th>SHOPPER_TYP_1.0</th>
+      <td>0.053370</td>
     </tr>
     <tr>
       <th>ZABEOTYP_6</th>
-      <td>0.050859</td>
+      <td>0.053035</td>
     </tr>
     <tr>
       <th>PLZ8_ANTG4</th>
-      <td>0.048327</td>
+      <td>0.052284</td>
     </tr>
     <tr>
       <th>PLZ8_ANTG3</th>
-      <td>0.047263</td>
+      <td>0.051810</td>
+    </tr>
+    <tr>
+      <th>GREEN_AVANTGARDE</th>
+      <td>0.047371</td>
     </tr>
     <tr>
       <th>ALTERSKATEGORIE_GROB</th>
-      <td>0.037971</td>
-    </tr>
-    <tr>
-      <th>LP_STATUS_GROB_5.0</th>
-      <td>0.037375</td>
+      <td>0.039497</td>
     </tr>
     <tr>
       <th>SEMIO_LUST</th>
-      <td>0.037016</td>
+      <td>0.038148</td>
     </tr>
     <tr>
       <th>ARBEIT</th>
-      <td>0.033560</td>
+      <td>0.036876</td>
     </tr>
     <tr>
       <th>PLZ8_ANTG2</th>
-      <td>0.032407</td>
+      <td>0.035689</td>
     </tr>
     <tr>
       <th>RELAT_AB</th>
-      <td>0.031977</td>
+      <td>0.034965</td>
+    </tr>
+    <tr>
+      <th>KBA05_ANTG4</th>
+      <td>0.030621</td>
+    </tr>
+    <tr>
+      <th>CAMEO_INTL_2015_WEALTH</th>
+      <td>0.030512</td>
     </tr>
     <tr>
       <th>GEBAEUDETYP_3.0</th>
-      <td>0.028236</td>
+      <td>0.030455</td>
     </tr>
     <tr>
-      <th>CJT_GESAMTTYP_1.0</th>
-      <td>0.026000</td>
+      <th>LP_STATUS_GROB_5.0</th>
+      <td>0.030261</td>
     </tr>
     <tr>
-      <th>LP_STATUS_GROB_3.0</th>
-      <td>0.025650</td>
+      <th>ANZ_HAUSHALTE_AKTIV</th>
+      <td>0.029219</td>
     </tr>
     <tr>
       <th>...</th>
       <td>...</td>
     </tr>
     <tr>
-      <th>WOHNLAGE</th>
-      <td>-0.028477</td>
-    </tr>
-    <tr>
       <th>ZABEOTYP_5</th>
-      <td>-0.033457</td>
+      <td>-0.032339</td>
     </tr>
     <tr>
       <th>NATIONALITAET_KZ_3.0</th>
-      <td>-0.034874</td>
+      <td>-0.034762</td>
     </tr>
     <tr>
-      <th>CJT_GESAMTTYP_6.0</th>
-      <td>-0.035436</td>
-    </tr>
-    <tr>
-      <th>ONLINE_AFFINITAET</th>
-      <td>-0.036263</td>
-    </tr>
-    <tr>
-      <th>PLZ8_GBZ</th>
-      <td>-0.037726</td>
-    </tr>
-    <tr>
-      <th>GEBAEUDETYP_RASTER</th>
-      <td>-0.037816</td>
-    </tr>
-    <tr>
-      <th>SEMIO_TRADV</th>
-      <td>-0.038813</td>
-    </tr>
-    <tr>
-      <th>BALLRAUM</th>
-      <td>-0.041014</td>
-    </tr>
-    <tr>
-      <th>KONSUMNAEHE</th>
-      <td>-0.043320</td>
+      <th>MOBI_REGIO</th>
+      <td>-0.035760</td>
     </tr>
     <tr>
       <th>PRAEGENDE_JUGENDJAHRE_MOVEMENT</th>
-      <td>-0.043358</td>
+      <td>-0.036289</td>
     </tr>
     <tr>
-      <th>SEMIO_PFLICHT</th>
-      <td>-0.043621</td>
+      <th>CJT_GESAMTTYP_6.0</th>
+      <td>-0.036501</td>
     </tr>
     <tr>
-      <th>PLZ8_ANTG1</th>
-      <td>-0.047465</td>
-    </tr>
-    <tr>
-      <th>INNENSTADT</th>
-      <td>-0.048335</td>
+      <th>GEBAEUDETYP_RASTER</th>
+      <td>-0.040269</td>
     </tr>
     <tr>
       <th>FINANZ_HAUSBAUER</th>
-      <td>-0.048559</td>
+      <td>-0.040886</td>
+    </tr>
+    <tr>
+      <th>SEMIO_TRADV</th>
+      <td>-0.040950</td>
+    </tr>
+    <tr>
+      <th>PLZ8_GBZ</th>
+      <td>-0.041146</td>
+    </tr>
+    <tr>
+      <th>BALLRAUM</th>
+      <td>-0.042431</td>
+    </tr>
+    <tr>
+      <th>ONLINE_AFFINITAET</th>
+      <td>-0.042475</td>
+    </tr>
+    <tr>
+      <th>SEMIO_PFLICHT</th>
+      <td>-0.044366</td>
+    </tr>
+    <tr>
+      <th>KONSUMNAEHE</th>
+      <td>-0.046610</td>
+    </tr>
+    <tr>
+      <th>INNENSTADT</th>
+      <td>-0.050578</td>
     </tr>
     <tr>
       <th>SHOPPER_TYP_3.0</th>
-      <td>-0.050006</td>
+      <td>-0.050855</td>
     </tr>
     <tr>
       <th>LP_FAMILIE_GROB_3.0</th>
-      <td>-0.050191</td>
+      <td>-0.050886</td>
     </tr>
     <tr>
-      <th>FINANZ_UNAUFFAELLIGER</th>
-      <td>-0.068754</td>
+      <th>PLZ8_ANTG1</th>
+      <td>-0.052426</td>
     </tr>
     <tr>
       <th>ZABEOTYP_4</th>
-      <td>-0.070104</td>
+      <td>-0.070351</td>
     </tr>
     <tr>
-      <th>PRAEGENDE_JUGENDJAHRE_DECADE</th>
-      <td>-0.072983</td>
+      <th>FINANZ_UNAUFFAELLIGER</th>
+      <td>-0.071734</td>
     </tr>
     <tr>
       <th>FINANZ_SPARER</th>
-      <td>-0.074752</td>
+      <td>-0.074851</td>
+    </tr>
+    <tr>
+      <th>PRAEGENDE_JUGENDJAHRE_DECADE</th>
+      <td>-0.075272</td>
     </tr>
     <tr>
       <th>SHOPPER_TYP_2.0</th>
-      <td>-0.097402</td>
+      <td>-0.096158</td>
     </tr>
     <tr>
       <th>FINANZTYP_1</th>
-      <td>-0.111522</td>
+      <td>-0.109617</td>
     </tr>
     <tr>
       <th>FINANZ_ANLEGER</th>
-      <td>-0.163142</td>
+      <td>-0.163541</td>
     </tr>
     <tr>
       <th>SEMIO_RAT</th>
-      <td>-0.175939</td>
+      <td>-0.177356</td>
     </tr>
     <tr>
       <th>SEMIO_ERL</th>
-      <td>-0.197009</td>
+      <td>-0.195902</td>
     </tr>
     <tr>
       <th>SEMIO_KRIT</th>
-      <td>-0.269879</td>
+      <td>-0.269120</td>
     </tr>
     <tr>
       <th>SEMIO_DOM</th>
-      <td>-0.295520</td>
+      <td>-0.296582</td>
     </tr>
     <tr>
       <th>SEMIO_KAEM</th>
-      <td>-0.323738</td>
+      <td>-0.323282</td>
     </tr>
     <tr>
       <th>ANREDE_KZ</th>
-      <td>-0.352053</td>
+      <td>-0.352155</td>
     </tr>
   </tbody>
 </table>
-<p>110 rows × 1 columns</p>
+<p>106 rows × 1 columns</p>
 </div>
 
 
@@ -3468,16 +3663,17 @@ def get_kmeans_score(data, center):
     # Obtain a score related to the model fit
     score = np.abs(model.score(data))
 
-    return score
+    return score, model
 
 def fit_mods(data, range_list):
     scores = []
 
     for center in range_list:
         print('applying {} clusters'.format(center))
-        scores.append(get_kmeans_score(data, center))
+        score, kmean_model = get_kmeans_score(data, center)
+        scores.append(score)
 
-    return scores
+    return scores, kmean_model
 ```
 
 
@@ -3490,19 +3686,31 @@ def fit_mods(data, range_list):
     
     # compute the average within-cluster distances.
     
-centers = range(5, 40, 5)
+# centers = range(5, 40, 5)
 # scores = fit_mods(one_hot_data_pca, centers)
 
 # memorized, as it will take hours, sometimes I need to rerun entire notebook, 
 # I saved the values here so I don't need to run it again if the code above does not change
-scores = [68656673.77467142,
- 63310659.966458,
- 60575304.883048564,
- 58127808.65660498,
- 56196627.50945433,
- 54419207.460554905,
- 52622383.92164255]
+# scores = [68656673.77467142,
+#  63310659.966458,
+#  60575304.883048564,
+#  58127808.65660498,
+#  56196627.50945433,
+#  54419207.460554905,
+#  52622383.92164255]
+
+centers = range(5, 40, 5)
+scores, kmean_model = fit_mods(one_hot_data_pca, centers)
 ```
+
+    applying 5 clusters
+    applying 10 clusters
+    applying 15 clusters
+    applying 20 clusters
+    applying 25 clusters
+    applying 30 clusters
+    applying 35 clusters
+
 
 
 ```python
@@ -3516,14 +3724,14 @@ plt.title('SSE vs. K');
 ```
 
 
-![png](output_80_0.png)
+![png](output_86_0.png)
 
 
 
 ```python
 # this takes 2-3 hours to run in mac pro
 
-centers2 = range(40, 60, 5)
+# centers2 = range(40, 60, 5)
 # scores2 = fit_mods(one_hot_data_pca, centers2)
 
 # result is [51523235.04840434, 50750805.60020616, 49738061.95247968, 49021509.485105716]
@@ -3531,31 +3739,20 @@ centers2 = range(40, 60, 5)
 
 
 ```python
-
-scores2 = [51523235.04840434, 50750805.60020616, 49738061.95247968, 49021509.485105716]
-
+# score_total = scores + scores2
+# range_total = range(5, 60, 5)
+# plt.plot(range_total, score_total, linestyle='--', marker='o', color='b');
+# plt.xlabel('K');
+# plt.ylabel('SSE');
+# plt.title('SSE vs. K');
 ```
-
-
-```python
-score_total = scores + scores2
-range_total = range(5, 60, 5)
-plt.plot(range_total, score_total, linestyle='--', marker='o', color='b');
-plt.xlabel('K');
-plt.ylabel('SSE');
-plt.title('SSE vs. K');
-```
-
-
-![png](output_83_0.png)
-
 
 
 ```python
 # Re-fit the k-means model with the selected number of clusters and obtain
 # cluster predictions for the general population demographics data.
 
-kmeans = KMeans(n_clusters=40)
+kmeans = KMeans(n_clusters=25)
 model = kmeans.fit(one_hot_data_pca)
 ```
 
@@ -3564,13 +3761,25 @@ model = kmeans.fit(one_hot_data_pca)
 labels_general = model.predict(one_hot_data_pca)
 ```
 
+
+```python
+one_hot_data_pca.shape
+```
+
+
+
+
+    (797981, 80)
+
+
+
 ### Discussion 3.1: Apply Clustering to General Population
 
 (Double-click this cell and replace this text with your own text, reporting your findings and decisions regarding clustering. Into how many clusters have you decided to segment the population?)
 
 A:
 
-As we can see from the above figure, the score decrease along with the number of clusters increasing, even though it's not showing a very good "elbow" curve, we can see that the curve become more "flat" after 35 or 40, that's why I choose 40 as the number of clusters.
+As we can see from the above figure, the score decrease along with the number of clusters increasing, even though it's not showing a very good "elbow" curve, we can observe that the decreasing rate turns down from 20, 25, that's why I choose 25 here as the number of clusters.
 
 ### Step 3.2: Apply All Steps to the Customer Data
 
@@ -3611,12 +3820,9 @@ customers_data = clean_data(customers)
     convert missing value codes into NaNs...
     df shape (191652, 85)
     drop columns:
-    ['AGER_TYP', 'GEBURTSJAHR', 'TITEL_KZ', 'ALTER_HH', 'KK_KUNDENTYP', 'KBA05_BAUMAX']
-    df shape (191652, 79)
-    df shape (191652, 79)
-    drop columns with categorical type that has more than 7 different values:
-    ['GFK_URLAUBERTYP', 'LP_FAMILIE_FEIN', 'LP_STATUS_FEIN', 'CAMEO_DEUG_2015', 'CAMEO_DEU_2015']
-    df shape (191652, 74)
+    ['AGER_TYP', 'GEBURTSJAHR', 'TITEL_KZ', 'ALTER_HH', 'KK_KUNDENTYP', 'KBA05_BAUMAX', 'GFK_URLAUBERTYP', 'LP_FAMILIE_FEIN', 'LP_STATUS_FEIN', 'CAMEO_DEUG_2015', 'CAMEO_DEU_2015', 'LP_LEBENSPHASE_FEIN', 'LP_LEBENSPHASE_GROB', 'WOHNLAGE', 'PLZ8_BAUMAX']
+    df shape (191652, 70)
+    df shape (191652, 70)
     one-hot encoding...
     drop CJT_GESAMTTYP
     drop FINANZTYP
@@ -3626,27 +3832,130 @@ customers_data = clean_data(customers)
     drop SHOPPER_TYP
     drop ZABEOTYP
     drop GEBAEUDETYP
-    df shape (191652, 110)
+    df shape (191652, 106)
     investgating engineered features
-    df shape (191652, 112)
+    df shape (191652, 108)
     Done!
 
 
 
 ```python
-# standard scaling
-customers_data = replace_missing_values(customers_data)
-customers_data = feature_scale(customers_data)
-
+customers_data.shape
 ```
 
-    (191652, 112)
+
+
+
+    (191652, 108)
+
+
+
+
+```python
+set(customers_data.columns) - set(one_hot_data.columns)
+```
+
+
+
+
+    {'LP_FAMILIE_GROB_0.0',
+     'NATIONALITAET_KZ_0',
+     'NATIONALITAET_KZ_1',
+     'NATIONALITAET_KZ_2',
+     'NATIONALITAET_KZ_3',
+     'SHOPPER_TYP_-1',
+     'SHOPPER_TYP_0',
+     'SHOPPER_TYP_1',
+     'SHOPPER_TYP_2',
+     'SHOPPER_TYP_3'}
+
+
+
+
+```python
+one_hot_data.shape
+```
+
+
+
+
+    (797981, 106)
+
+
+
+
+```python
+set(one_hot_data.columns) - set(customers_data.columns)
+```
+
+
+
+
+    {'GEBAEUDETYP_5.0',
+     'NATIONALITAET_KZ_1.0',
+     'NATIONALITAET_KZ_2.0',
+     'NATIONALITAET_KZ_3.0',
+     'SHOPPER_TYP_0.0',
+     'SHOPPER_TYP_1.0',
+     'SHOPPER_TYP_2.0',
+     'SHOPPER_TYP_3.0'}
+
+
+
+
+```python
+def add_missing_dummy_columns(d, columns):
+    missing_cols = set(columns) - set(d.columns)
+    print(missing_cols)
+    for c in missing_cols:
+        d[c] = 0
+
+def fix_columns(d, columns):  
+    add_missing_dummy_columns(d, columns)
+    # make sure we have all the columns we need
+    assert(set(columns) - set(d.columns) == set())
+    extra_cols = set(d.columns) - set(columns)
+    if extra_cols:
+        print("extra columns:", extra_cols)
+    d = d[columns]
+    return d
+```
+
+
+```python
+customers_data = fix_columns(customers_data, one_hot_data.columns.tolist())
+```
+
+    {'SHOPPER_TYP_1.0', 'NATIONALITAET_KZ_1.0', 'SHOPPER_TYP_3.0', 'NATIONALITAET_KZ_2.0', 'SHOPPER_TYP_0.0', 'SHOPPER_TYP_2.0', 'GEBAEUDETYP_5.0', 'NATIONALITAET_KZ_3.0'}
+    extra columns: {'NATIONALITAET_KZ_2', 'SHOPPER_TYP_0', 'SHOPPER_TYP_1', 'SHOPPER_TYP_-1', 'LP_FAMILIE_GROB_0.0', 'NATIONALITAET_KZ_0', 'SHOPPER_TYP_3', 'NATIONALITAET_KZ_1', 'SHOPPER_TYP_2', 'NATIONALITAET_KZ_3'}
+
+
+
+```python
+none_object_list_customer = get_none_object_list(customers_data)
+len(none_object_list_customer)
+```
+
     uint8
     int64
     float64
-    (191652, 112)
-    float64
 
+
+
+
+
+    106
+
+
+
+
+```python
+# standard scaling
+# customers_data = replace_missing_values(customers_data)
+customers_data[none_object_list_customer] = imp.transform(customers_data[none_object_list_customer])
+customers_data[none_object_list_customer] = scaler.transform(customers_data[none_object_list_customer])
+
+```
 
 
 ```python
@@ -3654,27 +3963,6 @@ customers_data = feature_scale(customers_data)
 customers_data = pca.transform(customers_data)
 
 ```
-
-
-    ---------------------------------------------------------------------------
-
-    ValueError                                Traceback (most recent call last)
-
-    <ipython-input-67-8a6d703e5894> in <module>
-          1 # PCA
-    ----> 2 customers_data = pca.transform(customers_data)
-    
-
-    ~/anaconda3/envs/py36/lib/python3.6/site-packages/sklearn/decomposition/base.py in transform(self, X)
-        128         X = check_array(X)
-        129         if self.mean_ is not None:
-    --> 130             X = X - self.mean_
-        131         X_transformed = np.dot(X, self.components_.T)
-        132         if self.whiten:
-
-
-    ValueError: operands could not be broadcast together with shapes (191652,112) (110,) 
-
 
 
 ```python
@@ -3686,8 +3974,39 @@ labels_customers = model.predict(customers_data)
 
 ```python
 
-
+customers_data.shape
 ```
+
+
+
+
+    (191652, 80)
+
+
+
+
+```python
+one_hot_data_pca
+```
+
+
+
+
+    array([[ 5.03303212, -2.46372486, -2.95032164, ...,  0.0397819 ,
+             0.22979901,  0.17624085],
+           [-0.0153131 , -0.618433  , -3.60712917, ..., -0.1355208 ,
+            -0.40619111, -0.35520388],
+           [-4.5170189 ,  1.24455207, -1.07378432, ...,  0.54529631,
+            -0.41623194,  1.07717031],
+           ...,
+           [ 0.30036289, -3.71168536, -3.23107053, ...,  0.13466337,
+             0.27460529, -0.37077656],
+           [ 6.51080606, -2.89132773,  2.83839382, ...,  0.49360379,
+            -0.20707195, -0.15332955],
+           [-0.3869713 ,  2.28012977,  2.62583423, ...,  1.23472312,
+            -0.1905459 ,  0.2193364 ]])
+
+
 
 ### Step 3.3: Compare Customer Data to Demographics Data
 
