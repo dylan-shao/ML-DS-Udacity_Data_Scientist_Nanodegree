@@ -1396,122 +1396,6 @@ As we can see above, most of them are below 10, but there is a high percentage t
 
 
 ```python
-# test
-
-# a = np.array([np.nan, 2, 1])
-# aa = pd.DataFrame()
-# np.nansum(2)
-# b = pd.DataFrame([a],columns=list('abq'))
-# # b.append(pd.DataFrame(a,columns=['a','b','q']))
-# # list(azdias_filled_nan.columns.values)
-# aa = aa.append(b, ignore_index = True)
-# aa= aa.append(b, ignore_index = True)
-# aa
-azdias_filled_nan.iloc[[0,2]]
-```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>AGER_TYP</th>
-      <th>ALTERSKATEGORIE_GROB</th>
-      <th>ANREDE_KZ</th>
-      <th>CJT_GESAMTTYP</th>
-      <th>FINANZ_MINIMALIST</th>
-      <th>FINANZ_SPARER</th>
-      <th>FINANZ_VORSORGER</th>
-      <th>FINANZ_ANLEGER</th>
-      <th>FINANZ_UNAUFFAELLIGER</th>
-      <th>FINANZ_HAUSBAUER</th>
-      <th>...</th>
-      <th>PLZ8_ANTG1</th>
-      <th>PLZ8_ANTG2</th>
-      <th>PLZ8_ANTG3</th>
-      <th>PLZ8_ANTG4</th>
-      <th>PLZ8_BAUMAX</th>
-      <th>PLZ8_HHZ</th>
-      <th>PLZ8_GBZ</th>
-      <th>ARBEIT</th>
-      <th>ORTSGR_KLS9</th>
-      <th>RELAT_AB</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>NaN</td>
-      <td>2.0</td>
-      <td>1</td>
-      <td>2.0</td>
-      <td>3</td>
-      <td>4</td>
-      <td>3</td>
-      <td>5</td>
-      <td>5</td>
-      <td>3</td>
-      <td>...</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>NaN</td>
-      <td>3.0</td>
-      <td>2</td>
-      <td>3.0</td>
-      <td>1</td>
-      <td>4</td>
-      <td>1</td>
-      <td>2</td>
-      <td>3</td>
-      <td>5</td>
-      <td>...</td>
-      <td>3.0</td>
-      <td>3.0</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>1.0</td>
-      <td>4.0</td>
-      <td>4.0</td>
-      <td>3.0</td>
-      <td>5.0</td>
-      <td>2.0</td>
-    </tr>
-  </tbody>
-</table>
-<p>2 rows × 85 columns</p>
-</div>
-
-
-
-
-```python
 # Write code to divide the data into two subsets based on the number of missing
 # values in each row.
 # by rows
@@ -1522,7 +1406,7 @@ azdias_filled_nan.iloc[[0,2]]
 #     n: threshold
 # Return: list of index below threshold and above threshold
 
-def get_misssing_info_in_row(df, n):
+def get_missing_info_in_row(df, n):
     subset_below_threshold_indexes = []
     subset_above_threshold_indexes = []
 #     column_names = list(df.columns.values)
@@ -1540,8 +1424,14 @@ def get_misssing_info_in_row(df, n):
             print('{} %'.format(index*10/print_every))
     print('Done!')
     return subset_below_threshold_indexes, subset_above_threshold_indexes
+```
 
-subset_below_threshold_indexes, subset_above_threshold_indexes = get_misssing_info_in_row(azdias, 30)
+
+```python
+
+
+subset_below_threshold_indexes, subset_above_threshold_indexes = get_missing_info_in_row(azdias, 30)
+
 ```
 
     0.0 %
@@ -1841,6 +1731,12 @@ one_hot_data['OST_WEST_KZ'] = one_hot_data['OST_WEST_KZ'].replace(['O','W'], [0,
 
 ```
 
+
+```python
+# filled_subset_below_threshold['GEBAEUDETYP']
+# one_hot_data['GEBAEUDETYP_1.0']
+```
+
 ## Discussion 1.2.1: Re-Encode Categorical Features
 
 (Double-click this cell and replace this text with your own text, reporting your findings and decisions regarding categorical features. Which ones did you keep, which did you drop, and what engineering steps did you perform?) 
@@ -1970,6 +1866,13 @@ print(one_hot_data['PRAEGENDE_JUGENDJAHRE_MOVEMENT'].head())
 one_hot_data = one_hot_data.drop('PRAEGENDE_JUGENDJAHRE', axis=1)
 print(one_hot_data.shape)
 
+# one hot encode engineered
+print('one-hot encode engineered feature')
+one_hot_data = pd.concat([one_hot_data, pd.get_dummies(one_hot_data['PRAEGENDE_JUGENDJAHRE_DECADE'], prefix='PRAEGENDE_JUGENDJAHRE_DECADE')], axis=1)
+one_hot_data = one_hot_data.drop(['PRAEGENDE_JUGENDJAHRE_DECADE'], axis=1)
+
+one_hot_data = pd.concat([one_hot_data, pd.get_dummies(one_hot_data['PRAEGENDE_JUGENDJAHRE_MOVEMENT'], prefix='PRAEGENDE_JUGENDJAHRE_MOVEMENT')], axis=1)
+one_hot_data = one_hot_data.drop(['PRAEGENDE_JUGENDJAHRE_MOVEMENT'], axis=1)
 
 ```
 
@@ -1987,6 +1890,7 @@ print(one_hot_data.shape)
     5    1
     Name: PRAEGENDE_JUGENDJAHRE_MOVEMENT, dtype: int64
     (797981, 109)
+    one-hot encode engineered feature
 
 
 
@@ -2024,10 +1928,17 @@ one_hot_data = one_hot_data.drop('CAMEO_INTL_2015', axis=1)
 
 print(one_hot_data.shape)
 
+# one hot encode engineered
+print('one-hot encode engineered feature')
+one_hot_data = pd.concat([one_hot_data, pd.get_dummies(one_hot_data['CAMEO_INTL_2015_WEALTH'], prefix='CAMEO_INTL_2015_WEALTH')], axis=1)
+one_hot_data = one_hot_data.drop(['CAMEO_INTL_2015_WEALTH'], axis=1)
 
+one_hot_data = pd.concat([one_hot_data, pd.get_dummies(one_hot_data['CAMEO_INTL_2015_LIFE_STAGE'], prefix='CAMEO_INTL_2015_LIFE_STAGE')], axis=1)
+one_hot_data = one_hot_data.drop(['CAMEO_INTL_2015_LIFE_STAGE'], axis=1)
+print(one_hot_data.shape)
 ```
 
-    (797981, 109)
+    (797981, 115)
     1    5.0
     2    2.0
     3    1.0
@@ -2040,7 +1951,9 @@ print(one_hot_data.shape)
     4    3.0
     5    4.0
     Name: CAMEO_INTL_2015_LIFE_STAGE, dtype: float64
-    (797981, 110)
+    (797981, 116)
+    one-hot encode engineered feature
+    (797981, 124)
 
 
 
@@ -2084,7 +1997,7 @@ one_hot_data.shape
 
 
 
-    (797981, 106)
+    (797981, 120)
 
 
 
@@ -2139,12 +2052,12 @@ plt.barh(name_list_10, width = percentage_list_10)
 
 
 
-    <BarContainer object of 34 artists>
+    <BarContainer object of 31 artists>
 
 
 
 
-![png](output_56_1.png)
+![png](output_57_1.png)
 
 
 As we can see, that we have removed those that have missing values large than 20%
@@ -2247,7 +2160,7 @@ one_hot_data.shape
 
 
 
-    (797981, 106)
+    (797981, 120)
 
 
 
@@ -2257,7 +2170,7 @@ Even though you've finished cleaning up the general population demographics data
 
 
 ```python
-def clean_data(df):
+def clean_data(df, conf):
     """
     Perform feature trimming, re-encoding, and engineering for demographics
     data
@@ -2265,6 +2178,7 @@ def clean_data(df):
     INPUT: Demographics DataFrame
     OUTPUT: Trimmed and cleaned demographics DataFrame
     """
+    dropped_columns = []
     
     # Put in code here to execute all main cleaning steps:
     # convert missing value codes into NaNs, ...
@@ -2275,109 +2189,154 @@ def clean_data(df):
         df[column_name] = df[column_name].replace(missing_or_unknow_list, np.nan)
     
     print('df shape {}'.format(df.shape))
-    # remove selected columns and rows, ...
-    
-#     name_list_20, percentage_list_20 = get_percentage_missing_in_column(df, config['column_missing_percentage'])
-    print('drop columns:')
-    print(dropped_columns)
-    df = df.drop(dropped_columns, axis = 1)
+
+    # ------------ drop columns that has missing info large than conf['column_missing_threshold']------------
+    print('drop columns that has missing info large than {} '.format(conf['column_missing_threshold']*100))
+    name_list, percentage_list = get_percentage_missing_in_column(df, conf['column_missing_threshold'])
+    df = df.drop(name_list, axis = 1)
+    dropped_columns +=name_list
+    print('df shape {}'.format(df.shape))
+
+    # --------------- drop rows that has missing value more than conf['row_missing_threshold'] ------------
+    print('remove rows that has missing values more than {}'.format(conf['row_missing_threshold']))
+    subset_below_threshold_indexes, subset_above_threshold_indexes = get_missing_info_in_row(df, conf['row_missing_threshold'])
+    df = df.iloc[subset_below_threshold_indexes]
     
     print('df shape {}'.format(df.shape))
-#     print('selecting rows that has less than 30% of missing values..')
-#     subset_below_threshold_indexes, subset_above_threshold_indexes = get_misssing_info_in_row(df, 30)
-#     print('percentage of rows with a lot of missing data: {0:.2f} %'.format(len(subset_above_threshold_indexes)*100/azdias.shape[0]))
-#     df = df.iloc[subset_below_threshold_indexes]
 
+    # --------------- Re-Encode Categorical Features ---------------
+    print('Re-Encode Categorical Features')
+    object_variable = []
+    binary_variable = []
+    large_level_variables = []
+    small_level_variables = []
+
+    for index in range(feat_info.shape[0]):
+        type = feat_info['type'][index]
+        
+        if type == 'categorical':
+            attribute = feat_info['attribute'][index]
+            if attribute in df.columns:
+                dimensions = df[attribute].nunique()
+                
+                print(attribute, dimensions)
+                if dimensions == 2:
+                    if df[attribute].dtype == 'O':
+                        object_variable.append(attribute)
+                    else:
+                        binary_variable.append(attribute)
+                else:
+                    if dimensions > 7:
+                        large_level_variables.append(attribute)
+                    else:
+                        small_level_variables.append(attribute)
+
+    print('\n')
+    print('{} binary variables: \n{}\n'.format(len(binary_variable), binary_variable))
+    print('{} object_variable: \n{}\n'.format(len(object_variable), object_variable))
+    print('{} small-level variables: \n{}\n'.format(len(small_level_variables), small_level_variables))
+    print('{} large_level_variables: \n{}\n'.format(len(large_level_variables), large_level_variables))
+
+    df = df.drop(large_level_variables, axis=1)
+    dropped_columns += large_level_variables
     print('df shape {}'.format(df.shape))
     
-    # select, re-encode, and engineer column values.
-    # Re-encode categorical variable(s) to be kept in the analysis.
-    # drop columns:
-#     large_level_variables = []
-#     small_level_variables = []
-#     print('investgating the categorical variables...')
     
-#     for index in range(feat_info.shape[0]):
-#         type = feat_info['type'][index]
-
-#         if type == 'categorical':
-#             attribute = feat_info['attribute'][index]
-#             if attribute in df.columns:
-#                 dimensions = df[attribute].nunique()
-
-#                 if dimensions > 7:
-#                     large_level_variables.append(attribute)
-#                 else:
-#                     small_level_variables.append(attribute)
-#     print('drop columns with categorical type that has more than 7 different values:')
-#     print(large_level_variables)
-#     df = df.drop(large_level_variables, axis=1)
-#     print('df shape {}'.format(df.shape))
     
+    #  --------------- one hot encoding  --------------- 
     print('one-hot encoding...')
     for item in small_level_variables:
         df = pd.concat([df, pd.get_dummies(df[item], prefix=item)], axis=1)
         print('drop {}'.format(item))
         df = df.drop(item, axis=1)
+    dropped_columns += small_level_variables
     
     # special treatment to OST_WEST_KZ
     if 'OST_WEST_KZ' in df.columns.values:
         df['OST_WEST_KZ'] = df['OST_WEST_KZ'].replace(['O','W'], [0,1])
 
     print('df shape {}'.format(df.shape))
-    
-    # engineeded:
+
+
+    # get the attribute that are mixed AND not dropped
+    mixed_attr_exists = feat_info[(feat_info.type == 'mixed') & (~feat_info.attribute.isin(dropped_columns))]
+    #  --------------- engineeded features --------------- 
     
     # after observe the Data_Dictionary.md, we could get:
     print('investgating engineered features')
-    criteria = [df['PRAEGENDE_JUGENDJAHRE'].between(1, 2),
-                df['PRAEGENDE_JUGENDJAHRE'].between(3, 4),
-                df['PRAEGENDE_JUGENDJAHRE'].between(5, 7),
-                df['PRAEGENDE_JUGENDJAHRE'].between(8, 9),
-                df['PRAEGENDE_JUGENDJAHRE'].between(10, 13),
-                df['PRAEGENDE_JUGENDJAHRE'].between(14, 15)]
+    if 'PRAEGENDE_JUGENDJAHRE' in df:
+        criteria = [df['PRAEGENDE_JUGENDJAHRE'].between(1, 2),
+                    df['PRAEGENDE_JUGENDJAHRE'].between(3, 4),
+                    df['PRAEGENDE_JUGENDJAHRE'].between(5, 7),
+                    df['PRAEGENDE_JUGENDJAHRE'].between(8, 9),
+                    df['PRAEGENDE_JUGENDJAHRE'].between(10, 13),
+                    df['PRAEGENDE_JUGENDJAHRE'].between(14, 15)]
 
-    values = [1, 2, 3, 4, 5, 6] # one hot encode this???
+        values = [1, 2, 3, 4, 5, 6] # one hot encode this???
 
-    df['PRAEGENDE_JUGENDJAHRE_DECADE'] = np.select(criteria, values, np.nan)
-    # create new PRAEGENDE_JUGENDJAHRE_MOVEMENT
-    # 0 for mainstream, 1 for avantgrade
-    mainstream_labels = [1, 3, 5, 8, 10, 12, 14]
-    df['PRAEGENDE_JUGENDJAHRE_MOVEMENT'] = df['PRAEGENDE_JUGENDJAHRE'].isin(mainstream_labels).astype(int)
-    # drop original column
-    df = df.drop('PRAEGENDE_JUGENDJAHRE', axis=1)
+        df['PRAEGENDE_JUGENDJAHRE_DECADE'] = np.select(criteria, values, np.nan)
+        # create new PRAEGENDE_JUGENDJAHRE_MOVEMENT
+        # 0 for mainstream, 1 for avantgrade
+        mainstream_labels = [1, 3, 5, 8, 10, 12, 14]
+        df['PRAEGENDE_JUGENDJAHRE_MOVEMENT'] = df['PRAEGENDE_JUGENDJAHRE'].isin(mainstream_labels).astype(int)
+        # drop original column
+        df = df.drop('PRAEGENDE_JUGENDJAHRE', axis=1)
+
+        # one-hot-encode engineered
+        df = pd.concat([df, pd.get_dummies(df['PRAEGENDE_JUGENDJAHRE_DECADE'], prefix='PRAEGENDE_JUGENDJAHRE_DECADE')], axis=1)
+        df = df.drop(['PRAEGENDE_JUGENDJAHRE_DECADE'], axis=1)
+
+        df = pd.concat([df, pd.get_dummies(df['PRAEGENDE_JUGENDJAHRE_MOVEMENT'], prefix='PRAEGENDE_JUGENDJAHRE_MOVEMENT')], axis=1)
+        df = df.drop(['PRAEGENDE_JUGENDJAHRE_MOVEMENT'], axis=1)
     
+    if 'CAMEO_INTL_2015' in df:
+        CAMEO_INTL_2015 = df['CAMEO_INTL_2015'].replace('XX', '0').astype(float)
+        # wealth
+        criteria1 = [CAMEO_INTL_2015.between(11, 15),
+                    CAMEO_INTL_2015.between(21, 25),
+                    CAMEO_INTL_2015.between(31, 35),
+                    CAMEO_INTL_2015.between(41, 45),
+                    CAMEO_INTL_2015.between(51, 55)]
+
+        values1 = [1, 2, 3, 4, 5]
+        df['CAMEO_INTL_2015_WEALTH'] = np.select(criteria1, values1, np.nan)
+        # life stage
+        life_stage1 = [11,21,31,41,51]
+        life_stage2 = [12,22,32,42,52]
+        life_stage3 = [13,23,33,43,53]
+        life_stage4 = [14,24,34,44,54]
+        life_stage5 = [15,25,35,45,55]
+
+        criteria2 = [CAMEO_INTL_2015.isin(life_stage1),
+                    CAMEO_INTL_2015.isin(life_stage2),
+                    CAMEO_INTL_2015.isin(life_stage3),
+                    CAMEO_INTL_2015.isin(life_stage4),
+                    CAMEO_INTL_2015.isin(life_stage5)]
+        df['CAMEO_INTL_2015_LIFE_STAGE'] = np.select(criteria2, values1, np.nan)
+
+        df = df.drop('CAMEO_INTL_2015', axis=1)
     
+        # hot code engineered features
+        print('one-hot encode engineered feature')
+        df = pd.concat([df, pd.get_dummies(df['CAMEO_INTL_2015_WEALTH'], prefix='CAMEO_INTL_2015_WEALTH')], axis=1)
+        df = df.drop(['CAMEO_INTL_2015_WEALTH'], axis=1)
 
-    CAMEO_INTL_2015 = df['CAMEO_INTL_2015'].replace('XX', '0').astype(float)
-    # wealth
-    criteria1 = [CAMEO_INTL_2015.between(11, 15),
-                CAMEO_INTL_2015.between(21, 25),
-                CAMEO_INTL_2015.between(31, 35),
-                CAMEO_INTL_2015.between(41, 45),
-                CAMEO_INTL_2015.between(51, 55)]
+        df = pd.concat([df, pd.get_dummies(df['CAMEO_INTL_2015_LIFE_STAGE'], prefix='CAMEO_INTL_2015_LIFE_STAGE')], axis=1)
+        df = df.drop(['CAMEO_INTL_2015_LIFE_STAGE'], axis=1)
 
-    values1 = [1, 2, 3, 4, 5]
-    df['CAMEO_INTL_2015_WEALTH'] = np.select(criteria1, values1, np.nan)
-    # life stage
-    life_stage1 = [11,21,31,41,51]
-    life_stage2 = [12,22,32,42,52]
-    life_stage3 = [13,23,33,43,53]
-    life_stage4 = [14,24,34,44,54]
-    life_stage5 = [15,25,35,45,55]
+        print('df shape {}'.format(df.shape))
 
-    criteria2 = [CAMEO_INTL_2015.isin(life_stage1),
-                CAMEO_INTL_2015.isin(life_stage2),
-                CAMEO_INTL_2015.isin(life_stage3),
-                CAMEO_INTL_2015.isin(life_stage4),
-                CAMEO_INTL_2015.isin(life_stage5)]
-    df['CAMEO_INTL_2015_LIFE_STAGE'] = np.select(criteria2, values1, np.nan)
 
-    df = df.drop('CAMEO_INTL_2015', axis=1)
-    print('df shape {}'.format(df.shape))
+    mixed_drop_list = list(mixed_attr_exists.attribute.values)
+
+    mixed_drop_list.remove('PRAEGENDE_JUGENDJAHRE')
+    mixed_drop_list.remove('CAMEO_INTL_2015')
+    df = df.drop(mixed_drop_list, axis=1)
+    dropped_columns += mixed_drop_list
+
     print('Done!')
     # Return the cleaned dataframe.
-    return df;
+    return df, subset_above_threshold_indexes;
     
 ```
 
@@ -2420,11 +2379,11 @@ def replace_missing_values(df):
 one_hot_data, imp, imp_list = replace_missing_values(one_hot_data)
 ```
 
-    (797981, 106)
+    (797981, 120)
     uint8
     int64
     float64
-    (797981, 106)
+    (797981, 120)
 
 
 
@@ -2496,16 +2455,16 @@ one_hot_data.head()
       <th>GREEN_AVANTGARDE</th>
       <th>HEALTH_TYP</th>
       <th>...</th>
-      <th>GEBAEUDETYP_2.0</th>
-      <th>GEBAEUDETYP_3.0</th>
-      <th>GEBAEUDETYP_4.0</th>
-      <th>GEBAEUDETYP_5.0</th>
-      <th>GEBAEUDETYP_6.0</th>
-      <th>GEBAEUDETYP_8.0</th>
-      <th>PRAEGENDE_JUGENDJAHRE_DECADE</th>
-      <th>PRAEGENDE_JUGENDJAHRE_MOVEMENT</th>
-      <th>CAMEO_INTL_2015_WEALTH</th>
-      <th>CAMEO_INTL_2015_LIFE_STAGE</th>
+      <th>CAMEO_INTL_2015_WEALTH_1.0</th>
+      <th>CAMEO_INTL_2015_WEALTH_2.0</th>
+      <th>CAMEO_INTL_2015_WEALTH_3.0</th>
+      <th>CAMEO_INTL_2015_WEALTH_4.0</th>
+      <th>CAMEO_INTL_2015_WEALTH_5.0</th>
+      <th>CAMEO_INTL_2015_LIFE_STAGE_1.0</th>
+      <th>CAMEO_INTL_2015_LIFE_STAGE_2.0</th>
+      <th>CAMEO_INTL_2015_LIFE_STAGE_3.0</th>
+      <th>CAMEO_INTL_2015_LIFE_STAGE_4.0</th>
+      <th>CAMEO_INTL_2015_LIFE_STAGE_5.0</th>
     </tr>
   </thead>
   <tbody>
@@ -2522,16 +2481,16 @@ one_hot_data.head()
       <td>-0.530436</td>
       <td>1.085897</td>
       <td>...</td>
-      <td>-0.0787</td>
-      <td>-0.537083</td>
-      <td>-0.033584</td>
-      <td>-0.001119</td>
-      <td>-0.02802</td>
-      <td>2.057585</td>
-      <td>1.165655</td>
-      <td>0.585899</td>
-      <td>1.191260</td>
-      <td>-1.266372</td>
+      <td>-0.419555</td>
+      <td>-0.560335</td>
+      <td>-0.305671</td>
+      <td>-0.558948</td>
+      <td>1.602843</td>
+      <td>1.502141</td>
+      <td>-0.327498</td>
+      <td>-0.420071</td>
+      <td>-0.641739</td>
+      <td>-0.414586</td>
     </tr>
     <tr>
       <th>2</th>
@@ -2546,16 +2505,16 @@ one_hot_data.head()
       <td>1.885243</td>
       <td>1.085897</td>
       <td>...</td>
-      <td>-0.0787</td>
-      <td>-0.537083</td>
-      <td>-0.033584</td>
-      <td>-0.001119</td>
-      <td>-0.02802</td>
-      <td>-0.486007</td>
-      <td>1.165655</td>
-      <td>-1.706778</td>
-      <td>-0.865143</td>
-      <td>0.761955</td>
+      <td>-0.419555</td>
+      <td>1.784647</td>
+      <td>-0.305671</td>
+      <td>-0.558948</td>
+      <td>-0.623891</td>
+      <td>-0.665717</td>
+      <td>-0.327498</td>
+      <td>-0.420071</td>
+      <td>1.558267</td>
+      <td>-0.414586</td>
     </tr>
     <tr>
       <th>3</th>
@@ -2570,16 +2529,16 @@ one_hot_data.head()
       <td>-0.530436</td>
       <td>-0.269842</td>
       <td>...</td>
-      <td>-0.0787</td>
-      <td>-0.537083</td>
-      <td>-0.033584</td>
-      <td>-0.001119</td>
-      <td>-0.02802</td>
-      <td>-0.486007</td>
-      <td>-0.232000</td>
-      <td>0.585899</td>
-      <td>-1.550611</td>
-      <td>-0.590263</td>
+      <td>2.383477</td>
+      <td>-0.560335</td>
+      <td>-0.305671</td>
+      <td>-0.558948</td>
+      <td>-0.623891</td>
+      <td>-0.665717</td>
+      <td>3.053452</td>
+      <td>-0.420071</td>
+      <td>-0.641739</td>
+      <td>-0.414586</td>
     </tr>
     <tr>
       <th>4</th>
@@ -2594,16 +2553,16 @@ one_hot_data.head()
       <td>-0.530436</td>
       <td>1.085897</td>
       <td>...</td>
-      <td>-0.0787</td>
-      <td>-0.537083</td>
-      <td>-0.033584</td>
-      <td>-0.001119</td>
-      <td>-0.02802</td>
-      <td>-0.486007</td>
-      <td>-0.232000</td>
-      <td>0.585899</td>
-      <td>0.505792</td>
-      <td>0.085846</td>
+      <td>-0.419555</td>
+      <td>-0.560335</td>
+      <td>-0.305671</td>
+      <td>1.789074</td>
+      <td>-0.623891</td>
+      <td>-0.665717</td>
+      <td>-0.327498</td>
+      <td>2.380548</td>
+      <td>-0.641739</td>
+      <td>-0.414586</td>
     </tr>
     <tr>
       <th>5</th>
@@ -2618,20 +2577,20 @@ one_hot_data.head()
       <td>-0.530436</td>
       <td>1.085897</td>
       <td>...</td>
-      <td>-0.0787</td>
-      <td>-0.537083</td>
-      <td>-0.033584</td>
-      <td>-0.001119</td>
-      <td>-0.02802</td>
-      <td>-0.486007</td>
-      <td>-1.629656</td>
-      <td>0.585899</td>
-      <td>1.191260</td>
-      <td>0.761955</td>
+      <td>-0.419555</td>
+      <td>-0.560335</td>
+      <td>-0.305671</td>
+      <td>-0.558948</td>
+      <td>1.602843</td>
+      <td>-0.665717</td>
+      <td>-0.327498</td>
+      <td>-0.420071</td>
+      <td>1.558267</td>
+      <td>-0.414586</td>
     </tr>
   </tbody>
 </table>
-<p>5 rows × 106 columns</p>
+<p>5 rows × 120 columns</p>
 </div>
 
 
@@ -2701,26 +2660,29 @@ scree_plot(pca)
 ```
 
 
-![png](output_74_0.png)
+![png](output_75_0.png)
 
 
 
 ```python
 # Re-apply PCA to the data while selecting for number of components to retain.
 
-pca = PCA(80)
-one_hot_data_pca = pca.fit_transform(one_hot_data)
+pca = PCA(60)
+
 ```
 
 
 ```python
+one_hot_data_pca = pca.fit_transform(one_hot_data)
+
 one_hot_data_pca.shape
+
 ```
 
 
 
 
-    (797981, 80)
+    (797981, 60)
 
 
 
@@ -2728,7 +2690,7 @@ one_hot_data_pca.shape
 
 (Double-click this cell and replace this text with your own text, reporting your findings and decisions regarding dimensionality reduction. How many principal components / transformed features are you retaining for the next step of the analysis?)
 
-As we can see from the above figure, with 80 components, it will explain about 95% explained_variance_ratio_, and also it's started to drop off around 60-70, but we gonan use 80 here to cover more variance.
+As we can see from the above figure, with 60 components, it will explain about 90% explained_variance_ratio_, and also it's started to drop off at this point, but we gonan use 60 here to cover more variance.
 
 ### Step 2.3: Interpret Principal Components
 
@@ -2794,251 +2756,251 @@ get_sorted_name_weights_dic(pca, 0)
   <tbody>
     <tr>
       <th>LP_STATUS_GROB_1.0</th>
-      <td>0.202742</td>
-    </tr>
-    <tr>
-      <th>PLZ8_ANTG3</th>
-      <td>0.189457</td>
+      <td>0.200806</td>
     </tr>
     <tr>
       <th>HH_EINKOMMEN_SCORE</th>
-      <td>0.187241</td>
+      <td>0.188052</td>
+    </tr>
+    <tr>
+      <th>PLZ8_ANTG3</th>
+      <td>0.187217</td>
     </tr>
     <tr>
       <th>PLZ8_ANTG4</th>
-      <td>0.184098</td>
-    </tr>
-    <tr>
-      <th>CAMEO_INTL_2015_WEALTH</th>
-      <td>0.178886</td>
+      <td>0.181932</td>
     </tr>
     <tr>
       <th>ORTSGR_KLS9</th>
-      <td>0.164229</td>
+      <td>0.160215</td>
     </tr>
     <tr>
       <th>EWDICHTE</th>
-      <td>0.162805</td>
+      <td>0.158914</td>
     </tr>
     <tr>
       <th>FINANZ_SPARER</th>
-      <td>0.159814</td>
+      <td>0.151013</td>
+    </tr>
+    <tr>
+      <th>CAMEO_INTL_2015_WEALTH_5.0</th>
+      <td>0.148630</td>
     </tr>
     <tr>
       <th>FINANZ_HAUSBAUER</th>
-      <td>0.144376</td>
+      <td>0.145250</td>
+    </tr>
+    <tr>
+      <th>CAMEO_INTL_2015_LIFE_STAGE_1.0</th>
+      <td>0.142374</td>
     </tr>
     <tr>
       <th>FINANZTYP_1</th>
-      <td>0.143032</td>
+      <td>0.136667</td>
     </tr>
     <tr>
       <th>KBA05_ANTG4</th>
-      <td>0.131174</td>
+      <td>0.130049</td>
     </tr>
     <tr>
       <th>PLZ8_ANTG2</th>
-      <td>0.129511</td>
-    </tr>
-    <tr>
-      <th>SEMIO_PFLICHT</th>
-      <td>0.124466</td>
-    </tr>
-    <tr>
-      <th>SEMIO_REL</th>
-      <td>0.119929</td>
+      <td>0.127668</td>
     </tr>
     <tr>
       <th>KBA05_ANTG3</th>
-      <td>0.118537</td>
+      <td>0.117614</td>
     </tr>
     <tr>
       <th>ANZ_HAUSHALTE_AKTIV</th>
-      <td>0.118061</td>
-    </tr>
-    <tr>
-      <th>PRAEGENDE_JUGENDJAHRE_DECADE</th>
-      <td>0.117874</td>
+      <td>0.117324</td>
     </tr>
     <tr>
       <th>ARBEIT</th>
-      <td>0.116960</td>
+      <td>0.116351</td>
+    </tr>
+    <tr>
+      <th>SEMIO_PFLICHT</th>
+      <td>0.115908</td>
+    </tr>
+    <tr>
+      <th>SEMIO_REL</th>
+      <td>0.111381</td>
     </tr>
     <tr>
       <th>RELAT_AB</th>
-      <td>0.111495</td>
+      <td>0.109944</td>
+    </tr>
+    <tr>
+      <th>PRAEGENDE_JUGENDJAHRE_DECADE_6.0</th>
+      <td>0.099096</td>
     </tr>
     <tr>
       <th>SEMIO_RAT</th>
-      <td>0.104451</td>
+      <td>0.097363</td>
     </tr>
     <tr>
-      <th>SEMIO_TRADV</th>
-      <td>0.100227</td>
+      <th>PRAEGENDE_JUGENDJAHRE_MOVEMENT_1</th>
+      <td>0.094274</td>
     </tr>
     <tr>
       <th>ZABEOTYP_5</th>
-      <td>0.096338</td>
+      <td>0.093820</td>
     </tr>
     <tr>
-      <th>FINANZ_UNAUFFAELLIGER</th>
-      <td>0.091384</td>
+      <th>SEMIO_TRADV</th>
+      <td>0.092306</td>
     </tr>
     <tr>
       <th>FINANZ_ANLEGER</th>
-      <td>0.089575</td>
+      <td>0.083728</td>
     </tr>
     <tr>
-      <th>PRAEGENDE_JUGENDJAHRE_MOVEMENT</th>
-      <td>0.088140</td>
-    </tr>
-    <tr>
-      <th>SEMIO_MAT</th>
-      <td>0.079927</td>
+      <th>FINANZ_UNAUFFAELLIGER</th>
+      <td>0.083150</td>
     </tr>
     <tr>
       <th>LP_FAMILIE_GROB_1.0</th>
-      <td>0.076372</td>
+      <td>0.076706</td>
+    </tr>
+    <tr>
+      <th>SEMIO_MAT</th>
+      <td>0.074641</td>
     </tr>
     <tr>
       <th>SEMIO_FAM</th>
-      <td>0.076329</td>
-    </tr>
-    <tr>
-      <th>SEMIO_KULT</th>
-      <td>0.074604</td>
+      <td>0.071277</td>
     </tr>
     <tr>
       <th>GEBAEUDETYP_3.0</th>
-      <td>0.071807</td>
+      <td>0.070086</td>
     </tr>
     <tr>
       <th>...</th>
       <td>...</td>
     </tr>
     <tr>
-      <th>ZABEOTYP_2</th>
-      <td>-0.045896</td>
-    </tr>
-    <tr>
-      <th>ZABEOTYP_3</th>
-      <td>-0.046640</td>
-    </tr>
-    <tr>
-      <th>SHOPPER_TYP_3.0</th>
-      <td>-0.047475</td>
-    </tr>
-    <tr>
-      <th>LP_FAMILIE_GROB_5.0</th>
-      <td>-0.057713</td>
-    </tr>
-    <tr>
       <th>WOHNDAUER_2008</th>
-      <td>-0.061447</td>
-    </tr>
-    <tr>
-      <th>KBA13_ANZAHL_PKW</th>
-      <td>-0.062849</td>
+      <td>-0.059159</td>
     </tr>
     <tr>
       <th>CJT_GESAMTTYP_2.0</th>
-      <td>-0.065772</td>
+      <td>-0.060708</td>
     </tr>
     <tr>
-      <th>ANZ_PERSONEN</th>
-      <td>-0.073524</td>
+      <th>PRAEGENDE_JUGENDJAHRE_DECADE_3.0</th>
+      <td>-0.061846</td>
+    </tr>
+    <tr>
+      <th>CAMEO_INTL_2015_LIFE_STAGE_4.0</th>
+      <td>-0.062271</td>
+    </tr>
+    <tr>
+      <th>KBA13_ANZAHL_PKW</th>
+      <td>-0.063131</td>
     </tr>
     <tr>
       <th>SEMIO_ERL</th>
-      <td>-0.080337</td>
+      <td>-0.073960</td>
+    </tr>
+    <tr>
+      <th>ANZ_PERSONEN</th>
+      <td>-0.074513</td>
     </tr>
     <tr>
       <th>SEMIO_LUST</th>
-      <td>-0.080947</td>
+      <td>-0.075222</td>
     </tr>
     <tr>
       <th>NATIONALITAET_KZ_1.0</th>
-      <td>-0.083087</td>
-    </tr>
-    <tr>
-      <th>ZABEOTYP_1</th>
-      <td>-0.092545</td>
+      <td>-0.078441</td>
     </tr>
     <tr>
       <th>GEBAEUDETYP_1.0</th>
-      <td>-0.094725</td>
+      <td>-0.092561</td>
+    </tr>
+    <tr>
+      <th>ZABEOTYP_1</th>
+      <td>-0.093647</td>
+    </tr>
+    <tr>
+      <th>PRAEGENDE_JUGENDJAHRE_MOVEMENT_0</th>
+      <td>-0.094274</td>
     </tr>
     <tr>
       <th>FINANZTYP_2</th>
-      <td>-0.100288</td>
+      <td>-0.095560</td>
+    </tr>
+    <tr>
+      <th>CAMEO_INTL_2015_WEALTH_1.0</th>
+      <td>-0.100546</td>
     </tr>
     <tr>
       <th>GEBAEUDETYP_RASTER</th>
-      <td>-0.102889</td>
-    </tr>
-    <tr>
-      <th>GREEN_AVANTGARDE</th>
-      <td>-0.104115</td>
+      <td>-0.100857</td>
     </tr>
     <tr>
       <th>BALLRAUM</th>
-      <td>-0.105301</td>
+      <td>-0.101976</td>
     </tr>
     <tr>
-      <th>CAMEO_INTL_2015_LIFE_STAGE</th>
-      <td>-0.112828</td>
+      <th>CAMEO_INTL_2015_WEALTH_2.0</th>
+      <td>-0.103337</td>
     </tr>
     <tr>
-      <th>LP_STATUS_GROB_5.0</th>
-      <td>-0.117967</td>
+      <th>GREEN_AVANTGARDE</th>
+      <td>-0.109214</td>
     </tr>
     <tr>
       <th>LP_STATUS_GROB_4.0</th>
-      <td>-0.118847</td>
+      <td>-0.113981</td>
     </tr>
     <tr>
       <th>FINANZ_VORSORGER</th>
-      <td>-0.126539</td>
+      <td>-0.118934</td>
+    </tr>
+    <tr>
+      <th>LP_STATUS_GROB_5.0</th>
+      <td>-0.119902</td>
     </tr>
     <tr>
       <th>ALTERSKATEGORIE_GROB</th>
-      <td>-0.130293</td>
+      <td>-0.121499</td>
     </tr>
     <tr>
       <th>INNENSTADT</th>
-      <td>-0.136496</td>
+      <td>-0.133391</td>
     </tr>
     <tr>
       <th>PLZ8_GBZ</th>
-      <td>-0.138405</td>
+      <td>-0.137777</td>
     </tr>
     <tr>
       <th>KONSUMNAEHE</th>
-      <td>-0.142673</td>
+      <td>-0.140334</td>
     </tr>
     <tr>
       <th>KBA05_GBZ</th>
-      <td>-0.187487</td>
+      <td>-0.185637</td>
     </tr>
     <tr>
       <th>PLZ8_ANTG1</th>
-      <td>-0.189348</td>
+      <td>-0.187793</td>
     </tr>
     <tr>
       <th>KBA05_ANTG1</th>
-      <td>-0.197247</td>
+      <td>-0.195764</td>
     </tr>
     <tr>
       <th>MOBI_REGIO</th>
-      <td>-0.210702</td>
+      <td>-0.208865</td>
     </tr>
     <tr>
       <th>FINANZ_MINIMALIST</th>
-      <td>-0.218556</td>
+      <td>-0.212737</td>
     </tr>
   </tbody>
 </table>
-<p>106 rows × 1 columns</p>
+<p>120 rows × 1 columns</p>
 </div>
 
 
@@ -3078,251 +3040,251 @@ get_sorted_name_weights_dic(pca, 1)
   <tbody>
     <tr>
       <th>ALTERSKATEGORIE_GROB</th>
-      <td>0.220430</td>
+      <td>0.221823</td>
     </tr>
     <tr>
       <th>FINANZ_VORSORGER</th>
-      <td>0.205153</td>
+      <td>0.208195</td>
     </tr>
     <tr>
       <th>ZABEOTYP_3</th>
-      <td>0.204246</td>
+      <td>0.203089</td>
     </tr>
     <tr>
       <th>SEMIO_ERL</th>
-      <td>0.187003</td>
+      <td>0.183886</td>
     </tr>
     <tr>
       <th>SEMIO_LUST</th>
-      <td>0.156676</td>
+      <td>0.156723</td>
     </tr>
     <tr>
       <th>RETOURTYP_BK_S</th>
-      <td>0.152799</td>
+      <td>0.153898</td>
     </tr>
     <tr>
       <th>W_KEIT_KIND_HH</th>
-      <td>0.127966</td>
+      <td>0.125408</td>
     </tr>
     <tr>
       <th>FINANZ_HAUSBAUER</th>
-      <td>0.127194</td>
+      <td>0.118469</td>
     </tr>
     <tr>
-      <th>PLZ8_ANTG3</th>
-      <td>0.106495</td>
+      <th>PRAEGENDE_JUGENDJAHRE_DECADE_3.0</th>
+      <td>0.109437</td>
     </tr>
     <tr>
       <th>CJT_GESAMTTYP_2.0</th>
-      <td>0.102348</td>
+      <td>0.102328</td>
     </tr>
     <tr>
-      <th>PLZ8_ANTG4</th>
-      <td>0.102313</td>
+      <th>PRAEGENDE_JUGENDJAHRE_DECADE_2.0</th>
+      <td>0.099569</td>
     </tr>
     <tr>
-      <th>EWDICHTE</th>
-      <td>0.098913</td>
-    </tr>
-    <tr>
-      <th>ORTSGR_KLS9</th>
-      <td>0.098390</td>
+      <th>PLZ8_ANTG3</th>
+      <td>0.099062</td>
     </tr>
     <tr>
       <th>FINANZTYP_5</th>
-      <td>0.095105</td>
+      <td>0.095157</td>
     </tr>
     <tr>
-      <th>CAMEO_INTL_2015_WEALTH</th>
-      <td>0.093123</td>
+      <th>PLZ8_ANTG4</th>
+      <td>0.095118</td>
+    </tr>
+    <tr>
+      <th>EWDICHTE</th>
+      <td>0.091619</td>
+    </tr>
+    <tr>
+      <th>ORTSGR_KLS9</th>
+      <td>0.090994</td>
     </tr>
     <tr>
       <th>SEMIO_KRIT</th>
-      <td>0.091240</td>
-    </tr>
-    <tr>
-      <th>SEMIO_KAEM</th>
-      <td>0.086210</td>
-    </tr>
-    <tr>
-      <th>HH_EINKOMMEN_SCORE</th>
-      <td>0.079710</td>
-    </tr>
-    <tr>
-      <th>KBA05_ANTG4</th>
-      <td>0.079324</td>
+      <td>0.085982</td>
     </tr>
     <tr>
       <th>FINANZTYP_2</th>
-      <td>0.077960</td>
+      <td>0.079533</td>
+    </tr>
+    <tr>
+      <th>SEMIO_KAEM</th>
+      <td>0.079097</td>
+    </tr>
+    <tr>
+      <th>KBA05_ANTG4</th>
+      <td>0.073775</td>
+    </tr>
+    <tr>
+      <th>CAMEO_INTL_2015_WEALTH_5.0</th>
+      <td>0.072981</td>
+    </tr>
+    <tr>
+      <th>HH_EINKOMMEN_SCORE</th>
+      <td>0.072949</td>
     </tr>
     <tr>
       <th>ARBEIT</th>
-      <td>0.075607</td>
-    </tr>
-    <tr>
-      <th>ANZ_HAUSHALTE_AKTIV</th>
-      <td>0.073856</td>
+      <td>0.071443</td>
     </tr>
     <tr>
       <th>SHOPPER_TYP_3.0</th>
-      <td>0.072677</td>
+      <td>0.071354</td>
     </tr>
     <tr>
-      <th>PLZ8_ANTG2</th>
-      <td>0.072668</td>
-    </tr>
-    <tr>
-      <th>RELAT_AB</th>
-      <td>0.070765</td>
-    </tr>
-    <tr>
-      <th>LP_FAMILIE_GROB_1.0</th>
-      <td>0.068448</td>
+      <th>ANZ_HAUSHALTE_AKTIV</th>
+      <td>0.068911</td>
     </tr>
     <tr>
       <th>CJT_GESAMTTYP_1.0</th>
-      <td>0.067973</td>
+      <td>0.067726</td>
     </tr>
     <tr>
-      <th>ANREDE_KZ</th>
-      <td>0.063582</td>
-    </tr>
-    <tr>
-      <th>LP_STATUS_GROB_1.0</th>
-      <td>0.063254</td>
+      <th>PLZ8_ANTG2</th>
+      <td>0.067437</td>
     </tr>
     <tr>
       <th>FINANZTYP_6</th>
-      <td>0.063159</td>
+      <td>0.066653</td>
+    </tr>
+    <tr>
+      <th>RELAT_AB</th>
+      <td>0.066142</td>
+    </tr>
+    <tr>
+      <th>LP_FAMILIE_GROB_1.0</th>
+      <td>0.064803</td>
     </tr>
     <tr>
       <th>...</th>
       <td>...</td>
     </tr>
     <tr>
-      <th>SHOPPER_TYP_0.0</th>
-      <td>-0.060952</td>
+      <th>BALLRAUM</th>
+      <td>-0.058555</td>
     </tr>
     <tr>
-      <th>BALLRAUM</th>
-      <td>-0.063582</td>
+      <th>CAMEO_INTL_2015_WEALTH_2.0</th>
+      <td>-0.060256</td>
     </tr>
     <tr>
       <th>LP_FAMILIE_GROB_4.0</th>
-      <td>-0.068905</td>
+      <td>-0.067606</td>
     </tr>
     <tr>
       <th>SEMIO_SOZ</th>
-      <td>-0.073132</td>
+      <td>-0.069607</td>
     </tr>
     <tr>
       <th>ANZ_PERSONEN</th>
-      <td>-0.076242</td>
-    </tr>
-    <tr>
-      <th>ZABEOTYP_5</th>
-      <td>-0.077196</td>
+      <td>-0.072185</td>
     </tr>
     <tr>
       <th>INNENSTADT</th>
-      <td>-0.080321</td>
+      <td>-0.074446</td>
     </tr>
     <tr>
       <th>KONSUMNAEHE</th>
-      <td>-0.080786</td>
+      <td>-0.075053</td>
     </tr>
     <tr>
       <th>PLZ8_GBZ</th>
-      <td>-0.081780</td>
+      <td>-0.076656</td>
+    </tr>
+    <tr>
+      <th>ZABEOTYP_5</th>
+      <td>-0.081641</td>
     </tr>
     <tr>
       <th>ZABEOTYP_1</th>
-      <td>-0.088048</td>
+      <td>-0.082215</td>
     </tr>
     <tr>
       <th>FINANZTYP_3</th>
-      <td>-0.090945</td>
-    </tr>
-    <tr>
-      <th>FINANZTYP_4</th>
-      <td>-0.092363</td>
-    </tr>
-    <tr>
-      <th>ZABEOTYP_4</th>
-      <td>-0.094339</td>
+      <td>-0.088596</td>
     </tr>
     <tr>
       <th>KBA05_ANTG1</th>
-      <td>-0.097828</td>
+      <td>-0.090258</td>
     </tr>
     <tr>
-      <th>FINANZTYP_1</th>
-      <td>-0.103168</td>
+      <th>FINANZTYP_4</th>
+      <td>-0.092569</td>
     </tr>
     <tr>
       <th>KBA05_GBZ</th>
-      <td>-0.103527</td>
+      <td>-0.095669</td>
+    </tr>
+    <tr>
+      <th>ZABEOTYP_4</th>
+      <td>-0.095723</td>
     </tr>
     <tr>
       <th>PLZ8_ANTG1</th>
-      <td>-0.105374</td>
+      <td>-0.098320</td>
     </tr>
     <tr>
       <th>MOBI_REGIO</th>
-      <td>-0.108000</td>
+      <td>-0.099674</td>
+    </tr>
+    <tr>
+      <th>FINANZTYP_1</th>
+      <td>-0.109465</td>
     </tr>
     <tr>
       <th>SEMIO_MAT</th>
-      <td>-0.129339</td>
+      <td>-0.128076</td>
     </tr>
     <tr>
       <th>SEMIO_FAM</th>
-      <td>-0.141743</td>
+      <td>-0.138135</td>
     </tr>
     <tr>
       <th>SEMIO_RAT</th>
-      <td>-0.149523</td>
+      <td>-0.152531</td>
     </tr>
     <tr>
       <th>ONLINE_AFFINITAET</th>
-      <td>-0.171347</td>
+      <td>-0.168883</td>
     </tr>
     <tr>
       <th>SEMIO_KULT</th>
-      <td>-0.174158</td>
+      <td>-0.169636</td>
     </tr>
     <tr>
       <th>FINANZ_ANLEGER</th>
-      <td>-0.185150</td>
+      <td>-0.187734</td>
+    </tr>
+    <tr>
+      <th>PRAEGENDE_JUGENDJAHRE_DECADE_6.0</th>
+      <td>-0.191373</td>
     </tr>
     <tr>
       <th>SEMIO_PFLICHT</th>
-      <td>-0.191967</td>
+      <td>-0.193192</td>
     </tr>
     <tr>
       <th>SEMIO_TRADV</th>
-      <td>-0.200962</td>
+      <td>-0.201409</td>
     </tr>
     <tr>
       <th>FINANZ_SPARER</th>
-      <td>-0.203546</td>
-    </tr>
-    <tr>
-      <th>FINANZ_UNAUFFAELLIGER</th>
-      <td>-0.207119</td>
+      <td>-0.208000</td>
     </tr>
     <tr>
       <th>SEMIO_REL</th>
-      <td>-0.209323</td>
+      <td>-0.208290</td>
     </tr>
     <tr>
-      <th>PRAEGENDE_JUGENDJAHRE_DECADE</th>
-      <td>-0.224676</td>
+      <th>FINANZ_UNAUFFAELLIGER</th>
+      <td>-0.210234</td>
     </tr>
   </tbody>
 </table>
-<p>106 rows × 1 columns</p>
+<p>120 rows × 1 columns</p>
 </div>
 
 
@@ -3362,251 +3324,251 @@ get_sorted_name_weights_dic(pca, 2)
   <tbody>
     <tr>
       <th>SEMIO_VERT</th>
-      <td>0.325066</td>
-    </tr>
-    <tr>
-      <th>SEMIO_SOZ</th>
-      <td>0.257374</td>
+      <td>0.323248</td>
     </tr>
     <tr>
       <th>SEMIO_FAM</th>
-      <td>0.256760</td>
+      <td>0.258116</td>
+    </tr>
+    <tr>
+      <th>SEMIO_SOZ</th>
+      <td>0.257508</td>
     </tr>
     <tr>
       <th>SEMIO_KULT</th>
-      <td>0.244683</td>
+      <td>0.246231</td>
     </tr>
     <tr>
       <th>FINANZTYP_5</th>
-      <td>0.140538</td>
+      <td>0.140428</td>
     </tr>
     <tr>
       <th>FINANZ_MINIMALIST</th>
-      <td>0.131131</td>
+      <td>0.130497</td>
     </tr>
     <tr>
       <th>SHOPPER_TYP_0.0</th>
-      <td>0.125114</td>
+      <td>0.124243</td>
     </tr>
     <tr>
       <th>ZABEOTYP_1</th>
-      <td>0.104788</td>
+      <td>0.109751</td>
     </tr>
     <tr>
       <th>SEMIO_REL</th>
-      <td>0.097958</td>
+      <td>0.102910</td>
     </tr>
     <tr>
       <th>RETOURTYP_BK_S</th>
-      <td>0.090117</td>
-    </tr>
-    <tr>
-      <th>W_KEIT_KIND_HH</th>
-      <td>0.083405</td>
+      <td>0.086775</td>
     </tr>
     <tr>
       <th>SEMIO_MAT</th>
-      <td>0.077439</td>
+      <td>0.081055</td>
+    </tr>
+    <tr>
+      <th>W_KEIT_KIND_HH</th>
+      <td>0.078385</td>
     </tr>
     <tr>
       <th>FINANZ_VORSORGER</th>
-      <td>0.069927</td>
-    </tr>
-    <tr>
-      <th>ORTSGR_KLS9</th>
-      <td>0.055547</td>
-    </tr>
-    <tr>
-      <th>EWDICHTE</th>
-      <td>0.055255</td>
-    </tr>
-    <tr>
-      <th>SHOPPER_TYP_1.0</th>
-      <td>0.053370</td>
-    </tr>
-    <tr>
-      <th>ZABEOTYP_6</th>
-      <td>0.053035</td>
-    </tr>
-    <tr>
-      <th>PLZ8_ANTG4</th>
-      <td>0.052284</td>
-    </tr>
-    <tr>
-      <th>PLZ8_ANTG3</th>
-      <td>0.051810</td>
+      <td>0.064406</td>
     </tr>
     <tr>
       <th>GREEN_AVANTGARDE</th>
-      <td>0.047371</td>
+      <td>0.062038</td>
     </tr>
     <tr>
-      <th>ALTERSKATEGORIE_GROB</th>
-      <td>0.039497</td>
+      <th>ORTSGR_KLS9</th>
+      <td>0.059645</td>
     </tr>
     <tr>
-      <th>SEMIO_LUST</th>
-      <td>0.038148</td>
+      <th>EWDICHTE</th>
+      <td>0.059530</td>
     </tr>
     <tr>
-      <th>ARBEIT</th>
-      <td>0.036876</td>
+      <th>SHOPPER_TYP_1.0</th>
+      <td>0.053173</td>
     </tr>
     <tr>
-      <th>PLZ8_ANTG2</th>
-      <td>0.035689</td>
+      <th>PLZ8_ANTG4</th>
+      <td>0.052498</td>
     </tr>
     <tr>
-      <th>RELAT_AB</th>
-      <td>0.034965</td>
+      <th>PLZ8_ANTG3</th>
+      <td>0.052356</td>
     </tr>
     <tr>
-      <th>KBA05_ANTG4</th>
-      <td>0.030621</td>
+      <th>ZABEOTYP_6</th>
+      <td>0.052178</td>
     </tr>
     <tr>
-      <th>CAMEO_INTL_2015_WEALTH</th>
-      <td>0.030512</td>
-    </tr>
-    <tr>
-      <th>GEBAEUDETYP_3.0</th>
-      <td>0.030455</td>
+      <th>PRAEGENDE_JUGENDJAHRE_MOVEMENT_0</th>
+      <td>0.051537</td>
     </tr>
     <tr>
       <th>LP_STATUS_GROB_5.0</th>
-      <td>0.030261</td>
+      <td>0.040926</td>
     </tr>
     <tr>
-      <th>ANZ_HAUSHALTE_AKTIV</th>
-      <td>0.029219</td>
+      <th>PRAEGENDE_JUGENDJAHRE_DECADE_3.0</th>
+      <td>0.040303</td>
+    </tr>
+    <tr>
+      <th>ARBEIT</th>
+      <td>0.037394</td>
+    </tr>
+    <tr>
+      <th>PRAEGENDE_JUGENDJAHRE_DECADE_2.0</th>
+      <td>0.037164</td>
+    </tr>
+    <tr>
+      <th>PLZ8_ANTG2</th>
+      <td>0.036717</td>
+    </tr>
+    <tr>
+      <th>RELAT_AB</th>
+      <td>0.036062</td>
+    </tr>
+    <tr>
+      <th>SEMIO_LUST</th>
+      <td>0.035715</td>
+    </tr>
+    <tr>
+      <th>ALTERSKATEGORIE_GROB</th>
+      <td>0.033566</td>
+    </tr>
+    <tr>
+      <th>CAMEO_INTL_2015_LIFE_STAGE_1.0</th>
+      <td>0.032547</td>
     </tr>
     <tr>
       <th>...</th>
       <td>...</td>
     </tr>
     <tr>
-      <th>ZABEOTYP_5</th>
-      <td>-0.032339</td>
+      <th>MOBI_REGIO</th>
+      <td>-0.032442</td>
+    </tr>
+    <tr>
+      <th>CAMEO_INTL_2015_WEALTH_2.0</th>
+      <td>-0.033536</td>
     </tr>
     <tr>
       <th>NATIONALITAET_KZ_3.0</th>
-      <td>-0.034762</td>
-    </tr>
-    <tr>
-      <th>MOBI_REGIO</th>
-      <td>-0.035760</td>
-    </tr>
-    <tr>
-      <th>PRAEGENDE_JUGENDJAHRE_MOVEMENT</th>
-      <td>-0.036289</td>
+      <td>-0.033566</td>
     </tr>
     <tr>
       <th>CJT_GESAMTTYP_6.0</th>
-      <td>-0.036501</td>
-    </tr>
-    <tr>
-      <th>GEBAEUDETYP_RASTER</th>
-      <td>-0.040269</td>
-    </tr>
-    <tr>
-      <th>FINANZ_HAUSBAUER</th>
-      <td>-0.040886</td>
+      <td>-0.033695</td>
     </tr>
     <tr>
       <th>SEMIO_TRADV</th>
-      <td>-0.040950</td>
-    </tr>
-    <tr>
-      <th>PLZ8_GBZ</th>
-      <td>-0.041146</td>
-    </tr>
-    <tr>
-      <th>BALLRAUM</th>
-      <td>-0.042431</td>
+      <td>-0.034564</td>
     </tr>
     <tr>
       <th>ONLINE_AFFINITAET</th>
-      <td>-0.042475</td>
+      <td>-0.035476</td>
     </tr>
     <tr>
       <th>SEMIO_PFLICHT</th>
-      <td>-0.044366</td>
+      <td>-0.038499</td>
+    </tr>
+    <tr>
+      <th>PLZ8_GBZ</th>
+      <td>-0.039375</td>
+    </tr>
+    <tr>
+      <th>GEBAEUDETYP_RASTER</th>
+      <td>-0.041146</td>
+    </tr>
+    <tr>
+      <th>FINANZ_HAUSBAUER</th>
+      <td>-0.044900</td>
+    </tr>
+    <tr>
+      <th>BALLRAUM</th>
+      <td>-0.046086</td>
     </tr>
     <tr>
       <th>KONSUMNAEHE</th>
-      <td>-0.046610</td>
-    </tr>
-    <tr>
-      <th>INNENSTADT</th>
-      <td>-0.050578</td>
-    </tr>
-    <tr>
-      <th>SHOPPER_TYP_3.0</th>
-      <td>-0.050855</td>
+      <td>-0.048551</td>
     </tr>
     <tr>
       <th>LP_FAMILIE_GROB_3.0</th>
-      <td>-0.050886</td>
+      <td>-0.049711</td>
+    </tr>
+    <tr>
+      <th>SHOPPER_TYP_3.0</th>
+      <td>-0.050978</td>
+    </tr>
+    <tr>
+      <th>PRAEGENDE_JUGENDJAHRE_MOVEMENT_1</th>
+      <td>-0.051537</td>
     </tr>
     <tr>
       <th>PLZ8_ANTG1</th>
-      <td>-0.052426</td>
+      <td>-0.051780</td>
     </tr>
     <tr>
-      <th>ZABEOTYP_4</th>
-      <td>-0.070351</td>
+      <th>INNENSTADT</th>
+      <td>-0.053979</td>
+    </tr>
+    <tr>
+      <th>PRAEGENDE_JUGENDJAHRE_DECADE_6.0</th>
+      <td>-0.055238</td>
     </tr>
     <tr>
       <th>FINANZ_UNAUFFAELLIGER</th>
-      <td>-0.071734</td>
+      <td>-0.064602</td>
+    </tr>
+    <tr>
+      <th>ZABEOTYP_4</th>
+      <td>-0.068373</td>
     </tr>
     <tr>
       <th>FINANZ_SPARER</th>
-      <td>-0.074851</td>
-    </tr>
-    <tr>
-      <th>PRAEGENDE_JUGENDJAHRE_DECADE</th>
-      <td>-0.075272</td>
+      <td>-0.069720</td>
     </tr>
     <tr>
       <th>SHOPPER_TYP_2.0</th>
-      <td>-0.096158</td>
+      <td>-0.096501</td>
     </tr>
     <tr>
       <th>FINANZTYP_1</th>
-      <td>-0.109617</td>
+      <td>-0.106279</td>
     </tr>
     <tr>
       <th>FINANZ_ANLEGER</th>
-      <td>-0.163541</td>
+      <td>-0.160986</td>
     </tr>
     <tr>
       <th>SEMIO_RAT</th>
-      <td>-0.177356</td>
+      <td>-0.171056</td>
     </tr>
     <tr>
       <th>SEMIO_ERL</th>
-      <td>-0.195902</td>
+      <td>-0.199078</td>
     </tr>
     <tr>
       <th>SEMIO_KRIT</th>
-      <td>-0.269120</td>
+      <td>-0.269213</td>
     </tr>
     <tr>
       <th>SEMIO_DOM</th>
-      <td>-0.296582</td>
+      <td>-0.292932</td>
     </tr>
     <tr>
       <th>SEMIO_KAEM</th>
-      <td>-0.323282</td>
+      <td>-0.320830</td>
     </tr>
     <tr>
       <th>ANREDE_KZ</th>
-      <td>-0.352155</td>
+      <td>-0.349926</td>
     </tr>
   </tbody>
 </table>
-<p>106 rows × 1 columns</p>
+<p>120 rows × 1 columns</p>
 </div>
 
 
@@ -3681,10 +3643,10 @@ def fit_mods(data, range_list):
 # Over a number of different cluster counts...
 
 
-    # run k-means clustering on the data and...
+# run k-means clustering on the data and...
     
     
-    # compute the average within-cluster distances.
+# compute the average within-cluster distances.
     
 # centers = range(5, 40, 5)
 # scores = fit_mods(one_hot_data_pca, centers)
@@ -3699,18 +3661,26 @@ def fit_mods(data, range_list):
 #  54419207.460554905,
 #  52622383.92164255]
 
-centers = range(5, 40, 5)
-scores, kmean_model = fit_mods(one_hot_data_pca, centers)
 ```
 
-    applying 5 clusters
-    applying 10 clusters
-    applying 15 clusters
-    applying 20 clusters
-    applying 25 clusters
-    applying 30 clusters
-    applying 35 clusters
 
+```python
+
+# centers = range(5, 35, 5)
+# scores, kmean_model = fit_mods(one_hot_data_pca, centers)
+
+```
+
+
+```python
+centers = range(5, 35, 5)
+scores = [67566996.33904031,
+ 62320972.90171934,
+ 59389546.79145319,
+ 56422256.082380734,
+ 54591818.827253416,
+ 53509633.94268633]
+```
 
 
 ```python
@@ -3724,7 +3694,7 @@ plt.title('SSE vs. K');
 ```
 
 
-![png](output_86_0.png)
+![png](output_89_0.png)
 
 
 
@@ -3752,24 +3722,25 @@ plt.title('SSE vs. K');
 # Re-fit the k-means model with the selected number of clusters and obtain
 # cluster predictions for the general population demographics data.
 
-kmeans = KMeans(n_clusters=25)
-model = kmeans.fit(one_hot_data_pca)
+kmeans = KMeans(n_clusters=15)
+kmeans_model = kmeans.fit(one_hot_data_pca)
 ```
 
 
 ```python
-labels_general = model.predict(one_hot_data_pca)
+labels_general = kmeans_model.predict(one_hot_data_pca)
 ```
 
 
 ```python
 one_hot_data_pca.shape
+labels_general
 ```
 
 
 
 
-    (797981, 80)
+    array([1, 0, 3, ..., 0, 9, 8], dtype=int32)
 
 
 
@@ -3779,7 +3750,7 @@ one_hot_data_pca.shape
 
 A:
 
-As we can see from the above figure, the score decrease along with the number of clusters increasing, even though it's not showing a very good "elbow" curve, we can observe that the decreasing rate turns down from 20, 25, that's why I choose 25 here as the number of clusters.
+As we can see from the above figure, the score decrease along with the number of clusters increasing, even though it's not showing a very good "elbow" curve, we can observe that the decreasing rate turns down from 15-20,  that's why I choose 15 here as the number of clusters.
 
 ### Step 3.2: Apply All Steps to the Customer Data
 
@@ -3795,6 +3766,25 @@ Now that you have clusters and cluster centers for the general population, it's 
 customers = pd.read_csv('Udacity_CUSTOMERS_Subset.csv', delimiter=';')
 
 ```
+
+
+```python
+name_list, percentage_list = get_percentage_missing_in_column(customers, 0)
+plt.figure(figsize=(30,20))
+plt.rcParams.update({'font.size': 22})
+plt.barh(name_list, width = percentage_list)
+```
+
+
+
+
+    <BarContainer object of 53 artists>
+
+
+
+
+![png](output_98_1.png)
+
 
 
 ```python
@@ -3814,27 +3804,81 @@ customers.shape
 
 ```python
 
-customers_data = clean_data(customers)
+customers_data, customer_subset_above_threshold_indexes = clean_data(customers, {'column_missing_threshold': 0.3, 'row_missing_threshold': 30})
+
+
 ```
 
     convert missing value codes into NaNs...
     df shape (191652, 85)
-    drop columns:
-    ['AGER_TYP', 'GEBURTSJAHR', 'TITEL_KZ', 'ALTER_HH', 'KK_KUNDENTYP', 'KBA05_BAUMAX', 'GFK_URLAUBERTYP', 'LP_FAMILIE_FEIN', 'LP_STATUS_FEIN', 'CAMEO_DEUG_2015', 'CAMEO_DEU_2015', 'LP_LEBENSPHASE_FEIN', 'LP_LEBENSPHASE_GROB', 'WOHNLAGE', 'PLZ8_BAUMAX']
-    df shape (191652, 70)
-    df shape (191652, 70)
+    drop columns that has missing info large than 30.0 
+    df shape (191652, 84)
+    remove rows that has missing values more than 30
+    0.0 %
+    10.0 %
+    20.0 %
+    30.0 %
+    40.0 %
+    50.0 %
+    60.0 %
+    70.0 %
+    80.0 %
+    90.0 %
+    100.0 %
+    Done!
+    df shape (141725, 84)
+    Re-Encode Categorical Features
+    AGER_TYP 5
+    ANREDE_KZ 2
+    CJT_GESAMTTYP 6
+    FINANZTYP 6
+    GFK_URLAUBERTYP 12
+    GREEN_AVANTGARDE 2
+    LP_FAMILIE_FEIN 12
+    LP_FAMILIE_GROB 6
+    LP_STATUS_FEIN 10
+    LP_STATUS_GROB 5
+    NATIONALITAET_KZ 4
+    SHOPPER_TYP 5
+    SOHO_KZ 2
+    TITEL_KZ 5
+    VERS_TYP 3
+    ZABEOTYP 6
+    GEBAEUDETYP 6
+    OST_WEST_KZ 2
+    CAMEO_DEUG_2015 9
+    CAMEO_DEU_2015 44
+    
+    
+    3 binary variables: 
+    ['ANREDE_KZ', 'GREEN_AVANTGARDE', 'SOHO_KZ']
+    
+    1 object_variable: 
+    ['OST_WEST_KZ']
+    
+    11 small-level variables: 
+    ['AGER_TYP', 'CJT_GESAMTTYP', 'FINANZTYP', 'LP_FAMILIE_GROB', 'LP_STATUS_GROB', 'NATIONALITAET_KZ', 'SHOPPER_TYP', 'TITEL_KZ', 'VERS_TYP', 'ZABEOTYP', 'GEBAEUDETYP']
+    
+    5 large_level_variables: 
+    ['GFK_URLAUBERTYP', 'LP_FAMILIE_FEIN', 'LP_STATUS_FEIN', 'CAMEO_DEUG_2015', 'CAMEO_DEU_2015']
+    
+    df shape (141725, 79)
     one-hot encoding...
+    drop AGER_TYP
     drop CJT_GESAMTTYP
     drop FINANZTYP
     drop LP_FAMILIE_GROB
     drop LP_STATUS_GROB
     drop NATIONALITAET_KZ
     drop SHOPPER_TYP
+    drop TITEL_KZ
+    drop VERS_TYP
     drop ZABEOTYP
     drop GEBAEUDETYP
-    df shape (191652, 106)
+    df shape (141725, 125)
     investgating engineered features
-    df shape (191652, 108)
+    one-hot encode engineered feature
+    df shape (141725, 141)
     Done!
 
 
@@ -3846,68 +3890,27 @@ customers_data.shape
 
 
 
-    (191652, 108)
+    (141725, 136)
 
 
 
 
 ```python
-set(customers_data.columns) - set(one_hot_data.columns)
+# set(customers_data.columns) - set(one_hot_data.columns)
 ```
-
-
-
-
-    {'LP_FAMILIE_GROB_0.0',
-     'NATIONALITAET_KZ_0',
-     'NATIONALITAET_KZ_1',
-     'NATIONALITAET_KZ_2',
-     'NATIONALITAET_KZ_3',
-     'SHOPPER_TYP_-1',
-     'SHOPPER_TYP_0',
-     'SHOPPER_TYP_1',
-     'SHOPPER_TYP_2',
-     'SHOPPER_TYP_3'}
-
-
 
 
 ```python
-one_hot_data.shape
+# set(one_hot_data.columns) - set(customers_data.columns)
 ```
-
-
-
-
-    (797981, 106)
-
-
-
-
-```python
-set(one_hot_data.columns) - set(customers_data.columns)
-```
-
-
-
-
-    {'GEBAEUDETYP_5.0',
-     'NATIONALITAET_KZ_1.0',
-     'NATIONALITAET_KZ_2.0',
-     'NATIONALITAET_KZ_3.0',
-     'SHOPPER_TYP_0.0',
-     'SHOPPER_TYP_1.0',
-     'SHOPPER_TYP_2.0',
-     'SHOPPER_TYP_3.0'}
-
-
 
 
 ```python
 def add_missing_dummy_columns(d, columns):
     missing_cols = set(columns) - set(d.columns)
-    print(missing_cols)
+#     print(len(missing_cols))
     for c in missing_cols:
+        print(c)
         d[c] = 0
 
 def fix_columns(d, columns):  
@@ -3926,14 +3929,40 @@ def fix_columns(d, columns):
 customers_data = fix_columns(customers_data, one_hot_data.columns.tolist())
 ```
 
-    {'SHOPPER_TYP_1.0', 'NATIONALITAET_KZ_1.0', 'SHOPPER_TYP_3.0', 'NATIONALITAET_KZ_2.0', 'SHOPPER_TYP_0.0', 'SHOPPER_TYP_2.0', 'GEBAEUDETYP_5.0', 'NATIONALITAET_KZ_3.0'}
-    extra columns: {'NATIONALITAET_KZ_2', 'SHOPPER_TYP_0', 'SHOPPER_TYP_1', 'SHOPPER_TYP_-1', 'LP_FAMILIE_GROB_0.0', 'NATIONALITAET_KZ_0', 'SHOPPER_TYP_3', 'NATIONALITAET_KZ_1', 'SHOPPER_TYP_2', 'NATIONALITAET_KZ_3'}
+    NATIONALITAET_KZ_2.0
+    GEBAEUDETYP_5.0
+    SHOPPER_TYP_2.0
+    SHOPPER_TYP_0.0
+    SHOPPER_TYP_1.0
+    VERS_TYP
+    SHOPPER_TYP_3.0
+    NATIONALITAET_KZ_3.0
+    NATIONALITAET_KZ_1.0
+    extra columns: {'SHOPPER_TYP_-1', 'AGER_TYP_-1', 'VERS_TYP_1', 'TITEL_KZ_4.0', 'SHOPPER_TYP_0', 'AGER_TYP_0', 'NATIONALITAET_KZ_1', 'LP_FAMILIE_GROB_0.0', 'TITEL_KZ_5.0', 'TITEL_KZ_3.0', 'GEBURTSJAHR', 'AGER_TYP_2', 'TITEL_KZ_1.0', 'TITEL_KZ_0.0', 'AGER_TYP_3', 'NATIONALITAET_KZ_0', 'VERS_TYP_2', 'NATIONALITAET_KZ_2', 'SHOPPER_TYP_1', 'SHOPPER_TYP_2', 'AGER_TYP_1', 'SHOPPER_TYP_3', 'NATIONALITAET_KZ_3', 'VERS_TYP_-1', 'ALTER_HH'}
 
 
 
 ```python
-none_object_list_customer = get_none_object_list(customers_data)
-len(none_object_list_customer)
+# none_object_list_customer = get_none_object_list(customers_data)
+# len(none_object_list_customer)
+```
+
+
+```python
+# customers_data
+# customers_data['NATIONALITAET_KZ_1.0']
+```
+
+
+```python
+# standard scaling
+# customers_data = replace_missing_values(customers_data)
+
+# use the pre-trained imp and scaler
+imp_list_customer = get_none_object_list(customers_data)
+customers_data[imp_list_customer] = imp.transform(customers_data[imp_list_customer])
+customers_data[imp_list_customer] = scaler.transform(customers_data[imp_list_customer])
+
 ```
 
     uint8
@@ -3942,69 +3971,56 @@ len(none_object_list_customer)
 
 
 
-
-
-    106
-
-
-
-
-```python
-# standard scaling
-# customers_data = replace_missing_values(customers_data)
-customers_data[none_object_list_customer] = imp.transform(customers_data[none_object_list_customer])
-customers_data[none_object_list_customer] = scaler.transform(customers_data[none_object_list_customer])
-
-```
-
-
 ```python
 # PCA
-customers_data = pca.transform(customers_data)
+# user pre-trained pca
+customers_data_pca = pca.transform(customers_data)
 
 ```
 
 
 ```python
     
-# clustering
-labels_customers = model.predict(customers_data)
+# clustering, user pre-trained kmeans model
+labels_customers = kmeans_model.predict(customers_data_pca)
 ```
 
 
 ```python
 
-customers_data.shape
+one_hot_data_pca.shape
 ```
 
 
 
 
-    (191652, 80)
+    (797981, 60)
 
 
 
 
 ```python
-one_hot_data_pca
+# pd.DataFrame(labels_customers).nunique()
+# labels_customers
+customers_data_pca
 ```
 
 
 
 
-    array([[ 5.03303212, -2.46372486, -2.95032164, ...,  0.0397819 ,
-             0.22979901,  0.17624085],
-           [-0.0153131 , -0.618433  , -3.60712917, ..., -0.1355208 ,
-            -0.40619111, -0.35520388],
-           [-4.5170189 ,  1.24455207, -1.07378432, ...,  0.54529631,
-            -0.41623194,  1.07717031],
+    array([[-3.93605461, -0.057827  ,  2.70101249, ..., -1.66988056,
+             0.02856398, -0.63191846],
+           [ 0.36841473,  4.17600856, -2.50036852, ...,  0.91646544,
+            -0.36439699,  0.52214261],
+           [-2.35212529, -1.18307983,  1.05249088, ...,  0.39296549,
+             0.56193045,  0.67811743],
            ...,
-           [ 0.30036289, -3.71168536, -3.23107053, ...,  0.13466337,
-             0.27460529, -0.37077656],
-           [ 6.51080606, -2.89132773,  2.83839382, ...,  0.49360379,
-            -0.20707195, -0.15332955],
-           [-0.3869713 ,  2.28012977,  2.62583423, ...,  1.23472312,
-            -0.1905459 ,  0.2193364 ]])
+           [-2.84551237,  1.7876998 ,  0.8677111 , ...,  0.00931928,
+            -0.48308473, -0.10264162],
+           [ 1.34912782,  1.77440958, -3.8095228 , ...,  0.2105044 ,
+             1.08995407,  0.69302537],
+           [-1.53919814, -4.22348516,  1.20385523, ..., -0.28167592,
+             0.07331434,  0.02707627]])
 
 
 
@@ -4026,24 +4042,1596 @@ Take a look at the following points in this step:
 # Compare the proportion of data in each cluster for the customer data to the
 # proportion of data in each cluster for the general population.
 
-# sns.countplot(x=list(range(0,len(labels_general))),data=pd.DataFrame(labels_general))
-labels_general
+# labels_general
+
+# -------general
+labels_general=pd.DataFrame(labels_general)
+labels_general.columns=['cluster']
+
+
+labels_general_missing = pd.DataFrame(-1*np.ones([len(subset_above_threshold_indexes),1]))
+labels_general_missing.columns=['cluster']
+
+total_general =pd.concat([labels_general,labels_general_missing],axis=0)
+
+# -------customer --------
+labels_customer=pd.DataFrame(labels_customers)
+labels_customer.columns=['cluster']
+
+
+labels_customer_missing = pd.DataFrame(-1*np.ones([len(customer_subset_above_threshold_indexes),1]))
+labels_customer_missing.columns=['cluster']
+
+total_customer =pd.concat([labels_customer,labels_customer_missing],axis=0)
+
+
 ```
+
+
+```python
+
+
+sns.countplot( x='cluster',data=total_general)
+```
+
+
+
+
+    <matplotlib.axes._subplots.AxesSubplot at 0x1a36dbbba8>
+
+
+
+
+![png](output_115_1.png)
+
+
+
+```python
+sns.countplot( x='cluster',data=total_customer)
+```
+
+
+
+
+    <matplotlib.axes._subplots.AxesSubplot at 0x1ad1fc3eb8>
+
+
+
+
+![png](output_116_1.png)
+
 
 
 ```python
 # What kinds of people are part of a cluster that is overrepresented in the
 # customer data compared to the general population?
 
-
+# number 4,
+customers_data
 ```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>ALTERSKATEGORIE_GROB</th>
+      <th>ANREDE_KZ</th>
+      <th>FINANZ_MINIMALIST</th>
+      <th>FINANZ_SPARER</th>
+      <th>FINANZ_VORSORGER</th>
+      <th>FINANZ_ANLEGER</th>
+      <th>FINANZ_UNAUFFAELLIGER</th>
+      <th>FINANZ_HAUSBAUER</th>
+      <th>GREEN_AVANTGARDE</th>
+      <th>HEALTH_TYP</th>
+      <th>...</th>
+      <th>CAMEO_INTL_2015_WEALTH_1.0</th>
+      <th>CAMEO_INTL_2015_WEALTH_2.0</th>
+      <th>CAMEO_INTL_2015_WEALTH_3.0</th>
+      <th>CAMEO_INTL_2015_WEALTH_4.0</th>
+      <th>CAMEO_INTL_2015_WEALTH_5.0</th>
+      <th>CAMEO_INTL_2015_LIFE_STAGE_1.0</th>
+      <th>CAMEO_INTL_2015_LIFE_STAGE_2.0</th>
+      <th>CAMEO_INTL_2015_LIFE_STAGE_3.0</th>
+      <th>CAMEO_INTL_2015_LIFE_STAGE_4.0</th>
+      <th>CAMEO_INTL_2015_LIFE_STAGE_5.0</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.660374</td>
+      <td>-0.702950</td>
+      <td>0.723187</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>-0.600728</td>
+      <td>0.136954</td>
+      <td>-0.553065</td>
+      <td>1.006989</td>
+      <td>-1.069075</td>
+      <td>...</td>
+      <td>1.587472</td>
+      <td>-0.632031</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>2.178745</td>
+      <td>-0.743421</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.660374</td>
+      <td>1.422577</td>
+      <td>0.723187</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>-0.600728</td>
+      <td>2.180637</td>
+      <td>0.965870</td>
+      <td>1.006989</td>
+      <td>0.101519</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>-0.632031</td>
+      <td>3.061520</td>
+      <td>-0.508025</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>1.345133</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.660374</td>
+      <td>-0.702950</td>
+      <td>0.723187</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>0.396720</td>
+      <td>-0.884887</td>
+      <td>-0.553065</td>
+      <td>-0.993060</td>
+      <td>0.101519</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>1.582202</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>1.345133</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>-0.650137</td>
+      <td>-0.702950</td>
+      <td>-1.241329</td>
+      <td>-0.517025</td>
+      <td>-0.665403</td>
+      <td>2.391617</td>
+      <td>3.202478</td>
+      <td>-0.553065</td>
+      <td>-0.993060</td>
+      <td>1.272112</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>-0.632031</td>
+      <td>-0.326635</td>
+      <td>1.968408</td>
+      <td>-0.377103</td>
+      <td>2.322580</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>-0.743421</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>-0.650137</td>
+      <td>-0.702950</td>
+      <td>0.723187</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>-0.600728</td>
+      <td>0.136954</td>
+      <td>0.206403</td>
+      <td>1.006989</td>
+      <td>1.272112</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>-0.632031</td>
+      <td>3.061520</td>
+      <td>-0.508025</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>1.345133</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>0.660374</td>
+      <td>-0.702950</td>
+      <td>0.723187</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>-0.600728</td>
+      <td>-0.884887</td>
+      <td>-0.553065</td>
+      <td>1.006989</td>
+      <td>0.101519</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>1.582202</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>2.178745</td>
+      <td>-0.743421</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>0.660374</td>
+      <td>-0.702950</td>
+      <td>0.723187</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>-0.600728</td>
+      <td>0.136954</td>
+      <td>-0.553065</td>
+      <td>1.006989</td>
+      <td>-1.069075</td>
+      <td>...</td>
+      <td>1.587472</td>
+      <td>-0.632031</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>-0.743421</td>
+      <td>1.934514</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>0.660374</td>
+      <td>1.422577</td>
+      <td>-2.223587</td>
+      <td>0.681440</td>
+      <td>0.516280</td>
+      <td>-0.600728</td>
+      <td>-0.884887</td>
+      <td>1.725337</td>
+      <td>-0.993060</td>
+      <td>0.101519</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>-0.632031</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>2.651796</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>-0.743421</td>
+      <td>1.934514</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>-0.650137</td>
+      <td>-0.702950</td>
+      <td>0.723187</td>
+      <td>0.681440</td>
+      <td>-0.665403</td>
+      <td>-0.600728</td>
+      <td>1.158796</td>
+      <td>-1.312532</td>
+      <td>1.006989</td>
+      <td>1.272112</td>
+      <td>...</td>
+      <td>1.587472</td>
+      <td>-0.632031</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>-0.743421</td>
+      <td>1.934514</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>0.660374</td>
+      <td>-0.702950</td>
+      <td>0.723187</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>-0.600728</td>
+      <td>1.158796</td>
+      <td>-0.553065</td>
+      <td>1.006989</td>
+      <td>-1.069075</td>
+      <td>...</td>
+      <td>1.587472</td>
+      <td>-0.632031</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>1.345133</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>0.660374</td>
+      <td>-0.702950</td>
+      <td>0.723187</td>
+      <td>0.681440</td>
+      <td>-0.665403</td>
+      <td>1.394168</td>
+      <td>0.136954</td>
+      <td>-1.312532</td>
+      <td>-0.993060</td>
+      <td>0.101519</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>1.582202</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>3.02755</td>
+      <td>-0.458980</td>
+      <td>-0.743421</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>-0.650137</td>
+      <td>-0.702950</td>
+      <td>0.723187</td>
+      <td>0.681440</td>
+      <td>-0.665403</td>
+      <td>0.396720</td>
+      <td>2.180637</td>
+      <td>-1.312532</td>
+      <td>-0.993060</td>
+      <td>1.272112</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>-0.632031</td>
+      <td>-0.326635</td>
+      <td>1.968408</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>2.178745</td>
+      <td>-0.743421</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>0.660374</td>
+      <td>1.422577</td>
+      <td>-1.241329</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>-0.600728</td>
+      <td>0.136954</td>
+      <td>1.725337</td>
+      <td>-0.993060</td>
+      <td>0.101519</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>-0.632031</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>2.651796</td>
+      <td>2.322580</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>-0.743421</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>-0.650137</td>
+      <td>-0.702950</td>
+      <td>0.723187</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>-0.600728</td>
+      <td>-0.884887</td>
+      <td>-0.553065</td>
+      <td>1.006989</td>
+      <td>-1.069075</td>
+      <td>...</td>
+      <td>1.587472</td>
+      <td>-0.632031</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>-0.743421</td>
+      <td>1.934514</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>0.660374</td>
+      <td>-0.702950</td>
+      <td>0.723187</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>-0.600728</td>
+      <td>1.158796</td>
+      <td>-0.553065</td>
+      <td>1.006989</td>
+      <td>-1.069075</td>
+      <td>...</td>
+      <td>1.587472</td>
+      <td>-0.632031</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>-0.743421</td>
+      <td>1.934514</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>0.660374</td>
+      <td>-0.702950</td>
+      <td>-0.259071</td>
+      <td>1.879905</td>
+      <td>-4.210451</td>
+      <td>2.391617</td>
+      <td>3.202478</td>
+      <td>-1.312532</td>
+      <td>1.006989</td>
+      <td>0.101519</td>
+      <td>...</td>
+      <td>1.587472</td>
+      <td>-0.632031</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>1.345133</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>-1.960649</td>
+      <td>-0.702950</td>
+      <td>-2.223587</td>
+      <td>3.078370</td>
+      <td>-3.028768</td>
+      <td>0.396720</td>
+      <td>1.158796</td>
+      <td>0.206403</td>
+      <td>-0.993060</td>
+      <td>-1.069075</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>-0.632031</td>
+      <td>-0.326635</td>
+      <td>1.968408</td>
+      <td>-0.377103</td>
+      <td>2.322580</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>-0.743421</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>0.660374</td>
+      <td>1.422577</td>
+      <td>-1.241329</td>
+      <td>0.681440</td>
+      <td>-0.665403</td>
+      <td>1.394168</td>
+      <td>1.158796</td>
+      <td>0.206403</td>
+      <td>-0.993060</td>
+      <td>0.101519</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>1.582202</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>1.345133</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>0.660374</td>
+      <td>-0.702950</td>
+      <td>0.723187</td>
+      <td>1.879905</td>
+      <td>-0.665403</td>
+      <td>0.396720</td>
+      <td>1.158796</td>
+      <td>-1.312532</td>
+      <td>1.006989</td>
+      <td>-1.069075</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>-0.632031</td>
+      <td>3.061520</td>
+      <td>-0.508025</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>2.178745</td>
+      <td>-0.743421</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>0.660374</td>
+      <td>-0.702950</td>
+      <td>-1.241329</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>0.396720</td>
+      <td>-0.884887</td>
+      <td>0.965870</td>
+      <td>-0.993060</td>
+      <td>0.101519</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>-0.632031</td>
+      <td>-0.326635</td>
+      <td>1.968408</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>2.178745</td>
+      <td>-0.743421</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>-3.271160</td>
+      <td>1.422577</td>
+      <td>0.723187</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>-0.600728</td>
+      <td>-0.884887</td>
+      <td>-0.553065</td>
+      <td>-0.993060</td>
+      <td>1.272112</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>1.582202</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>1.345133</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>-0.650137</td>
+      <td>-0.702950</td>
+      <td>-1.241329</td>
+      <td>1.879905</td>
+      <td>-0.665403</td>
+      <td>-0.600728</td>
+      <td>0.136954</td>
+      <td>-0.553065</td>
+      <td>-0.993060</td>
+      <td>1.272112</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>-0.632031</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>2.651796</td>
+      <td>2.322580</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>-0.743421</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>0.660374</td>
+      <td>1.422577</td>
+      <td>-0.259071</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>0.396720</td>
+      <td>0.136954</td>
+      <td>0.206403</td>
+      <td>-0.993060</td>
+      <td>0.101519</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>-0.632031</td>
+      <td>3.061520</td>
+      <td>-0.508025</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>2.178745</td>
+      <td>-0.743421</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>-0.650137</td>
+      <td>1.422577</td>
+      <td>0.723187</td>
+      <td>0.681440</td>
+      <td>-0.665403</td>
+      <td>2.391617</td>
+      <td>0.136954</td>
+      <td>-1.312532</td>
+      <td>1.006989</td>
+      <td>1.272112</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>1.582202</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>3.02755</td>
+      <td>-0.458980</td>
+      <td>-0.743421</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>0.660374</td>
+      <td>1.422577</td>
+      <td>0.723187</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>0.396720</td>
+      <td>-0.884887</td>
+      <td>0.206403</td>
+      <td>-0.993060</td>
+      <td>0.101519</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>1.582202</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>-0.743421</td>
+      <td>1.934514</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>-0.650137</td>
+      <td>-0.702950</td>
+      <td>0.723187</td>
+      <td>0.681440</td>
+      <td>-1.847085</td>
+      <td>-0.600728</td>
+      <td>0.136954</td>
+      <td>-1.312532</td>
+      <td>1.006989</td>
+      <td>-1.069075</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>-0.632031</td>
+      <td>-0.326635</td>
+      <td>1.968408</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>1.345133</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>0.660374</td>
+      <td>1.422577</td>
+      <td>-1.241329</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>-0.600728</td>
+      <td>-0.884887</td>
+      <td>1.725337</td>
+      <td>-0.993060</td>
+      <td>0.101519</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>-0.632031</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>2.651796</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>1.345133</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>-0.650137</td>
+      <td>1.422577</td>
+      <td>-1.241329</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>-0.600728</td>
+      <td>0.136954</td>
+      <td>1.725337</td>
+      <td>-0.993060</td>
+      <td>1.272112</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>-0.632031</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>2.651796</td>
+      <td>2.322580</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>-0.743421</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>-0.650137</td>
+      <td>1.422577</td>
+      <td>-0.259071</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>-0.600728</td>
+      <td>0.136954</td>
+      <td>-0.553065</td>
+      <td>1.006989</td>
+      <td>0.101519</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>-0.632031</td>
+      <td>3.061520</td>
+      <td>-0.508025</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>3.02755</td>
+      <td>-0.458980</td>
+      <td>-0.743421</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>31</th>
+      <td>-0.650137</td>
+      <td>-0.702950</td>
+      <td>0.723187</td>
+      <td>0.681440</td>
+      <td>-1.847085</td>
+      <td>1.394168</td>
+      <td>0.136954</td>
+      <td>-1.312532</td>
+      <td>1.006989</td>
+      <td>1.272112</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>1.582202</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>1.345133</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>191622</th>
+      <td>0.660374</td>
+      <td>-0.702950</td>
+      <td>0.723187</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>-0.600728</td>
+      <td>-0.884887</td>
+      <td>-0.553065</td>
+      <td>-0.993060</td>
+      <td>0.101519</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>-0.632031</td>
+      <td>-0.326635</td>
+      <td>1.968408</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>2.178745</td>
+      <td>-0.743421</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>191623</th>
+      <td>0.660374</td>
+      <td>-0.702950</td>
+      <td>0.723187</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>-0.600728</td>
+      <td>1.158796</td>
+      <td>-0.553065</td>
+      <td>1.006989</td>
+      <td>0.101519</td>
+      <td>...</td>
+      <td>1.587472</td>
+      <td>-0.632031</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>1.345133</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>191624</th>
+      <td>0.660374</td>
+      <td>-0.702950</td>
+      <td>0.723187</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>-0.600728</td>
+      <td>2.180637</td>
+      <td>-0.553065</td>
+      <td>1.006989</td>
+      <td>1.272112</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>-0.632031</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>2.651796</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>1.345133</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>191625</th>
+      <td>0.660374</td>
+      <td>1.422577</td>
+      <td>0.723187</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>0.396720</td>
+      <td>-0.884887</td>
+      <td>-0.553065</td>
+      <td>1.006989</td>
+      <td>0.101519</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>1.582202</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>-0.743421</td>
+      <td>1.934514</td>
+    </tr>
+    <tr>
+      <th>191626</th>
+      <td>-1.960649</td>
+      <td>-0.702950</td>
+      <td>-1.241329</td>
+      <td>1.879905</td>
+      <td>-1.847085</td>
+      <td>-0.600728</td>
+      <td>1.158796</td>
+      <td>-0.553065</td>
+      <td>-0.993060</td>
+      <td>1.272112</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>1.582202</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>1.345133</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>191627</th>
+      <td>-0.650137</td>
+      <td>1.422577</td>
+      <td>-2.223587</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>-0.600728</td>
+      <td>0.136954</td>
+      <td>1.725337</td>
+      <td>-0.993060</td>
+      <td>0.101519</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>-0.632031</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>2.651796</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>-0.743421</td>
+      <td>1.934514</td>
+    </tr>
+    <tr>
+      <th>191628</th>
+      <td>0.660374</td>
+      <td>-0.702950</td>
+      <td>0.723187</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>-0.600728</td>
+      <td>-0.884887</td>
+      <td>-0.553065</td>
+      <td>1.006989</td>
+      <td>-1.069075</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>1.582202</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>3.02755</td>
+      <td>-0.458980</td>
+      <td>-0.743421</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>191629</th>
+      <td>0.660374</td>
+      <td>1.422577</td>
+      <td>-2.223587</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>-0.600728</td>
+      <td>0.136954</td>
+      <td>1.725337</td>
+      <td>-0.993060</td>
+      <td>0.101519</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>-0.632031</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>2.651796</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>-0.743421</td>
+      <td>1.934514</td>
+    </tr>
+    <tr>
+      <th>191630</th>
+      <td>-0.650137</td>
+      <td>-0.702950</td>
+      <td>0.723187</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>-0.600728</td>
+      <td>-0.884887</td>
+      <td>-0.553065</td>
+      <td>1.006989</td>
+      <td>1.272112</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>-0.632031</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>2.651796</td>
+      <td>2.322580</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>-0.743421</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>191631</th>
+      <td>0.660374</td>
+      <td>1.422577</td>
+      <td>-2.223587</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>-0.600728</td>
+      <td>0.136954</td>
+      <td>1.725337</td>
+      <td>-0.993060</td>
+      <td>0.101519</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>-0.632031</td>
+      <td>-0.326635</td>
+      <td>1.968408</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>1.345133</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>191632</th>
+      <td>-0.650137</td>
+      <td>-0.702950</td>
+      <td>-0.259071</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>-0.600728</td>
+      <td>-0.884887</td>
+      <td>0.965870</td>
+      <td>-0.993060</td>
+      <td>1.272112</td>
+      <td>...</td>
+      <td>1.587472</td>
+      <td>-0.632031</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>1.345133</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>191633</th>
+      <td>0.660374</td>
+      <td>-0.702950</td>
+      <td>0.723187</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>-0.600728</td>
+      <td>2.180637</td>
+      <td>-0.553065</td>
+      <td>1.006989</td>
+      <td>0.101519</td>
+      <td>...</td>
+      <td>1.587472</td>
+      <td>-0.632031</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>1.345133</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>191634</th>
+      <td>-0.650137</td>
+      <td>-0.702950</td>
+      <td>0.723187</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>-0.600728</td>
+      <td>0.136954</td>
+      <td>0.206403</td>
+      <td>-0.993060</td>
+      <td>1.272112</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>-0.632031</td>
+      <td>3.061520</td>
+      <td>-0.508025</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>2.178745</td>
+      <td>-0.743421</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>191635</th>
+      <td>0.660374</td>
+      <td>1.422577</td>
+      <td>0.723187</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>0.396720</td>
+      <td>-0.884887</td>
+      <td>0.206403</td>
+      <td>-0.993060</td>
+      <td>0.101519</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>-0.632031</td>
+      <td>-0.326635</td>
+      <td>1.968408</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>-0.743421</td>
+      <td>1.934514</td>
+    </tr>
+    <tr>
+      <th>191636</th>
+      <td>0.660374</td>
+      <td>-0.702950</td>
+      <td>0.723187</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>-0.600728</td>
+      <td>-0.884887</td>
+      <td>-0.553065</td>
+      <td>1.006989</td>
+      <td>0.101519</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>-0.632031</td>
+      <td>3.061520</td>
+      <td>-0.508025</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>1.345133</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>191637</th>
+      <td>-0.650137</td>
+      <td>1.422577</td>
+      <td>0.723187</td>
+      <td>0.681440</td>
+      <td>-0.665403</td>
+      <td>0.396720</td>
+      <td>1.158796</td>
+      <td>-1.312532</td>
+      <td>1.006989</td>
+      <td>1.272112</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>1.582202</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>-0.743421</td>
+      <td>1.934514</td>
+    </tr>
+    <tr>
+      <th>191638</th>
+      <td>0.660374</td>
+      <td>-0.702950</td>
+      <td>-1.241329</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>-0.600728</td>
+      <td>-0.884887</td>
+      <td>0.965870</td>
+      <td>-0.993060</td>
+      <td>0.101519</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>-0.632031</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>2.651796</td>
+      <td>-0.430556</td>
+      <td>3.02755</td>
+      <td>-0.458980</td>
+      <td>-0.743421</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>191639</th>
+      <td>-0.650137</td>
+      <td>-0.702950</td>
+      <td>-0.259071</td>
+      <td>1.879905</td>
+      <td>-1.847085</td>
+      <td>0.396720</td>
+      <td>2.180637</td>
+      <td>-1.312532</td>
+      <td>-0.993060</td>
+      <td>1.272112</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>1.582202</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>3.02755</td>
+      <td>-0.458980</td>
+      <td>-0.743421</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>191640</th>
+      <td>-0.650137</td>
+      <td>-0.702950</td>
+      <td>-0.259071</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>-0.600728</td>
+      <td>0.136954</td>
+      <td>0.965870</td>
+      <td>1.006989</td>
+      <td>1.272112</td>
+      <td>...</td>
+      <td>1.587472</td>
+      <td>-0.632031</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>-0.743421</td>
+      <td>1.934514</td>
+    </tr>
+    <tr>
+      <th>191641</th>
+      <td>0.660374</td>
+      <td>-0.702950</td>
+      <td>0.723187</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>-0.600728</td>
+      <td>0.136954</td>
+      <td>-0.553065</td>
+      <td>1.006989</td>
+      <td>-1.069075</td>
+      <td>...</td>
+      <td>1.587472</td>
+      <td>-0.632031</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>1.345133</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>191642</th>
+      <td>0.660374</td>
+      <td>1.422577</td>
+      <td>-2.223587</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>0.396720</td>
+      <td>-0.884887</td>
+      <td>1.725337</td>
+      <td>-0.993060</td>
+      <td>-1.069075</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>-0.632031</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>2.651796</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>-0.743421</td>
+      <td>1.934514</td>
+    </tr>
+    <tr>
+      <th>191643</th>
+      <td>0.660374</td>
+      <td>-0.702950</td>
+      <td>0.723187</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>-0.600728</td>
+      <td>1.158796</td>
+      <td>-0.553065</td>
+      <td>1.006989</td>
+      <td>0.101519</td>
+      <td>...</td>
+      <td>1.587472</td>
+      <td>-0.632031</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>-0.743421</td>
+      <td>1.934514</td>
+    </tr>
+    <tr>
+      <th>191644</th>
+      <td>0.660374</td>
+      <td>1.422577</td>
+      <td>-2.223587</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>-0.600728</td>
+      <td>0.136954</td>
+      <td>1.725337</td>
+      <td>1.006989</td>
+      <td>0.101519</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>-0.632031</td>
+      <td>-0.326635</td>
+      <td>1.968408</td>
+      <td>-0.377103</td>
+      <td>2.322580</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>-0.743421</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>191645</th>
+      <td>0.660374</td>
+      <td>-0.702950</td>
+      <td>0.723187</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>-0.600728</td>
+      <td>1.158796</td>
+      <td>-0.553065</td>
+      <td>-0.993060</td>
+      <td>1.272112</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>-0.632031</td>
+      <td>-0.326635</td>
+      <td>1.968408</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>2.178745</td>
+      <td>-0.743421</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>191646</th>
+      <td>-1.960649</td>
+      <td>1.422577</td>
+      <td>-2.223587</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>-0.600728</td>
+      <td>0.136954</td>
+      <td>1.725337</td>
+      <td>-0.993060</td>
+      <td>0.101519</td>
+      <td>...</td>
+      <td>1.587472</td>
+      <td>-0.632031</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>1.345133</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>191647</th>
+      <td>-0.650137</td>
+      <td>-0.702950</td>
+      <td>0.723187</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>-0.600728</td>
+      <td>-0.884887</td>
+      <td>-0.553065</td>
+      <td>1.006989</td>
+      <td>1.272112</td>
+      <td>...</td>
+      <td>1.587472</td>
+      <td>-0.632031</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>1.345133</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>191648</th>
+      <td>0.660374</td>
+      <td>1.422577</td>
+      <td>0.723187</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>0.396720</td>
+      <td>0.136954</td>
+      <td>0.206403</td>
+      <td>-0.993060</td>
+      <td>0.101519</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>-0.632031</td>
+      <td>3.061520</td>
+      <td>-0.508025</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>3.02755</td>
+      <td>-0.458980</td>
+      <td>-0.743421</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>191649</th>
+      <td>0.660374</td>
+      <td>-0.702950</td>
+      <td>0.723187</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>-0.600728</td>
+      <td>-0.884887</td>
+      <td>-0.553065</td>
+      <td>1.006989</td>
+      <td>0.101519</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>1.582202</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>1.345133</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>191650</th>
+      <td>-0.650137</td>
+      <td>1.422577</td>
+      <td>-2.223587</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>-0.600728</td>
+      <td>0.136954</td>
+      <td>1.725337</td>
+      <td>-0.993060</td>
+      <td>0.101519</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>1.582202</td>
+      <td>-0.326635</td>
+      <td>-0.508025</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>-0.458980</td>
+      <td>1.345133</td>
+      <td>-0.516926</td>
+    </tr>
+    <tr>
+      <th>191651</th>
+      <td>-1.960649</td>
+      <td>-0.702950</td>
+      <td>0.723187</td>
+      <td>-0.517025</td>
+      <td>0.516280</td>
+      <td>-0.600728</td>
+      <td>-0.884887</td>
+      <td>-0.553065</td>
+      <td>-0.993060</td>
+      <td>0.101519</td>
+      <td>...</td>
+      <td>-0.629932</td>
+      <td>-0.632031</td>
+      <td>3.061520</td>
+      <td>-0.508025</td>
+      <td>-0.377103</td>
+      <td>-0.430556</td>
+      <td>-0.33030</td>
+      <td>2.178745</td>
+      <td>-0.743421</td>
+      <td>-0.516926</td>
+    </tr>
+  </tbody>
+</table>
+<p>141725 rows × 120 columns</p>
+</div>
+
+
 
 
 ```python
 # What kinds of people are part of a cluster that is underrepresented in the
 # customer data compared to the general population?
 
-
+# 0,1,
 ```
 
 ### Discussion 3.3: Compare Customer Data to Demographics Data
