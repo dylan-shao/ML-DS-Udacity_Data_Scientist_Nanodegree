@@ -2703,6 +2703,18 @@ As a reminder, each principal component is a unit vector that points in the dire
 
 
 ```python
+pca.components_[0].shape
+```
+
+
+
+
+    (120,)
+
+
+
+
+```python
 # Map weights for the first principal component to corresponding feature names
 # and then print the linked values, sorted by weight.
 # HINT: Try defining a function here or in a new cell that you can reuse in the
@@ -3694,7 +3706,7 @@ plt.title('SSE vs. K');
 ```
 
 
-![png](output_89_0.png)
+![png](output_90_0.png)
 
 
 
@@ -3783,7 +3795,7 @@ plt.barh(name_list, width = percentage_list)
 
 
 
-![png](output_98_1.png)
+![png](output_99_1.png)
 
 
 
@@ -4044,21 +4056,21 @@ Take a look at the following points in this step:
 
 # labels_general
 
-# -------general
+# -------------- general --------------
 labels_general=pd.DataFrame(labels_general)
 labels_general.columns=['cluster']
 
-
+# with ignored data
 labels_general_missing = pd.DataFrame(-1*np.ones([len(subset_above_threshold_indexes),1]))
 labels_general_missing.columns=['cluster']
 
 total_general =pd.concat([labels_general,labels_general_missing],axis=0)
 
-# -------customer --------
+# -------------- customer ---------------
 labels_customer=pd.DataFrame(labels_customers)
 labels_customer.columns=['cluster']
 
-
+# with ignored data
 labels_customer_missing = pd.DataFrame(-1*np.ones([len(customer_subset_above_threshold_indexes),1]))
 labels_customer_missing.columns=['cluster']
 
@@ -4070,19 +4082,19 @@ total_customer =pd.concat([labels_customer,labels_customer_missing],axis=0)
 
 ```python
 
-
 sns.countplot( x='cluster',data=total_general)
+
 ```
 
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x1a36dbbba8>
+    <matplotlib.axes._subplots.AxesSubplot at 0x1ace3ee400>
 
 
 
 
-![png](output_115_1.png)
+![png](output_116_1.png)
 
 
 
@@ -4093,12 +4105,47 @@ sns.countplot( x='cluster',data=total_customer)
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x1ad1fc3eb8>
+    <matplotlib.axes._subplots.AxesSubplot at 0x1af78e42b0>
 
 
 
 
-![png](output_116_1.png)
+![png](output_117_1.png)
+
+
+
+```python
+# Now, instead show the cound like above, we gona tranform it to percentage, adn compare two dataset side by side:
+
+general_percentage_list = []
+customer_percentage_list = []
+clusters_range = range(0,15)
+for i in clusters_range:
+    general_percentage_list.append(total_general[total_general['cluster'] == i].shape[0] / total_general.shape[0] *100)
+    customer_percentage_list.append(total_customer[total_customer['cluster'] == i].shape[0] / total_customer.shape[0] *100)
+
+fig = plt.figure(figsize=(15,6))
+width = np.min(np.diff(clusters_range))/3.
+ax = fig.add_subplot(111)
+bar1 = ax.bar(clusters_range-width,general_percentage_list, width, color='b',label='general')
+for rect in bar1:
+    height = rect.get_height()
+    plt.text(rect.get_x() + rect.get_width()/2.0, height, "{:0.1f}%".format(float(height)), ha='center', va='bottom',fontsize=12)
+        
+bar2 = ax.bar(clusters_range,customer_percentage_list, width, color='r',label='customer')
+for rect in bar2:
+    height = rect.get_height()
+    plt.text(rect.get_x() + rect.get_width()/2.0, height, "{:0.1f}%".format(float(height)), ha='center', va='bottom',fontsize=12)
+
+plt.xticks(clusters_range)        
+ax.set_xlabel('cluster')
+plt.legend((bar1[0], bar2[0]), ('general', 'customer'),prop={'size': 16})
+plt.show()
+
+```
+
+
+![png](output_118_0.png)
 
 
 
@@ -4106,1524 +4153,61 @@ sns.countplot( x='cluster',data=total_customer)
 # What kinds of people are part of a cluster that is overrepresented in the
 # customer data compared to the general population?
 
-# number 4,
-customers_data
+# number 4, as we can see that the 4th cluster is 6.2% in general data, but 15.8% in the customer data
+
+customer_overrepresented = pd.DataFrame(pca.inverse_transform(customers_data_pca[labels_customer[labels_customer['cluster'] == 4].index, :]))
+customer_overrepresented.columns = customers_data.columns
+
+general_underrepresented = pd.DataFrame(pca.inverse_transform(one_hot_data_pca[labels_general[labels_general['cluster'] == 4].index, :]))
+general_underrepresented.columns = one_hot_data.columns
+
+```
+
+
+```python
+plt.figure(figsize=(25, 55))
+plt.subplots_adjust(hspace=0.6)
+
+# FINANZ related
+plt.subplot(6, 2, 1)
+plt.title('customer_overrepresented')
+plt.xlabel('FINANZ_MINIMALIST')
+customer_overrepresented['FINANZ_MINIMALIST'].hist(bins=50,range=[-2,2])
+plt.subplot(6, 2, 2)
+plt.title('customer_underrepresented')
+plt.xlabel('FINANZ_MINIMALIST')
+general_underrepresented['FINANZ_MINIMALIST'].hist(bins=50,range=[-2,2])
+
+plt.subplot(6, 2, 3)
+plt.title('customer_overrepresented')
+plt.xlabel('FINANZ_SPARER')
+customer_overrepresented['FINANZ_SPARER'].hist(bins=50,range=[-2,2])
+plt.subplot(6, 2, 4)
+plt.title('customer_underrepresented')
+plt.xlabel('FINANZ_SPARER')
+general_underrepresented['FINANZ_SPARER'].hist(bins=50,range=[-2,2])
+
+
+# age:
+plt.subplot(6, 2, 5)
+plt.title('customer_overrepresented')
+plt.xlabel('SEMIO_KAEM')
+customer_overrepresented['SEMIO_KAEM'].hist(bins=50,range=[-2,2])
+plt.subplot(6, 2, 6)
+plt.title('general_underrepresented')
+plt.xlabel('SEMIO_KAEM')
+general_underrepresented['SEMIO_KAEM'].hist(bins=50,range=[-2,2])
 ```
 
 
 
 
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
+    <matplotlib.axes._subplots.AxesSubplot at 0x1b18183a20>
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
 
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>ALTERSKATEGORIE_GROB</th>
-      <th>ANREDE_KZ</th>
-      <th>FINANZ_MINIMALIST</th>
-      <th>FINANZ_SPARER</th>
-      <th>FINANZ_VORSORGER</th>
-      <th>FINANZ_ANLEGER</th>
-      <th>FINANZ_UNAUFFAELLIGER</th>
-      <th>FINANZ_HAUSBAUER</th>
-      <th>GREEN_AVANTGARDE</th>
-      <th>HEALTH_TYP</th>
-      <th>...</th>
-      <th>CAMEO_INTL_2015_WEALTH_1.0</th>
-      <th>CAMEO_INTL_2015_WEALTH_2.0</th>
-      <th>CAMEO_INTL_2015_WEALTH_3.0</th>
-      <th>CAMEO_INTL_2015_WEALTH_4.0</th>
-      <th>CAMEO_INTL_2015_WEALTH_5.0</th>
-      <th>CAMEO_INTL_2015_LIFE_STAGE_1.0</th>
-      <th>CAMEO_INTL_2015_LIFE_STAGE_2.0</th>
-      <th>CAMEO_INTL_2015_LIFE_STAGE_3.0</th>
-      <th>CAMEO_INTL_2015_LIFE_STAGE_4.0</th>
-      <th>CAMEO_INTL_2015_LIFE_STAGE_5.0</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>0.660374</td>
-      <td>-0.702950</td>
-      <td>0.723187</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>-0.600728</td>
-      <td>0.136954</td>
-      <td>-0.553065</td>
-      <td>1.006989</td>
-      <td>-1.069075</td>
-      <td>...</td>
-      <td>1.587472</td>
-      <td>-0.632031</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>2.178745</td>
-      <td>-0.743421</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>0.660374</td>
-      <td>1.422577</td>
-      <td>0.723187</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>-0.600728</td>
-      <td>2.180637</td>
-      <td>0.965870</td>
-      <td>1.006989</td>
-      <td>0.101519</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>-0.632031</td>
-      <td>3.061520</td>
-      <td>-0.508025</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>1.345133</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>0.660374</td>
-      <td>-0.702950</td>
-      <td>0.723187</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>0.396720</td>
-      <td>-0.884887</td>
-      <td>-0.553065</td>
-      <td>-0.993060</td>
-      <td>0.101519</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>1.582202</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>1.345133</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>-0.650137</td>
-      <td>-0.702950</td>
-      <td>-1.241329</td>
-      <td>-0.517025</td>
-      <td>-0.665403</td>
-      <td>2.391617</td>
-      <td>3.202478</td>
-      <td>-0.553065</td>
-      <td>-0.993060</td>
-      <td>1.272112</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>-0.632031</td>
-      <td>-0.326635</td>
-      <td>1.968408</td>
-      <td>-0.377103</td>
-      <td>2.322580</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>-0.743421</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>-0.650137</td>
-      <td>-0.702950</td>
-      <td>0.723187</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>-0.600728</td>
-      <td>0.136954</td>
-      <td>0.206403</td>
-      <td>1.006989</td>
-      <td>1.272112</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>-0.632031</td>
-      <td>3.061520</td>
-      <td>-0.508025</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>1.345133</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>0.660374</td>
-      <td>-0.702950</td>
-      <td>0.723187</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>-0.600728</td>
-      <td>-0.884887</td>
-      <td>-0.553065</td>
-      <td>1.006989</td>
-      <td>0.101519</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>1.582202</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>2.178745</td>
-      <td>-0.743421</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>0.660374</td>
-      <td>-0.702950</td>
-      <td>0.723187</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>-0.600728</td>
-      <td>0.136954</td>
-      <td>-0.553065</td>
-      <td>1.006989</td>
-      <td>-1.069075</td>
-      <td>...</td>
-      <td>1.587472</td>
-      <td>-0.632031</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>-0.743421</td>
-      <td>1.934514</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>0.660374</td>
-      <td>1.422577</td>
-      <td>-2.223587</td>
-      <td>0.681440</td>
-      <td>0.516280</td>
-      <td>-0.600728</td>
-      <td>-0.884887</td>
-      <td>1.725337</td>
-      <td>-0.993060</td>
-      <td>0.101519</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>-0.632031</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>2.651796</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>-0.743421</td>
-      <td>1.934514</td>
-    </tr>
-    <tr>
-      <th>9</th>
-      <td>-0.650137</td>
-      <td>-0.702950</td>
-      <td>0.723187</td>
-      <td>0.681440</td>
-      <td>-0.665403</td>
-      <td>-0.600728</td>
-      <td>1.158796</td>
-      <td>-1.312532</td>
-      <td>1.006989</td>
-      <td>1.272112</td>
-      <td>...</td>
-      <td>1.587472</td>
-      <td>-0.632031</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>-0.743421</td>
-      <td>1.934514</td>
-    </tr>
-    <tr>
-      <th>11</th>
-      <td>0.660374</td>
-      <td>-0.702950</td>
-      <td>0.723187</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>-0.600728</td>
-      <td>1.158796</td>
-      <td>-0.553065</td>
-      <td>1.006989</td>
-      <td>-1.069075</td>
-      <td>...</td>
-      <td>1.587472</td>
-      <td>-0.632031</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>1.345133</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>12</th>
-      <td>0.660374</td>
-      <td>-0.702950</td>
-      <td>0.723187</td>
-      <td>0.681440</td>
-      <td>-0.665403</td>
-      <td>1.394168</td>
-      <td>0.136954</td>
-      <td>-1.312532</td>
-      <td>-0.993060</td>
-      <td>0.101519</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>1.582202</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>3.02755</td>
-      <td>-0.458980</td>
-      <td>-0.743421</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>13</th>
-      <td>-0.650137</td>
-      <td>-0.702950</td>
-      <td>0.723187</td>
-      <td>0.681440</td>
-      <td>-0.665403</td>
-      <td>0.396720</td>
-      <td>2.180637</td>
-      <td>-1.312532</td>
-      <td>-0.993060</td>
-      <td>1.272112</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>-0.632031</td>
-      <td>-0.326635</td>
-      <td>1.968408</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>2.178745</td>
-      <td>-0.743421</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>14</th>
-      <td>0.660374</td>
-      <td>1.422577</td>
-      <td>-1.241329</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>-0.600728</td>
-      <td>0.136954</td>
-      <td>1.725337</td>
-      <td>-0.993060</td>
-      <td>0.101519</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>-0.632031</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>2.651796</td>
-      <td>2.322580</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>-0.743421</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>15</th>
-      <td>-0.650137</td>
-      <td>-0.702950</td>
-      <td>0.723187</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>-0.600728</td>
-      <td>-0.884887</td>
-      <td>-0.553065</td>
-      <td>1.006989</td>
-      <td>-1.069075</td>
-      <td>...</td>
-      <td>1.587472</td>
-      <td>-0.632031</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>-0.743421</td>
-      <td>1.934514</td>
-    </tr>
-    <tr>
-      <th>16</th>
-      <td>0.660374</td>
-      <td>-0.702950</td>
-      <td>0.723187</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>-0.600728</td>
-      <td>1.158796</td>
-      <td>-0.553065</td>
-      <td>1.006989</td>
-      <td>-1.069075</td>
-      <td>...</td>
-      <td>1.587472</td>
-      <td>-0.632031</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>-0.743421</td>
-      <td>1.934514</td>
-    </tr>
-    <tr>
-      <th>17</th>
-      <td>0.660374</td>
-      <td>-0.702950</td>
-      <td>-0.259071</td>
-      <td>1.879905</td>
-      <td>-4.210451</td>
-      <td>2.391617</td>
-      <td>3.202478</td>
-      <td>-1.312532</td>
-      <td>1.006989</td>
-      <td>0.101519</td>
-      <td>...</td>
-      <td>1.587472</td>
-      <td>-0.632031</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>1.345133</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>18</th>
-      <td>-1.960649</td>
-      <td>-0.702950</td>
-      <td>-2.223587</td>
-      <td>3.078370</td>
-      <td>-3.028768</td>
-      <td>0.396720</td>
-      <td>1.158796</td>
-      <td>0.206403</td>
-      <td>-0.993060</td>
-      <td>-1.069075</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>-0.632031</td>
-      <td>-0.326635</td>
-      <td>1.968408</td>
-      <td>-0.377103</td>
-      <td>2.322580</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>-0.743421</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>19</th>
-      <td>0.660374</td>
-      <td>1.422577</td>
-      <td>-1.241329</td>
-      <td>0.681440</td>
-      <td>-0.665403</td>
-      <td>1.394168</td>
-      <td>1.158796</td>
-      <td>0.206403</td>
-      <td>-0.993060</td>
-      <td>0.101519</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>1.582202</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>1.345133</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>20</th>
-      <td>0.660374</td>
-      <td>-0.702950</td>
-      <td>0.723187</td>
-      <td>1.879905</td>
-      <td>-0.665403</td>
-      <td>0.396720</td>
-      <td>1.158796</td>
-      <td>-1.312532</td>
-      <td>1.006989</td>
-      <td>-1.069075</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>-0.632031</td>
-      <td>3.061520</td>
-      <td>-0.508025</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>2.178745</td>
-      <td>-0.743421</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>21</th>
-      <td>0.660374</td>
-      <td>-0.702950</td>
-      <td>-1.241329</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>0.396720</td>
-      <td>-0.884887</td>
-      <td>0.965870</td>
-      <td>-0.993060</td>
-      <td>0.101519</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>-0.632031</td>
-      <td>-0.326635</td>
-      <td>1.968408</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>2.178745</td>
-      <td>-0.743421</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>22</th>
-      <td>-3.271160</td>
-      <td>1.422577</td>
-      <td>0.723187</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>-0.600728</td>
-      <td>-0.884887</td>
-      <td>-0.553065</td>
-      <td>-0.993060</td>
-      <td>1.272112</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>1.582202</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>1.345133</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>23</th>
-      <td>-0.650137</td>
-      <td>-0.702950</td>
-      <td>-1.241329</td>
-      <td>1.879905</td>
-      <td>-0.665403</td>
-      <td>-0.600728</td>
-      <td>0.136954</td>
-      <td>-0.553065</td>
-      <td>-0.993060</td>
-      <td>1.272112</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>-0.632031</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>2.651796</td>
-      <td>2.322580</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>-0.743421</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>24</th>
-      <td>0.660374</td>
-      <td>1.422577</td>
-      <td>-0.259071</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>0.396720</td>
-      <td>0.136954</td>
-      <td>0.206403</td>
-      <td>-0.993060</td>
-      <td>0.101519</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>-0.632031</td>
-      <td>3.061520</td>
-      <td>-0.508025</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>2.178745</td>
-      <td>-0.743421</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>25</th>
-      <td>-0.650137</td>
-      <td>1.422577</td>
-      <td>0.723187</td>
-      <td>0.681440</td>
-      <td>-0.665403</td>
-      <td>2.391617</td>
-      <td>0.136954</td>
-      <td>-1.312532</td>
-      <td>1.006989</td>
-      <td>1.272112</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>1.582202</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>3.02755</td>
-      <td>-0.458980</td>
-      <td>-0.743421</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>26</th>
-      <td>0.660374</td>
-      <td>1.422577</td>
-      <td>0.723187</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>0.396720</td>
-      <td>-0.884887</td>
-      <td>0.206403</td>
-      <td>-0.993060</td>
-      <td>0.101519</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>1.582202</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>-0.743421</td>
-      <td>1.934514</td>
-    </tr>
-    <tr>
-      <th>27</th>
-      <td>-0.650137</td>
-      <td>-0.702950</td>
-      <td>0.723187</td>
-      <td>0.681440</td>
-      <td>-1.847085</td>
-      <td>-0.600728</td>
-      <td>0.136954</td>
-      <td>-1.312532</td>
-      <td>1.006989</td>
-      <td>-1.069075</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>-0.632031</td>
-      <td>-0.326635</td>
-      <td>1.968408</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>1.345133</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>28</th>
-      <td>0.660374</td>
-      <td>1.422577</td>
-      <td>-1.241329</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>-0.600728</td>
-      <td>-0.884887</td>
-      <td>1.725337</td>
-      <td>-0.993060</td>
-      <td>0.101519</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>-0.632031</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>2.651796</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>1.345133</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>29</th>
-      <td>-0.650137</td>
-      <td>1.422577</td>
-      <td>-1.241329</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>-0.600728</td>
-      <td>0.136954</td>
-      <td>1.725337</td>
-      <td>-0.993060</td>
-      <td>1.272112</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>-0.632031</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>2.651796</td>
-      <td>2.322580</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>-0.743421</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>30</th>
-      <td>-0.650137</td>
-      <td>1.422577</td>
-      <td>-0.259071</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>-0.600728</td>
-      <td>0.136954</td>
-      <td>-0.553065</td>
-      <td>1.006989</td>
-      <td>0.101519</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>-0.632031</td>
-      <td>3.061520</td>
-      <td>-0.508025</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>3.02755</td>
-      <td>-0.458980</td>
-      <td>-0.743421</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>31</th>
-      <td>-0.650137</td>
-      <td>-0.702950</td>
-      <td>0.723187</td>
-      <td>0.681440</td>
-      <td>-1.847085</td>
-      <td>1.394168</td>
-      <td>0.136954</td>
-      <td>-1.312532</td>
-      <td>1.006989</td>
-      <td>1.272112</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>1.582202</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>1.345133</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-    </tr>
-    <tr>
-      <th>191622</th>
-      <td>0.660374</td>
-      <td>-0.702950</td>
-      <td>0.723187</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>-0.600728</td>
-      <td>-0.884887</td>
-      <td>-0.553065</td>
-      <td>-0.993060</td>
-      <td>0.101519</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>-0.632031</td>
-      <td>-0.326635</td>
-      <td>1.968408</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>2.178745</td>
-      <td>-0.743421</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>191623</th>
-      <td>0.660374</td>
-      <td>-0.702950</td>
-      <td>0.723187</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>-0.600728</td>
-      <td>1.158796</td>
-      <td>-0.553065</td>
-      <td>1.006989</td>
-      <td>0.101519</td>
-      <td>...</td>
-      <td>1.587472</td>
-      <td>-0.632031</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>1.345133</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>191624</th>
-      <td>0.660374</td>
-      <td>-0.702950</td>
-      <td>0.723187</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>-0.600728</td>
-      <td>2.180637</td>
-      <td>-0.553065</td>
-      <td>1.006989</td>
-      <td>1.272112</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>-0.632031</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>2.651796</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>1.345133</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>191625</th>
-      <td>0.660374</td>
-      <td>1.422577</td>
-      <td>0.723187</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>0.396720</td>
-      <td>-0.884887</td>
-      <td>-0.553065</td>
-      <td>1.006989</td>
-      <td>0.101519</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>1.582202</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>-0.743421</td>
-      <td>1.934514</td>
-    </tr>
-    <tr>
-      <th>191626</th>
-      <td>-1.960649</td>
-      <td>-0.702950</td>
-      <td>-1.241329</td>
-      <td>1.879905</td>
-      <td>-1.847085</td>
-      <td>-0.600728</td>
-      <td>1.158796</td>
-      <td>-0.553065</td>
-      <td>-0.993060</td>
-      <td>1.272112</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>1.582202</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>1.345133</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>191627</th>
-      <td>-0.650137</td>
-      <td>1.422577</td>
-      <td>-2.223587</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>-0.600728</td>
-      <td>0.136954</td>
-      <td>1.725337</td>
-      <td>-0.993060</td>
-      <td>0.101519</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>-0.632031</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>2.651796</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>-0.743421</td>
-      <td>1.934514</td>
-    </tr>
-    <tr>
-      <th>191628</th>
-      <td>0.660374</td>
-      <td>-0.702950</td>
-      <td>0.723187</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>-0.600728</td>
-      <td>-0.884887</td>
-      <td>-0.553065</td>
-      <td>1.006989</td>
-      <td>-1.069075</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>1.582202</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>3.02755</td>
-      <td>-0.458980</td>
-      <td>-0.743421</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>191629</th>
-      <td>0.660374</td>
-      <td>1.422577</td>
-      <td>-2.223587</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>-0.600728</td>
-      <td>0.136954</td>
-      <td>1.725337</td>
-      <td>-0.993060</td>
-      <td>0.101519</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>-0.632031</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>2.651796</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>-0.743421</td>
-      <td>1.934514</td>
-    </tr>
-    <tr>
-      <th>191630</th>
-      <td>-0.650137</td>
-      <td>-0.702950</td>
-      <td>0.723187</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>-0.600728</td>
-      <td>-0.884887</td>
-      <td>-0.553065</td>
-      <td>1.006989</td>
-      <td>1.272112</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>-0.632031</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>2.651796</td>
-      <td>2.322580</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>-0.743421</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>191631</th>
-      <td>0.660374</td>
-      <td>1.422577</td>
-      <td>-2.223587</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>-0.600728</td>
-      <td>0.136954</td>
-      <td>1.725337</td>
-      <td>-0.993060</td>
-      <td>0.101519</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>-0.632031</td>
-      <td>-0.326635</td>
-      <td>1.968408</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>1.345133</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>191632</th>
-      <td>-0.650137</td>
-      <td>-0.702950</td>
-      <td>-0.259071</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>-0.600728</td>
-      <td>-0.884887</td>
-      <td>0.965870</td>
-      <td>-0.993060</td>
-      <td>1.272112</td>
-      <td>...</td>
-      <td>1.587472</td>
-      <td>-0.632031</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>1.345133</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>191633</th>
-      <td>0.660374</td>
-      <td>-0.702950</td>
-      <td>0.723187</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>-0.600728</td>
-      <td>2.180637</td>
-      <td>-0.553065</td>
-      <td>1.006989</td>
-      <td>0.101519</td>
-      <td>...</td>
-      <td>1.587472</td>
-      <td>-0.632031</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>1.345133</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>191634</th>
-      <td>-0.650137</td>
-      <td>-0.702950</td>
-      <td>0.723187</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>-0.600728</td>
-      <td>0.136954</td>
-      <td>0.206403</td>
-      <td>-0.993060</td>
-      <td>1.272112</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>-0.632031</td>
-      <td>3.061520</td>
-      <td>-0.508025</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>2.178745</td>
-      <td>-0.743421</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>191635</th>
-      <td>0.660374</td>
-      <td>1.422577</td>
-      <td>0.723187</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>0.396720</td>
-      <td>-0.884887</td>
-      <td>0.206403</td>
-      <td>-0.993060</td>
-      <td>0.101519</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>-0.632031</td>
-      <td>-0.326635</td>
-      <td>1.968408</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>-0.743421</td>
-      <td>1.934514</td>
-    </tr>
-    <tr>
-      <th>191636</th>
-      <td>0.660374</td>
-      <td>-0.702950</td>
-      <td>0.723187</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>-0.600728</td>
-      <td>-0.884887</td>
-      <td>-0.553065</td>
-      <td>1.006989</td>
-      <td>0.101519</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>-0.632031</td>
-      <td>3.061520</td>
-      <td>-0.508025</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>1.345133</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>191637</th>
-      <td>-0.650137</td>
-      <td>1.422577</td>
-      <td>0.723187</td>
-      <td>0.681440</td>
-      <td>-0.665403</td>
-      <td>0.396720</td>
-      <td>1.158796</td>
-      <td>-1.312532</td>
-      <td>1.006989</td>
-      <td>1.272112</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>1.582202</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>-0.743421</td>
-      <td>1.934514</td>
-    </tr>
-    <tr>
-      <th>191638</th>
-      <td>0.660374</td>
-      <td>-0.702950</td>
-      <td>-1.241329</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>-0.600728</td>
-      <td>-0.884887</td>
-      <td>0.965870</td>
-      <td>-0.993060</td>
-      <td>0.101519</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>-0.632031</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>2.651796</td>
-      <td>-0.430556</td>
-      <td>3.02755</td>
-      <td>-0.458980</td>
-      <td>-0.743421</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>191639</th>
-      <td>-0.650137</td>
-      <td>-0.702950</td>
-      <td>-0.259071</td>
-      <td>1.879905</td>
-      <td>-1.847085</td>
-      <td>0.396720</td>
-      <td>2.180637</td>
-      <td>-1.312532</td>
-      <td>-0.993060</td>
-      <td>1.272112</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>1.582202</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>3.02755</td>
-      <td>-0.458980</td>
-      <td>-0.743421</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>191640</th>
-      <td>-0.650137</td>
-      <td>-0.702950</td>
-      <td>-0.259071</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>-0.600728</td>
-      <td>0.136954</td>
-      <td>0.965870</td>
-      <td>1.006989</td>
-      <td>1.272112</td>
-      <td>...</td>
-      <td>1.587472</td>
-      <td>-0.632031</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>-0.743421</td>
-      <td>1.934514</td>
-    </tr>
-    <tr>
-      <th>191641</th>
-      <td>0.660374</td>
-      <td>-0.702950</td>
-      <td>0.723187</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>-0.600728</td>
-      <td>0.136954</td>
-      <td>-0.553065</td>
-      <td>1.006989</td>
-      <td>-1.069075</td>
-      <td>...</td>
-      <td>1.587472</td>
-      <td>-0.632031</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>1.345133</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>191642</th>
-      <td>0.660374</td>
-      <td>1.422577</td>
-      <td>-2.223587</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>0.396720</td>
-      <td>-0.884887</td>
-      <td>1.725337</td>
-      <td>-0.993060</td>
-      <td>-1.069075</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>-0.632031</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>2.651796</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>-0.743421</td>
-      <td>1.934514</td>
-    </tr>
-    <tr>
-      <th>191643</th>
-      <td>0.660374</td>
-      <td>-0.702950</td>
-      <td>0.723187</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>-0.600728</td>
-      <td>1.158796</td>
-      <td>-0.553065</td>
-      <td>1.006989</td>
-      <td>0.101519</td>
-      <td>...</td>
-      <td>1.587472</td>
-      <td>-0.632031</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>-0.743421</td>
-      <td>1.934514</td>
-    </tr>
-    <tr>
-      <th>191644</th>
-      <td>0.660374</td>
-      <td>1.422577</td>
-      <td>-2.223587</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>-0.600728</td>
-      <td>0.136954</td>
-      <td>1.725337</td>
-      <td>1.006989</td>
-      <td>0.101519</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>-0.632031</td>
-      <td>-0.326635</td>
-      <td>1.968408</td>
-      <td>-0.377103</td>
-      <td>2.322580</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>-0.743421</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>191645</th>
-      <td>0.660374</td>
-      <td>-0.702950</td>
-      <td>0.723187</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>-0.600728</td>
-      <td>1.158796</td>
-      <td>-0.553065</td>
-      <td>-0.993060</td>
-      <td>1.272112</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>-0.632031</td>
-      <td>-0.326635</td>
-      <td>1.968408</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>2.178745</td>
-      <td>-0.743421</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>191646</th>
-      <td>-1.960649</td>
-      <td>1.422577</td>
-      <td>-2.223587</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>-0.600728</td>
-      <td>0.136954</td>
-      <td>1.725337</td>
-      <td>-0.993060</td>
-      <td>0.101519</td>
-      <td>...</td>
-      <td>1.587472</td>
-      <td>-0.632031</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>1.345133</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>191647</th>
-      <td>-0.650137</td>
-      <td>-0.702950</td>
-      <td>0.723187</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>-0.600728</td>
-      <td>-0.884887</td>
-      <td>-0.553065</td>
-      <td>1.006989</td>
-      <td>1.272112</td>
-      <td>...</td>
-      <td>1.587472</td>
-      <td>-0.632031</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>1.345133</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>191648</th>
-      <td>0.660374</td>
-      <td>1.422577</td>
-      <td>0.723187</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>0.396720</td>
-      <td>0.136954</td>
-      <td>0.206403</td>
-      <td>-0.993060</td>
-      <td>0.101519</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>-0.632031</td>
-      <td>3.061520</td>
-      <td>-0.508025</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>3.02755</td>
-      <td>-0.458980</td>
-      <td>-0.743421</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>191649</th>
-      <td>0.660374</td>
-      <td>-0.702950</td>
-      <td>0.723187</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>-0.600728</td>
-      <td>-0.884887</td>
-      <td>-0.553065</td>
-      <td>1.006989</td>
-      <td>0.101519</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>1.582202</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>1.345133</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>191650</th>
-      <td>-0.650137</td>
-      <td>1.422577</td>
-      <td>-2.223587</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>-0.600728</td>
-      <td>0.136954</td>
-      <td>1.725337</td>
-      <td>-0.993060</td>
-      <td>0.101519</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>1.582202</td>
-      <td>-0.326635</td>
-      <td>-0.508025</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>-0.458980</td>
-      <td>1.345133</td>
-      <td>-0.516926</td>
-    </tr>
-    <tr>
-      <th>191651</th>
-      <td>-1.960649</td>
-      <td>-0.702950</td>
-      <td>0.723187</td>
-      <td>-0.517025</td>
-      <td>0.516280</td>
-      <td>-0.600728</td>
-      <td>-0.884887</td>
-      <td>-0.553065</td>
-      <td>-0.993060</td>
-      <td>0.101519</td>
-      <td>...</td>
-      <td>-0.629932</td>
-      <td>-0.632031</td>
-      <td>3.061520</td>
-      <td>-0.508025</td>
-      <td>-0.377103</td>
-      <td>-0.430556</td>
-      <td>-0.33030</td>
-      <td>2.178745</td>
-      <td>-0.743421</td>
-      <td>-0.516926</td>
-    </tr>
-  </tbody>
-</table>
-<p>141725 rows × 120 columns</p>
-</div>
 
+
+![png](output_120_1.png)
 
 
 
@@ -5631,11 +4215,69 @@ customers_data
 # What kinds of people are part of a cluster that is underrepresented in the
 # customer data compared to the general population?
 
-# 0,1,
+# 0,1, let's take 1 as an example as 1 has bigger percentage difference than 0
+
+customer_underrepresented = pd.DataFrame(pca.inverse_transform(customers_data_pca[labels_customer[labels_customer['cluster'] == 1].index, :]))
+customer_underrepresented.columns = customers_data.columns
+
+general_overrepresented = pd.DataFrame(pca.inverse_transform(one_hot_data_pca[labels_general[labels_general['cluster'] == 1].index, :]))
+general_overrepresented.columns = one_hot_data.columns
+
+
 ```
+
+
+```python
+plt.figure(figsize=(25, 55))
+plt.subplots_adjust(hspace=0.6)
+
+# FINANZ related
+plt.subplot(6, 2, 1)
+plt.title('customer_overrepresented')
+plt.xlabel('FINANZ_MINIMALIST')
+customer_underrepresented['FINANZ_MINIMALIST'].hist(bins=50,range=[-2,2])
+plt.subplot(6, 2, 2)
+plt.title('customer_underrepresented')
+plt.xlabel('FINANZ_MINIMALIST')
+general_overrepresented['FINANZ_MINIMALIST'].hist(bins=50,range=[-2,2])
+
+plt.subplot(6, 2, 3)
+plt.title('customer_overrepresented')
+plt.xlabel('SEMIO_KAEM')
+customer_underrepresented['SEMIO_KAEM'].hist(bins=50,range=[-2,2])
+plt.subplot(6, 2, 4)
+plt.title('customer_underrepresented')
+plt.xlabel('SEMIO_KAEM')
+general_overrepresented['SEMIO_KAEM'].hist(bins=50,range=[-2,2])
+
+
+# age:
+
+plt.subplot(6, 2, 5)
+plt.title('customer_overrepresented')
+plt.xlabel('ALTERSKATEGORIE_GROB')
+customer_underrepresented['SEMIO_VERT'].hist(bins=50,range=[-2,2])
+plt.subplot(6, 2, 6)
+plt.title('general_underrepresented')
+plt.xlabel('ALTERSKATEGORIE_GROB')
+general_overrepresented['SEMIO_VERT'].hist(bins=50,range=[-2,2])
+```
+
+
+
+
+    <matplotlib.axes._subplots.AxesSubplot at 0x1b25e0ce10>
+
+
+
+
+![png](output_122_1.png)
+
 
 ### Discussion 3.3: Compare Customer Data to Demographics Data
 
 (Double-click this cell and replace this text with your own text, reporting findings and conclusions from the clustering analysis. Can we describe segments of the population that are relatively popular with the mail-order company, or relatively unpopular with the company?)
+
+As we can see from the "comparsion figure' that the cluster 4 has the biggest difference between the general and customer data, which has percentage 6.2% and 15.8% each, and after compare the financial reltaed property such as `FINANZ_MINIMALIST`, we can see that customer data has a relative lower score than the general data, and from the `principla component analysis` in `2.3` we find that higher score (positive) is the lower-income family, and `FINANZ_MINIMALIST` has the lowest score (negative), so here the lower `FINANZ_MINIMALIST` score means this people/family are relative high-income. So high-income people/famoly are more likely to be the customer!
 
 > Congratulations on making it this far in the project! Before you finish, make sure to check through the entire notebook from top to bottom to make sure that your analysis follows a logical flow and all of your findings are documented in **Discussion** cells. Once you've checked over all of your work, you should export the notebook as an HTML document to submit for evaluation. You can do this from the menu, navigating to **File -> Download as -> HTML (.html)**. You will submit both that document and this notebook for your project submission.
